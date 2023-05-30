@@ -1,5 +1,5 @@
-# Bukkit-Boilerplate
-Boilerplate code for all of my plugins
+# SimpleTags
+A Simple Tags Plugin
 
 ### Libraries Used
 [RoseGarden](https://github.com/Rosewood-Development/RoseGarden) By [Rosewood Developement](https://github.com/Rosewood-Development)
