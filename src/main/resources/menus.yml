@@ -1,0 +1,18 @@
+tags:
+  title: "&8Tags"
+  items:
+    tag-item:
+      material: NAME_TAG
+      data: 0
+      lore:
+        - "&bPrefix: %tag-prefix%"
+        - ""
+        - "&aClick to select this tag."
+      equipped-lore:
+        - "&bPrefix: %tag-prefix%"
+        - ""
+        - "&eClick to unequip."
+      no-permission-lore:
+        - "&bPrefix: %tag-prefix%"
+        - ""
+        - "&cYou don't own this tag."

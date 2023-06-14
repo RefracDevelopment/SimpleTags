@@ -1,9 +1,42 @@
-name: ExamplePlugin
+name: SimpleTags
 version: '@version@'
-main: me.refracdevelopment.example.ExamplePlugin
+main: me.refracdevelopment.simpletags.SimpleTags
 author: RefracDevelopment
 api-version: "1.13"
-depend:
+softdepend:
   - PlaceholderAPI
-description: An Example plugin
+  - Skulls
+  - HeadDatabase
+description: A Simple Tags Plugin
 website: https://discord.refracdev.ml/
+
+permissions:
+  simpletags.*:
+    default: op
+    description: Gives access to all commands & tags.
+    children:
+      simpletags.command.create: true
+      simpletags.command.delete: true
+      simpletags.command.edit: true
+      simpletags.command.set: true
+      simpletags.command.list: true
+      simpletags.command.version: true
+      simpletags.tags.*: true
+  simpletags.command.create:
+    default: op
+    description: Gives access to the create command.
+  simpletags.command.delete:
+    default: op
+    description: Gives access to the delete command.
+  simpletags.command.edit:
+    default: op
+    description: Gives access to the edit command.
+  simpletags.command.set:
+    default: op
+    description: Gives access to the set command.
+  simpletags.command.list:
+    default: op
+    description: Gives access to the list command.
+  simpletags.command.version:
+    default: op
+    description: Gives access to the version command.

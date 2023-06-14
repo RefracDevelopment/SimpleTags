@@ -1,12 +1,20 @@
 # en_US translation by Refrac
 # Plugin Message Prefix
-prefix: <g:#8A2387:#E94057:#F27121>ExamplePlugin &8| &f
+prefix: <g:#8A2387:#E94057:#F27121>SimpleTags &8| &f
 
 # Generic Command Messages
 no-permission: '&cYou don''t have permission for that!'
 no-console: '&cOnly players may execute this command.'
 unknown-command: Unknown command, use &d/%cmd%&f help for more info
-example-message: 'This is a test message'
+tag-already-exists: '&cThis tag already exists.'
+invalid-tag: '&cThis tag doesn''t exist.'
+tag-not-owned: '&cYou don''t own this tag!'
+tag-created: '&aCreated the tag %tag-name%&a.'
+tag-deleted: '&aDeleted the tag %tag-name%&a.'
+tag-edited: '&aThe tag %tag-name%''s &aprefix has been updated to %tag-preifx%&a.'
+tag-set: '&aSet %player%''s &atag to %tag-name%&a.'
+tag-updated: '&aYour tag has been updated to %tag-prefix%&a.'
+tag-reset: '&aYour tag has been reset.'
 
 # Base Command Message
 base-command-color: '&e'
@@ -18,10 +26,30 @@ command-help-description: Displays the help menu.
 command-help-list-description: '&8 - &d/%cmd% %subcmd% %args% &7- %desc%'
 command-help-list-description-no-args: '&8 - &d/%cmd% %subcmd% &7- %desc%'
 
+# Create Command
+command-create-description: Create a tag
+command-create-usage: '&cUsage: &e/%cmd% create <name> <tag>'
+
+# Delete Command
+command-delete-description: Deletes a tag
+command-delete-usage: '&cUsage: &e/%cmd% delete <name>'
+
+# Edit Command
+command-edit-description: Edit a tag
+command-edit-usage: '&cUsage: &e/%cmd% edit <name> <tag>'
+
+# List Command
+command-list-description: List of tags
+command-list-usage: '&cUsage: &e/%cmd% list'
+
+# Set Command
+command-set-description: Set a players tag
+command-set-usage: '&cUsage: &e/%cmd% set <player> <tag>'
+
 # Reload Command
 command-reload-description: Reloads the plugin
 command-reload-usage: '&cUsage: &e/%cmd% reload'
 command-reload-success: '&aConfiguration and locale files were reloaded.'
 
 # Version Command
-command-version-description: Display the version info for ExamplePlugin
+command-version-description: Display the version info for SimpleTags
