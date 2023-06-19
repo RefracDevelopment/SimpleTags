@@ -24,7 +24,7 @@ public class TagsMenu extends PaginatedMenu {
 
     @Override
     public String getMenuName() {
-        return Color.translate("&8Tags");
+        return Color.translate(Menus.TAGS_TITLE);
     }
 
     @Override

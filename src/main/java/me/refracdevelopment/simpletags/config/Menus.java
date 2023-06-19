@@ -5,10 +5,11 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class Menus {
 
+    public static String TAGS_TITLE;
     public static ConfigurationSection TAGS_ITEMS;
 
     public static void loadConfig() {
-        SimpleTags.getInstance().getMenusFile().load();
+        TAGS_TITLE = SimpleTags.getInstance().getMenusFile().getString("tags.title");
         TAGS_ITEMS = SimpleTags.getInstance().getMenusFile().getConfigurationSection("tags.items");
     }
 }
