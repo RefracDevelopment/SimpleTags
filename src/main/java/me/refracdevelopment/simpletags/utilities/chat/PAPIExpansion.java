@@ -39,7 +39,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
             if (profile.getTagPrefix().equals("")) {
                 return "";
             }
-            return profile.getTagPrefix();
+            return Color.translate(profile.getTagPrefix());
         }
 
         return null;
