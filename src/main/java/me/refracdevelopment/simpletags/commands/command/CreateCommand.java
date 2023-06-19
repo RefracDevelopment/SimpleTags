@@ -63,7 +63,7 @@ public class CreateCommand extends RoseCommand {
 
     @Override
     public String getArgumentsString() {
-        return "identifier name prefix";
+        return "<identifier> <name> <prefix>";
     }
 
     @Override
