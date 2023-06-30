@@ -3,7 +3,6 @@ package me.refracdevelopment.simpletags.config;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.data.ProfileData;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 
 import java.io.File;
@@ -38,16 +37,7 @@ public class PlayerMapper {
         SimpleTags.getInstance().getProfileManager().getProfile(uuid).getData().setTagPrefix(getTagPrefix(uuid));
     }
 
-    public void savePlayer(ProfileData player) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("uuid", player.getUuid().toString());
-        jsonObject.addProperty("name", player.getName());
-        jsonObject.addProperty("tag", player.getTag());
-        jsonObject.addProperty("tagPrefix", player.getTagPrefix());
-        this.saveFile(player.getUuid(), jsonObject);
-    }
-
-    public void saveOfflinePlayer(UUID uuid, String name, String tag, String tagPrefix) {
+    public void savePlayer(UUID uuid, String name, String tag, String tagPrefix) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("uuid", uuid.toString());
         jsonObject.addProperty("name", name);

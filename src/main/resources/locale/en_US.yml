@@ -28,23 +28,18 @@ command-help-list-description-no-args: '&8 - &d/%cmd% %subcmd% &7- %desc%'
 
 # Create Command
 command-create-description: Create a tag
-command-create-usage: '&cUsage: &e/%cmd% create <name> <tag>'
 
 # Delete Command
 command-delete-description: Deletes a tag
-command-delete-usage: '&cUsage: &e/%cmd% delete <name>'
 
 # Edit Command
 command-edit-description: Edit a tag
-command-edit-usage: '&cUsage: &e/%cmd% edit <name> <tag>'
 
 # List Command
 command-list-description: List of tags
-command-list-usage: '&cUsage: &e/%cmd% list'
 
 # Set Command
 command-set-description: Set a players tag
-command-set-usage: '&cUsage: &e/%cmd% set <player> <tag>'
 
 # Reload Command
 command-reload-description: Reloads the plugin

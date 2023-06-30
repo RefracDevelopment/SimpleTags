@@ -62,7 +62,7 @@ public class DeleteCommand extends RoseCommand {
 
     @Override
     public String getArgumentsString() {
-        return "identifier";
+        return "<identifier>";
     }
 
     @Override

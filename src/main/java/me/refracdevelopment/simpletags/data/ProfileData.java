@@ -18,8 +18,7 @@ public class ProfileData {
     private final String name;
     private final UUID uuid;
 
-    private String tag;
-    private String tagPrefix;
+    private String tag, tagPrefix;
 
     public ProfileData(UUID uuid, String name) {
         this.uuid = uuid;
@@ -58,7 +57,7 @@ public class ProfileData {
             plugin.getMySQLManager().execute("UPDATE SimpleTags SET tag=?, tagPrefix=? WHERE uuid=?",
                     tag, tagPrefix, uuid.toString());
         } else if (plugin.getDataType() == DataType.FLAT_FILE) {
-            plugin.getPlayerMapper().savePlayer(this);
+            plugin.getPlayerMapper().savePlayer(uuid, name, tag, tagPrefix);
         }
     }
 

@@ -6,10 +6,9 @@ import dev.rosewood.rosegarden.command.framework.RoseCommand;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.config.Menus;
-import me.refracdevelopment.simpletags.config.Tags;
 import me.refracdevelopment.simpletags.manager.LocaleManager;
 import me.refracdevelopment.simpletags.utilities.Permissions;
+import me.refracdevelopment.simpletags.utilities.Tasks;
 
 public class ReloadCommand extends RoseCommand {
 
@@ -21,12 +20,11 @@ public class ReloadCommand extends RoseCommand {
     public void execute(CommandContext context) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
-        SimpleTags.getInstance().getTagsFile().load();
-        SimpleTags.getInstance().getMenusFile().load();
-        Tags.loadConfig();
-        Menus.loadConfig();
-        SimpleTags.getInstance().getTagManager().loadTags();
-        SimpleTags.getInstance().getTagManager().updateTags();
+        SimpleTags.getInstance().loadFiles();
+        Tasks.runAsync(rosePlugin, () -> {
+            SimpleTags.getInstance().getTagManager().loadTags();
+            SimpleTags.getInstance().getTagManager().updateTags();
+        });
         locale.sendMessage(context.getSender(), "command-reload-success");
     }
 

@@ -1,7 +1,8 @@
 package me.refracdevelopment.simpletags.utilities.menu;
 
+import me.refracdevelopment.simpletags.config.Menus;
 import me.refracdevelopment.simpletags.utilities.Utilities;
-import org.bukkit.ChatColor;
+import me.refracdevelopment.simpletags.utilities.chat.Color;
 
 /**
  * A class extending the functionality of the regular Menu, but making it Paginated
@@ -17,11 +18,11 @@ public abstract class PaginatedMenu extends Menu {
     }
 
     public void addMenuBorder() {
-        inventory.setItem(48, makeItem(Utilities.getMaterial("DARK_OAK_BUTTON").parseMaterial(), ChatColor.GREEN + "Left"));
+        inventory.setItem(48, makeItem(Utilities.getMaterial(Menus.TAGS_ITEMS.getString("left.material")).parseMaterial(), Color.translate(Menus.TAGS_ITEMS.getString("left.name"))));
 
-        inventory.setItem(49, makeItem(Utilities.getMaterial("BARRIER").parseMaterial(), ChatColor.DARK_RED + "Close"));
+        inventory.setItem(49, makeItem(Utilities.getMaterial(Menus.TAGS_ITEMS.getString("close.material")).parseMaterial(), Color.translate(Menus.TAGS_ITEMS.getString("close.name"))));
 
-        inventory.setItem(50, makeItem(Utilities.getMaterial("DARK_OAK_BUTTON").parseMaterial(), ChatColor.GREEN + "Right"));
+        inventory.setItem(50, makeItem(Utilities.getMaterial(Menus.TAGS_ITEMS.getString("right.material")).parseMaterial(), Color.translate(Menus.TAGS_ITEMS.getString("right.name"))));
 
         for (int i = 0; i < 10; i++) {
             if (inventory.getItem(i) == null) {

@@ -1,9 +1,20 @@
 tags:
-  title: "&8Tags"
+  title: "&8Tags (%total-tags%)"
   items:
+    left:
+      material: DARK_OAK_BUTTON
+      data: 0
+      name: "&aLeft"
+    close:
+      material: BARRIER
+      name: "&cClose"
+    right:
+      material: DARK_OAK_BUTTON
+      name: "&aRight"
     tag-item:
       material: NAME_TAG
       data: 0
+      name: "%tag-name%"
       lore:
         - "&bPrefix: %tag-prefix%"
         - ""

@@ -2,6 +2,7 @@ package me.refracdevelopment.simpletags.utilities;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.refracdevelopment.simpletags.SimpleTags;
+import me.refracdevelopment.simpletags.database.DataType;
 import me.refracdevelopment.simpletags.manager.LocaleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -33,6 +34,15 @@ public class Utilities {
         player.sendMessage("");
         locale.sendCustomMessage(player, "&aServer version&7: &f" + Bukkit.getVersion());
         player.sendMessage("");
+    }
+
+    public static void saveOfflinePlayer(UUID uuid, String name, String tag, String tagPrefix) {
+        if (SimpleTags.getInstance().getDataType() == DataType.MYSQL) {
+            SimpleTags.getInstance().getMySQLManager().execute("UPDATE SimpleTags SET tag=?, tagPrefix=? WHERE uuid=?",
+                    tag, tagPrefix, uuid.toString());
+        } else if (SimpleTags.getInstance().getDataType() == DataType.FLAT_FILE) {
+            SimpleTags.getInstance().getPlayerMapper().savePlayer(uuid, name, tag, tagPrefix);
+        }
     }
 
 }

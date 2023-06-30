@@ -3,6 +3,7 @@ package me.refracdevelopment.simpletags.menu;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.XMaterial;
+import de.tr7zw.nbtapi.NBTItem;
 import dev.rosewood.rosegarden.utils.NMSUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,7 +62,9 @@ public class TagsItem {
             HeadDatabaseAPI api = new HeadDatabaseAPI();
             ItemBuilder item = new ItemBuilder(api.getItemHead(this.skullOwner));
 
-            item.setName(Color.translate(player, tag.getTagName()));
+            item.setName(Color.translate(player, Menus.TAGS_ITEMS.getString("tag-item.name")
+                    .replace("%tag-name%", tag.getTagName())
+            ));
 
             if (player.hasPermission("simpletags.tag." + tag.getConfigName()) || player.hasPermission("simpletags.tag.*")) {
                 if (!profile.getTag().equals(tag.getConfigName())) {
@@ -84,13 +87,19 @@ public class TagsItem {
                     item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix())));
                 }
             }
+
+            NBTItem nbtItem = new NBTItem(item.toItemStack());
+            nbtItem.setString("tag-name", tag.getConfigName());
+            nbtItem.applyNBT(item.toItemStack());
 
             return item.toItemStack();
         } else if (skulls) {
             Skull api = Skulls.getAPI().getSkull(Integer.parseInt(this.skullOwner));
             ItemBuilder item = new ItemBuilder(api.getItemStack());
 
-            item.setName(Color.translate(player, tag.getTagName()));
+            item.setName(Color.translate(player, Menus.TAGS_ITEMS.getString("tag-item.name")
+                    .replace("%tag-name%", tag.getTagName())
+            ));
 
             if (player.hasPermission("simpletags.tag." + tag.getConfigName()) || player.hasPermission("simpletags.tag.*")) {
                 if (!profile.getTag().equals(tag.getConfigName())) {
@@ -114,16 +123,23 @@ public class TagsItem {
                 }
             }
 
+            NBTItem nbtItem = new NBTItem(item.toItemStack());
+            nbtItem.setString("tag-name", tag.getConfigName());
+            nbtItem.applyNBT(item.toItemStack());
+
             return item.toItemStack();
         } else if (customData) {
             ItemBuilder item = new ItemBuilder(this.material.parseMaterial());
+
+            item.setName(Color.translate(player, Menus.TAGS_ITEMS.getString("tag-item.name")
+                    .replace("%tag-name%", tag.getTagName())
+            ));
 
             if (NMSUtil.getVersionNumber() >= 14) {
                 item.setCustomModelData(this.customModelData);
             } else {
                 Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
             }
-            item.setName(Color.translate(player, tag.getTagName()));
 
             if (player.hasPermission("simpletags.tag." + tag.getConfigName()) || player.hasPermission("simpletags.tag.*")) {
                 if (!profile.getTag().equals(tag.getConfigName())) {
@@ -146,6 +162,11 @@ public class TagsItem {
                     item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix())));
                 }
             }
+
+            NBTItem nbtItem = new NBTItem(item.toItemStack());
+            nbtItem.setString("tag-name", tag.getConfigName());
+            nbtItem.applyNBT(item.toItemStack());
+
             item.setDurability(this.data);
             item.setSkullOwner(this.skullOwner);
 
@@ -153,7 +174,9 @@ public class TagsItem {
         } else {
             ItemBuilder item = new ItemBuilder(this.material.parseMaterial());
 
-            item.setName(Color.translate(player, tag.getTagName()));
+            item.setName(Color.translate(player, Menus.TAGS_ITEMS.getString("tag-item.name")
+                    .replace("%tag-name%", tag.getTagName())
+            ));
 
             if (player.hasPermission("simpletags.tag." + tag.getConfigName()) || player.hasPermission("simpletags.tag.*")) {
                 if (!profile.getTag().equals(tag.getConfigName())) {
@@ -176,6 +199,11 @@ public class TagsItem {
                     item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix())));
                 }
             }
+
+            NBTItem nbtItem = new NBTItem(item.toItemStack());
+            nbtItem.setString("tag-name", tag.getConfigName());
+            nbtItem.applyNBT(item.toItemStack());
+
             item.setDurability(this.data);
             item.setSkullOwner(this.skullOwner);
 

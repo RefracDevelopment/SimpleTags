@@ -15,8 +15,8 @@ public class ConfigurationManager extends AbstractConfigurationManager {
         DATA_TYPE("data-type", "FLAT_FILE", "Choose your data saving type:", "MYSQL - Database saving", "FLAT_FILE - Local Json file saving in the playerdata/player.json file"),
         MYSQL_HOST("mysql.host", "127.0.0.1"),
         MYSQL_PORT("mysql.port", "3306"),
-        MYSQL_DATABASE("mysql.database", "SimpleGems"),
-        MYSQL_USERNAME("mysql.username", "root"),
+        MYSQL_DATABASE("mysql.database", "SimpleTags"),
+        MYSQL_USERNAME("mysql.username", ""),
         MYSQL_PASSWORD("mysql.password", ""),
         ;
 
@@ -69,12 +69,12 @@ public class ConfigurationManager extends AbstractConfigurationManager {
     @Override
     protected String[] getHeader() {
         return new String[]{
-                "___________                             __          ",
-                "\\_   _____/__  _______    _____ ______ |  |   ____  ",
-                " |    __)_\\  \\/  /__  \\  /     \\\\____ \\|  | _/ __ \\ ",
-                " |        \\\\    / / __ \\_  | |  \\  |_\\ \\  |__  ___/_",
-                "/_______  /__/\\_ \\____  /__|_|  /   ___/____/\\___  /",
-                "        \\/      \\/    \\/      \\/|__|             \\/ ",
+                "  ___________                __         ___________                      ",
+                " /   _____/__| _____ ______ |  |   ____ \\__    ___/____     ____   ______",
+                " \\_____  \\|  |/     \\\\____ \\|  | _/ __ \\  |    |  \\__  \\   / ___\\ /  ___/",
+                " /        \\  |  | |  \\  |_\\ \\  |__  ___/_ |    |   / __ \\_/ /_/  \\\\___ \\ ",
+                "/_______  /__|__|_|  /   ___/____/\\___  / |____|  (____  /\\___  //____  ",
+                "        \\/         \\/|__|             \\/               \\//_____/      \\/ ",
         };
     }
 

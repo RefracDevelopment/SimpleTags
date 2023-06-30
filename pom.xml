@@ -6,7 +6,7 @@
 
     <groupId>me.refracdevelopment</groupId>
     <artifactId>SimpleTags</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-beta.2</version>
     <packaging>jar</packaging>
 
     <name>SimpleTags</name>
@@ -42,11 +42,11 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.cryptomorin.xseries</pattern>
-                                    <shadedPattern>me.refracdevelopment.simpletags.xseries</shadedPattern>
+                                    <shadedPattern>me.refracdevelopment.simpletags.libs.xseries</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>dev.rosewood.rosegarden</pattern>
-                                    <shadedPattern>me.refracdevelopment.simpletags.rosegarden</shadedPattern>
+                                    <shadedPattern>me.refracdevelopment.simpletags.libs.rosegarden</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -72,16 +72,17 @@
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>rosewood</id>
-            <url>https://repo.rosewooddev.io/repository/public/</url>
-        </repository>
-        <repository>
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
+            <layout>default</layout>
         </repository>
     </repositories>
 
@@ -124,6 +125,12 @@
             <groupId>com.github.Tweetzy</groupId>
             <artifactId>Skulls</artifactId>
             <version>3.10.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.tr7zw</groupId>
+            <artifactId>item-nbt-api-plugin</artifactId>
+            <version>2.11.3</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

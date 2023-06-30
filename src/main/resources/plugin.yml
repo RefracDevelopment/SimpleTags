@@ -4,10 +4,11 @@ main: me.refracdevelopment.simpletags.SimpleTags
 author: RefracDevelopment
 api-version: "1.13"
 softdepend:
+  - NBTAPI
   - PlaceholderAPI
   - Skulls
   - HeadDatabase
-description: A Simple Tags Plugin
+description: A simple tags plugin
 website: https://discord.refracdev.ml/
 
 permissions:

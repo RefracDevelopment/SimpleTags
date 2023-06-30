@@ -53,7 +53,7 @@ public class EditCommand extends RoseCommand {
 
     @Override
     public String getArgumentsString() {
-        return "identifier prefix";
+        return "<identifier> <prefix>";
     }
 
     @Override

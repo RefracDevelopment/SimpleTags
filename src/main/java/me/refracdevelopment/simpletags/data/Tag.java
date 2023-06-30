@@ -11,9 +11,7 @@ import org.bukkit.inventory.ItemStack;
 @Setter
 public class Tag {
 
-    private String configName;
-    private String tagName;
-    private String tagPrefix;
+    private String configName, tagName, tagPrefix;
 
     public Tag(String configName, String tagName, String tagPrefix) {
         this.configName = configName;

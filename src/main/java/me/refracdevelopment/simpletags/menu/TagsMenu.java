@@ -1,5 +1,7 @@
 package me.refracdevelopment.simpletags.menu;
 
+import de.tr7zw.nbtapi.NBTItem;
+import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.config.Menus;
 import me.refracdevelopment.simpletags.data.ProfileData;
 import me.refracdevelopment.simpletags.data.Tag;
@@ -24,7 +26,7 @@ public class TagsMenu extends PaginatedMenu {
 
     @Override
     public String getMenuName() {
-        return Color.translate(Menus.TAGS_TITLE);
+        return Color.translate(Menus.TAGS_TITLE.replace("%total-tags%", String.valueOf(SimpleTags.getInstance().getTagManager().getLoadedTags().size())));
     }
 
     @Override
@@ -58,12 +60,14 @@ public class TagsMenu extends PaginatedMenu {
         }
 
         if (e.getCurrentItem().getType().equals(Utilities.getMaterial(Menus.TAGS_ITEMS.getString("tag-item.material")).parseMaterial())) {
-            if (!plugin.getTagManager().findByName(e.getCurrentItem().getItemMeta().getDisplayName()).isPresent()) {
-                Color.sendDebug(null, "Tag item is null");
-                return;
-            }
+            Tag tag;
 
-            Tag tag = plugin.getTagManager().findByName(e.getCurrentItem().getItemMeta().getDisplayName()).get();
+            NBTItem nbtItem = new NBTItem(e.getCurrentItem());
+            if (nbtItem.hasTag("tag-name")) {
+                tag = plugin.getTagManager().getCachedTag(nbtItem.getString("tag-name"));
+            } else {
+                tag = plugin.getTagManager().findByName(e.getCurrentItem().getItemMeta().getDisplayName()).get();
+            }
 
             if (!player.hasPermission("simpletags.tag." + tag.getConfigName()) || !player.hasPermission("simpletags.tag.*")) {
                 locale.sendMessage(player, "tag-not-owned", Placeholders.setPlaceholders(player));
@@ -97,7 +101,7 @@ public class TagsMenu extends PaginatedMenu {
             for (int i = 0; i < getMaxItemsPerPage(); i++) {
                 index = getMaxItemsPerPage() * page + i;
                 if (index >= tags.size()) break;
-                if (tags.get(index) != null) {
+                if (tags.get(index) != null && playerMenuUtility.getOwner().hasPermission("simpletags.tag." + tags.get(index).getConfigName())) {
                     inventory.addItem(tags.get(index).toItemStack(playerMenuUtility.getOwner(), tags.get(index).getConfigName()));
                 }
             }
