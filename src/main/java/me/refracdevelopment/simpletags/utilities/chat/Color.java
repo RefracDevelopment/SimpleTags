@@ -15,7 +15,7 @@ public class Color {
     public static String translate(CommandSender sender, String source) {
         source = Placeholders.setPlaceholders(sender, source);
 
-        if (sender instanceof Player && Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        if (sender instanceof Player && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             return PlaceholderAPIHook.applyPlaceholders((Player) sender, translate(source));
         } else return translate(source);
     }
