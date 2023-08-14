@@ -64,7 +64,7 @@ public final class SimpleTags extends RosePlugin {
         }
 
         // Make sure the server has NBTAPI
-        if (!pluginManager.isPluginEnabled("NBTAPI")) {
+        if (pluginManager.getPlugin("NBTAPI") == null) {
             Color.log("&cPlease install NBTAPI onto your server to use this plugin.");
             pluginManager.disablePlugin(this);
             return;
@@ -148,7 +148,7 @@ public final class SimpleTags extends RosePlugin {
 
     public void updateCheck(CommandSender sender, boolean console) {
         try {
-            String urlString = "https://updatecheck.refracdev.ml";
+            String urlString = "https://refracdev-updatecheck.refracdev.workers.dev/";
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
