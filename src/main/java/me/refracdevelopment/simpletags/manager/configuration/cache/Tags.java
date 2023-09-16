@@ -1,4 +1,4 @@
-package me.refracdevelopment.simpletags.config;
+package me.refracdevelopment.simpletags.manager.configuration.cache;
 
 import me.refracdevelopment.simpletags.SimpleTags;
 import org.bukkit.configuration.ConfigurationSection;

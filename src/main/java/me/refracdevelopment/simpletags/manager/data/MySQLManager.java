@@ -1,9 +1,9 @@
-package me.refracdevelopment.simpletags.database;
+package me.refracdevelopment.simpletags.manager.data;
 
 import dev.rosewood.rosegarden.lib.hikaricp.HikariConfig;
 import dev.rosewood.rosegarden.lib.hikaricp.HikariDataSource;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.manager.ConfigurationManager;
+import me.refracdevelopment.simpletags.manager.configuration.ConfigurationManager;
 import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 
@@ -26,16 +26,16 @@ public class MySQLManager {
     }
 
     public void createT() {
-        Tasks.runAsync(plugin, () -> createTables());
+        Tasks.runAsync(plugin, this::createTables);
     }
 
     public boolean connect() {
         try {
             Color.log("&eConnecting to MySQL...");
             HikariConfig config = new HikariConfig();
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mysql://" + host + ':' + port + '/' + database);
+            Class.forName("org.mariadb.jdbc.Driver");
+            config.setDriverClassName("org.mariadb.jdbc.Driver");
+            config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database);
             config.setUsername(username);
             config.setPassword(password);
             config.addDataSourceProperty("cachePrepStmts", "true");
@@ -57,7 +57,11 @@ public class MySQLManager {
 
 
     public void createTables() {
-        createTable("SimpleTags", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), tag VARCHAR(50), tagPrefix VARCHAR(50)");
+        createTable("SimpleTags",
+                "uuid VARCHAR(36) NOT NULL PRIMARY KEY," +
+                "name VARCHAR(255)," +
+                "tag VARCHAR(255)," +
+                "tagPrefix VARCHAR(255)");
     }
 
     public boolean isInitiated() {

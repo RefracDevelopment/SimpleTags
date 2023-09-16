@@ -16,6 +16,9 @@ tag-set: '&aSet %player%''s &atag to %tag-name%&a.'
 tag-updated: '&aYour tag has been updated to %tag-prefix%&a.'
 tag-reset: '&aYour tag has been reset.'
 
+# Kick Messages
+kick-messages-error: '&cERROR: Profile returned null.'
+
 # Base Command Message
 base-command-color: '&e'
 base-command-help: '&eUse &b/%cmd% help &efor command information.'

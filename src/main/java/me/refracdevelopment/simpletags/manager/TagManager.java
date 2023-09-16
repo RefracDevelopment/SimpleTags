@@ -1,5 +1,6 @@
 package me.refracdevelopment.simpletags.manager;
 
+import lombok.Getter;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.data.Tag;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Getter
 public class TagManager {
 
     private final List<Tag> loadedTags = new ArrayList<>();
@@ -37,10 +39,6 @@ public class TagManager {
             }
         }
         return null;
-    }
-
-    public List<Tag> getLoadedTags() {
-        return loadedTags;
     }
 
     public void updateTags() {

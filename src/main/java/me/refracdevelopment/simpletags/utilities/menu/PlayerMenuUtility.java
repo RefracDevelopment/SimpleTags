@@ -1,5 +1,6 @@
 package me.refracdevelopment.simpletags.utilities.menu;
 
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 /**
@@ -7,6 +8,7 @@ import org.bukkit.entity.Player;
  * menu system no matter how many inventories are opened or closed.
  * Each player has one of these objects, and only one.
  */
+@Getter
 public class PlayerMenuUtility {
 
     private final Player owner;
@@ -15,7 +17,4 @@ public class PlayerMenuUtility {
         this.owner = p;
     }
 
-    public Player getOwner() {
-        return owner;
-    }
 }

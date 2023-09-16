@@ -1,4 +1,4 @@
-package me.refracdevelopment.simpletags.manager;
+package me.refracdevelopment.simpletags.manager.configuration;
 
 import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.AbstractLocaleManager;

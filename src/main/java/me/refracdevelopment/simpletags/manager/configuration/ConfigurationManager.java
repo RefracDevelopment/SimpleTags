@@ -1,4 +1,4 @@
-package me.refracdevelopment.simpletags.manager;
+package me.refracdevelopment.simpletags.manager.configuration;
 
 import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.config.CommentedFileConfiguration;
@@ -10,7 +10,6 @@ public class ConfigurationManager extends AbstractConfigurationManager {
 
     public enum Setting implements RoseSetting {
         // Config Settings
-        DEBUG("debug", false, "Used to debug errors"),
         USE_CHAT("use-chat", false, "Automatically add tags to chat behind a player's name."),
         DATA_TYPE("data-type", "FLAT_FILE", "Choose your data saving type:", "MYSQL - Database saving", "FLAT_FILE - Local Json file saving in the playerdata/player.json file"),
         MYSQL_HOST("mysql.host", "127.0.0.1"),

@@ -1,6 +1,7 @@
-package me.refracdevelopment.simpletags.data;
+package me.refracdevelopment.simpletags.player.data;
 
 import me.refracdevelopment.simpletags.SimpleTags;
+import me.refracdevelopment.simpletags.player.Profile;
 import me.refracdevelopment.simpletags.utilities.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,11 +18,9 @@ public class ProfileManager {
         // Refresh to remove profiles from a previous instance of plugin
         // This is basically /reload support (not recommended)
         Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-            Tasks.runAsync(SimpleTags.getInstance(), () -> {
-                getProfiles().clear();
-                handleProfileCreation(onlinePlayer.getUniqueId(), onlinePlayer.getName());
-                getProfile(onlinePlayer.getUniqueId()).getData().load();
-            });
+            getProfiles().clear();
+            handleProfileCreation(onlinePlayer.getUniqueId(), onlinePlayer.getName());
+            Tasks.runAsync(SimpleTags.getInstance(), () -> getProfile(onlinePlayer.getUniqueId()).getData().load());
         });
     }
 

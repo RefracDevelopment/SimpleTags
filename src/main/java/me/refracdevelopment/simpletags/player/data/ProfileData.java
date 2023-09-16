@@ -1,9 +1,9 @@
-package me.refracdevelopment.simpletags.data;
+package me.refracdevelopment.simpletags.player.data;
 
 import lombok.Getter;
 import lombok.Setter;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.database.DataType;
+import me.refracdevelopment.simpletags.manager.data.DataType;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 import org.bukkit.entity.Player;
 

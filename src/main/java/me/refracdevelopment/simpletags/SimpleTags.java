@@ -6,14 +6,23 @@ import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosegarden.utils.NMSUtil;
 import lombok.Getter;
-import me.refracdevelopment.simpletags.config.*;
-import me.refracdevelopment.simpletags.data.ProfileManager;
-import me.refracdevelopment.simpletags.database.DataType;
-import me.refracdevelopment.simpletags.database.MySQLManager;
 import me.refracdevelopment.simpletags.listeners.ChatListener;
 import me.refracdevelopment.simpletags.listeners.MenuListener;
 import me.refracdevelopment.simpletags.listeners.PlayerListener;
-import me.refracdevelopment.simpletags.manager.*;
+import me.refracdevelopment.simpletags.manager.CommandManager;
+import me.refracdevelopment.simpletags.manager.MenuManager;
+import me.refracdevelopment.simpletags.manager.TagManager;
+import me.refracdevelopment.simpletags.manager.configuration.ConfigurationManager;
+import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
+import me.refracdevelopment.simpletags.manager.configuration.cache.Config;
+import me.refracdevelopment.simpletags.manager.configuration.cache.ConfigFile;
+import me.refracdevelopment.simpletags.manager.configuration.cache.Menus;
+import me.refracdevelopment.simpletags.manager.configuration.cache.Tags;
+import me.refracdevelopment.simpletags.manager.data.DataType;
+import me.refracdevelopment.simpletags.manager.data.MySQLManager;
+import me.refracdevelopment.simpletags.manager.data.PlayerMapper;
+import me.refracdevelopment.simpletags.player.data.ProfileManager;
+import me.refracdevelopment.simpletags.utilities.DownloadUtil;
 import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.PAPIExpansion;
@@ -56,9 +65,18 @@ public final class SimpleTags extends RosePlugin {
         long startTiming = System.currentTimeMillis();
         PluginManager pluginManager = this.getServer().getPluginManager();
 
+        DownloadUtil.downloadAndEnable();
+
         // Check if the server is on 1.7
         if (NMSUtil.getVersionNumber() <= 7) {
             Color.log("&cSimpleTags 1.7 is in legacy mode, please update to 1.8+");
+            pluginManager.disablePlugin(this);
+            return;
+        }
+
+        // Make sure the server has PlaceholderAPI
+        if (pluginManager.getPlugin("PlaceholderAPI") == null) {
+            Color.log("&cPlease install PlaceholderAPI onto your server to use this plugin.");
             pluginManager.disablePlugin(this);
             return;
         }
@@ -101,7 +119,11 @@ public final class SimpleTags extends RosePlugin {
 
     @Override
     public void disable() {
-        // unused
+        // Plugin shutdown logic
+        if (dataType == DataType.MYSQL) {
+            mySQLManager.shutdown();
+        }
+        this.getServer().getScheduler().cancelTasks(this);
     }
 
     @Override
@@ -112,24 +134,25 @@ public final class SimpleTags extends RosePlugin {
     public void loadFiles() {
         tagsFile = new ConfigFile(this, "tags.yml");
         menusFile = new ConfigFile(this, "menus.yml");
-        tagsFile.load();
-        menusFile.load();
         Config.loadConfig();
         Tags.loadConfig();
         Menus.loadConfig();
     }
 
     private void loadManagers() {
-        if (Config.DATA_TYPE.equalsIgnoreCase("MYSQL")) {
-            dataType = DataType.MYSQL;
-            mySQLManager = new MySQLManager(this);
-            getMySQLManager().connect();
-            getMySQLManager().createT();
-            Color.log("&aEnabled MySQL support!");
-        } else {
-            dataType = DataType.FLAT_FILE;
-            playerMapper = new PlayerMapper(getDataFolder().getAbsolutePath() + File.separator + "playerdata");
-            Color.log("&aEnabled Flat File support!");
+        switch (Config.DATA_TYPE.toUpperCase()) {
+            case "MYSQL":
+                dataType = DataType.MYSQL;
+                mySQLManager = new MySQLManager(this);
+                getMySQLManager().connect();
+                getMySQLManager().createT();
+                Color.log("&aEnabled MySQL support!");
+                break;
+            case "FLAT_FILE":
+                dataType = DataType.FLAT_FILE;
+                playerMapper = new PlayerMapper(getDataFolder().getAbsolutePath() + File.separator + "playerdata");
+                Color.log("&aEnabled Flat File support!");
+                break;
         }
 
         profileManager = new ProfileManager();

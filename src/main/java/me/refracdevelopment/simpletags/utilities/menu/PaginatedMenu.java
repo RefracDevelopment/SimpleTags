@@ -1,12 +1,14 @@
 package me.refracdevelopment.simpletags.utilities.menu;
 
-import me.refracdevelopment.simpletags.config.Menus;
+import lombok.Getter;
+import me.refracdevelopment.simpletags.manager.configuration.cache.Menus;
 import me.refracdevelopment.simpletags.utilities.Utilities;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 
 /**
  * A class extending the functionality of the regular Menu, but making it Paginated
  */
+@Getter
 public abstract class PaginatedMenu extends Menu {
 
     protected int page = 0;
@@ -44,7 +46,4 @@ public abstract class PaginatedMenu extends Menu {
         }
     }
 
-    public int getMaxItemsPerPage() {
-        return maxItemsPerPage;
-    }
 }

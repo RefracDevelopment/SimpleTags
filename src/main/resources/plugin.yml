@@ -9,7 +9,7 @@ softdepend:
   - Skulls
   - HeadDatabase
 description: A simple tags plugin
-website: https://discord.refracdev.ml/
+website: https://discord.gg/EFeSKPg739
 
 permissions:
   simpletags.*:

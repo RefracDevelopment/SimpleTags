@@ -2,8 +2,8 @@ package me.refracdevelopment.simpletags.utilities.chat;
 
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.data.ProfileData;
-import me.refracdevelopment.simpletags.manager.LocaleManager;
+import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
+import me.refracdevelopment.simpletags.player.data.ProfileData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

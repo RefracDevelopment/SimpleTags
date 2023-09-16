@@ -2,7 +2,7 @@ package me.refracdevelopment.simpletags.utilities.chat;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.data.ProfileData;
+import me.refracdevelopment.simpletags.player.data.ProfileData;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

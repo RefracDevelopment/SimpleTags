@@ -2,10 +2,11 @@ package me.refracdevelopment.simpletags.menu;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.config.Menus;
-import me.refracdevelopment.simpletags.data.ProfileData;
 import me.refracdevelopment.simpletags.data.Tag;
-import me.refracdevelopment.simpletags.manager.LocaleManager;
+import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
+import me.refracdevelopment.simpletags.manager.configuration.cache.Config;
+import me.refracdevelopment.simpletags.manager.configuration.cache.Menus;
+import me.refracdevelopment.simpletags.player.data.ProfileData;
 import me.refracdevelopment.simpletags.utilities.Utilities;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
@@ -43,19 +44,19 @@ public class TagsMenu extends PaginatedMenu {
         if (e.getCurrentItem() == null) return;
         if (e.getCurrentItem().getItemMeta() == null) return;
 
-        if (e.getCurrentItem().getType().equals(Utilities.getMaterial("DARK_OAK_BUTTON").parseMaterial())) {
+        if (e.getCurrentItem().getType().equals(Utilities.getMaterial(Menus.TAGS_ITEMS.getString("left.material")).parseMaterial())) {
             if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Left")) {
                 if (page != 0) {
                     page = page - 1;
                     super.open();
                 }
-            } else if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Right")) {
-                if (!((index + 1) >= plugin.getTagManager().getLoadedTags().size())) {
-                    page = page + 1;
-                    super.open();
-                }
             }
-        } else if (e.getCurrentItem().getType().equals(Utilities.getMaterial("BARRIER").parseMaterial())) {
+        } else if (e.getCurrentItem().getType().equals(Utilities.getMaterial(Menus.TAGS_ITEMS.getString("right.material")).parseMaterial())) {
+            if (!((index + 1) >= plugin.getTagManager().getLoadedTags().size())) {
+                page = page + 1;
+                super.open();
+            }
+        } else if (e.getCurrentItem().getType().equals(Utilities.getMaterial(Menus.TAGS_ITEMS.getString("close.material")).parseMaterial())) {
             player.closeInventory();
         }
 
@@ -101,7 +102,7 @@ public class TagsMenu extends PaginatedMenu {
             for (int i = 0; i < getMaxItemsPerPage(); i++) {
                 index = getMaxItemsPerPage() * page + i;
                 if (index >= tags.size()) break;
-                if (tags.get(index) != null && playerMenuUtility.getOwner().hasPermission("simpletags.tag." + tags.get(index).getConfigName())) {
+                if (tags.get(index) != null) {
                     inventory.addItem(tags.get(index).toItemStack(playerMenuUtility.getOwner(), tags.get(index).getConfigName()));
                 }
             }

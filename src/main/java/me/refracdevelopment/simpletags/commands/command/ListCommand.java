@@ -6,7 +6,7 @@ import dev.rosewood.rosegarden.command.framework.RoseCommand;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.manager.LocaleManager;
+import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
 import me.refracdevelopment.simpletags.utilities.Permissions;
 import org.bukkit.entity.Player;
 

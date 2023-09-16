@@ -2,8 +2,8 @@ package me.refracdevelopment.simpletags.utilities;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.database.DataType;
-import me.refracdevelopment.simpletags.manager.LocaleManager;
+import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
+import me.refracdevelopment.simpletags.manager.data.DataType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

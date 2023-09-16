@@ -1,4 +1,4 @@
-package me.refracdevelopment.simpletags.database;
+package me.refracdevelopment.simpletags.manager.data;
 
 import java.sql.ResultSet;
 

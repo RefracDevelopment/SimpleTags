@@ -1,8 +1,9 @@
-package me.refracdevelopment.simpletags.data;
+package me.refracdevelopment.simpletags.player;
 
 import lombok.Getter;
 import lombok.Setter;
 import me.refracdevelopment.simpletags.SimpleTags;
+import me.refracdevelopment.simpletags.player.data.ProfileData;
 
 import java.util.UUID;
 
