@@ -1,4 +1,4 @@
-package me.refracdevelopment.simpletags.data;
+package me.refracdevelopment.simpletags.player.data;
 
 import lombok.Getter;
 import lombok.Setter;

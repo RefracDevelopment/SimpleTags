@@ -8,7 +8,7 @@ import dev.rosewood.rosegarden.command.framework.annotation.Optional;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.data.Tag;
+import me.refracdevelopment.simpletags.player.data.Tag;
 import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
 import me.refracdevelopment.simpletags.utilities.Permissions;
@@ -60,6 +60,7 @@ public class SetCommand extends RoseCommand {
 
             profile.setTag(configName);
             profile.setTagPrefix(tag.getTagPrefix());
+            Tasks.runAsync(rosePlugin, profile::save);
             locale.sendMessage(player, "tag-updated", placeholders);
             return;
         }

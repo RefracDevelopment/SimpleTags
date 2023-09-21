@@ -20,7 +20,7 @@ public class ReloadCommand extends RoseCommand {
     public void execute(CommandContext context) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
-        SimpleTags.getInstance().loadFiles();
+        SimpleTags.getInstance().reloadFiles();
         Tasks.runAsync(rosePlugin, () -> {
             SimpleTags.getInstance().getTagManager().loadTags();
             SimpleTags.getInstance().getTagManager().updateTags();

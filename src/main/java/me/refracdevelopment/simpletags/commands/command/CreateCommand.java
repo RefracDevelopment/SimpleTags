@@ -7,11 +7,12 @@ import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.data.Tag;
+import me.refracdevelopment.simpletags.player.data.Tag;
 import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
 import me.refracdevelopment.simpletags.manager.configuration.cache.ConfigFile;
 import me.refracdevelopment.simpletags.manager.configuration.cache.Tags;
 import me.refracdevelopment.simpletags.utilities.Permissions;
+import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
 import org.bukkit.entity.Player;
 
@@ -39,13 +40,15 @@ public class CreateCommand extends RoseCommand {
             return;
         }
 
-        ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
-        tagsFile.set("tags." + configName + ".name", tagName);
-        tagsFile.set("tags." + configName + ".prefix", tagPrefix);
-        tagsFile.save();
-        tagsFile.load();
-        Tags.loadConfig();
-        SimpleTags.getInstance().getTagManager().addTag(new Tag(configName, tagName, tagPrefix));
+        Tasks.runAsync(rosePlugin, () -> {
+            ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
+            tagsFile.set("tags." + configName + ".name", tagName);
+            tagsFile.set("tags." + configName + ".prefix", tagPrefix);
+            tagsFile.save();
+            tagsFile.load();
+            Tags.loadConfig();
+            SimpleTags.getInstance().getTagManager().addTag(new Tag(configName, tagName, tagPrefix));
+        });
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
                 .addAll(Placeholders.setPlaceholders(context.getSender()))

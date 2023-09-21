@@ -11,6 +11,7 @@ import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
 import me.refracdevelopment.simpletags.manager.configuration.cache.ConfigFile;
 import me.refracdevelopment.simpletags.manager.configuration.cache.Tags;
 import me.refracdevelopment.simpletags.utilities.Permissions;
+import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
 import org.bukkit.entity.Player;
 
@@ -44,13 +45,15 @@ public class DeleteCommand extends RoseCommand {
                 .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
                 .build();
 
-        ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
-        tagsFile.set("tags." + configName, null);
-        tagsFile.save();
-        tagsFile.load();
-        Tags.loadConfig();
-        SimpleTags.getInstance().getTagManager().removeTag(SimpleTags.getInstance().getTagManager().getCachedTag(configName));
-        SimpleTags.getInstance().getTagManager().updateTags();
+        Tasks.runAsync(rosePlugin, () -> {
+            ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
+            tagsFile.set("tags." + configName, null);
+            tagsFile.save();
+            tagsFile.load();
+            Tags.loadConfig();
+            SimpleTags.getInstance().getTagManager().removeTag(SimpleTags.getInstance().getTagManager().getCachedTag(configName));
+            SimpleTags.getInstance().getTagManager().updateTags();
+        });
 
         locale.sendMessage(player, "tag-deleted", placeholders);
     }

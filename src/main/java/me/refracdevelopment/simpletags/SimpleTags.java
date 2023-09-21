@@ -139,6 +139,14 @@ public final class SimpleTags extends RosePlugin {
         Menus.loadConfig();
     }
 
+    public void reloadFiles() {
+        tagsFile.load();
+        menusFile.load();
+        Config.loadConfig();
+        Tags.loadConfig();
+        Menus.loadConfig();
+    }
+
     private void loadManagers() {
         switch (Config.DATA_TYPE.toUpperCase()) {
             case "MYSQL":

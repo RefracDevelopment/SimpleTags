@@ -17,8 +17,7 @@ public class MenuManager {
             playerMenuUtilityMap.put(p, playerMenuUtility);
 
             return playerMenuUtility;
-        } else {
-            return playerMenuUtilityMap.get(p);
         }
+        return playerMenuUtilityMap.get(p);
     }
 }

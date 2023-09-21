@@ -2,7 +2,7 @@ package me.refracdevelopment.simpletags.manager;
 
 import lombok.Getter;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.data.Tag;
+import me.refracdevelopment.simpletags.player.data.Tag;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 
 import java.util.ArrayList;
@@ -22,6 +22,18 @@ public class TagManager {
         Color.log("&eLoaded " + loadedTags.size() + " tags.");
     }
 
+    public void updateTags() {
+        SimpleTags.getInstance().getProfileManager().getProfiles().values().forEach(profile -> {
+            if (getCachedTag(profile.getData().getTag()) == null) {
+                profile.getData().setTag("");
+                profile.getData().setTagPrefix("");
+                return;
+            }
+
+            profile.getData().setTagPrefix(getCachedTag(profile.getData().getTag()).getTagPrefix());
+        });
+    }
+
     public void addTag(Tag tag) {
         if (!loadedTags.contains(tag)) {
             loadedTags.add(tag);
@@ -39,17 +51,6 @@ public class TagManager {
             }
         }
         return null;
-    }
-
-    public void updateTags() {
-        SimpleTags.getInstance().getProfileManager().getProfiles().values().forEach(profile -> {
-            if (getCachedTag(profile.getData().getTag()) == null) {
-                profile.getData().setTag("");
-                profile.getData().setTagPrefix("");
-            } else {
-                profile.getData().setTagPrefix(getCachedTag(profile.getData().getTag()).getTagPrefix());
-            }
-        });
     }
 
     public Optional<Tag> findByName(String tagName) {

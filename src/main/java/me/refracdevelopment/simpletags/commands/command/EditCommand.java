@@ -11,6 +11,7 @@ import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
 import me.refracdevelopment.simpletags.manager.configuration.cache.ConfigFile;
 import me.refracdevelopment.simpletags.manager.configuration.cache.Tags;
 import me.refracdevelopment.simpletags.utilities.Permissions;
+import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
 import org.bukkit.entity.Player;
 
@@ -35,12 +36,14 @@ public class EditCommand extends RoseCommand {
         // Edit a tag
         if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) return;
 
-        ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
-        tagsFile.set("tags." + configName + ".prefix", tagPrefix);
-        tagsFile.save();
-        tagsFile.load();
-        Tags.loadConfig();
-        SimpleTags.getInstance().getTagManager().updateTags();
+        Tasks.runAsync(rosePlugin, () -> {
+            ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
+            tagsFile.set("tags." + configName + ".prefix", tagPrefix);
+            tagsFile.save();
+            tagsFile.load();
+            Tags.loadConfig();
+            SimpleTags.getInstance().getTagManager().updateTags();
+        });
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
                 .addAll(Placeholders.setPlaceholders(context.getSender()))
