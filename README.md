@@ -1,5 +1,6 @@
-# SimpleTags
-A Simple Tags Plugin
+![](https://i.imgur.com/O57ilA8.png)
+
+SimpleTags is a plugin that allows you to use custom tags in chat.
 
 ### Issue Reporting/Support
 
