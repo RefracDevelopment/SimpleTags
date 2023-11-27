@@ -35,7 +35,7 @@ public class SetCommand extends RoseCommand {
         // Make sure the sender is a player.
         if ((context.getSender() instanceof Player)) {
             
-            Player player = (Player) context.getSender();
+            player = (Player) context.getSender();
 
             // Set a player tag
             if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
@@ -73,7 +73,7 @@ public class SetCommand extends RoseCommand {
         }
 
         if (target == null) {
-            Color.log("You need to specify a target"); // maybe translate?
+            locale.sendCustomMessage(context.getSender(), "You need to specify a target"); // maybe translate?
             return;
         }
 
@@ -95,7 +95,7 @@ public class SetCommand extends RoseCommand {
                 locale.sendMessage(player, "tag-set", placeholders);
             }
             else {
-                Color.log("Tag updated"); // maybe translate?
+                locale.sendMessage(context.getSender(), "tag-set", placeholders);
             }
             locale.sendMessage(profile.getPlayer(), "tag-updated", placeholders);
         } else {
@@ -115,7 +115,7 @@ public class SetCommand extends RoseCommand {
                 locale.sendMessage(player, "tag-set", placeholders);
             }
             else {
-                Color.log("Tag updated"); // maybe translate?
+                locale.sendMessage(context.getSender(), "tag-set", placeholders);
             }
         }
     }
