@@ -74,6 +74,7 @@ public class SetCommand extends RoseCommand {
 
         if (target == null) {
             Color.log("You need to specify a target"); // maybe translate?
+            return;
         }
 
         if (target.isOnline()) {
