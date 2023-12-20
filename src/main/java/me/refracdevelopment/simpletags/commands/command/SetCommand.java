@@ -9,21 +9,19 @@ import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.data.Tag;
-import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
 import me.refracdevelopment.simpletags.utilities.Permissions;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.Utilities;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
+import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class SetCommand extends RoseCommand {
+import java.util.List;
 
-    public SetCommand(RosePlugin rosePlugin, RoseCommandWrapper parent) {
-        super(rosePlugin, parent);
-    }
+public class SetCommand extends SubCommand {
 
     @RoseExecutable
     public void execute(CommandContext context, @Optional OfflinePlayer target, @Optional String configName) {
@@ -138,5 +136,56 @@ public class SetCommand extends RoseCommand {
     @Override
     public String getRequiredPermission() {
         return Permissions.SET_COMMAND;
+    }
+
+    /**
+     * @return The name of the subcommand
+     */
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    /**
+     * @return The aliases that can be used for this command. Can be null
+     */
+    @Override
+    public List<String> getAliases() {
+        return null;
+    }
+
+    /**
+     * @return A description of what the subcommand does to be displayed
+     */
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
+    /**
+     * @return An example of how to use the subcommand
+     */
+    @Override
+    public String getSyntax() {
+        return "[player] <identifier>";
+    }
+
+    /**
+     * @param sender The thing that ran the command
+     * @param args   The args passed into the command when run
+     */
+    @Override
+    public void perform(CommandSender sender, String[] args) {
+
+    }
+
+    /**
+     * @param player The player who ran the command
+     * @param args   The args passed into the command when run
+     * @return A list of arguments to be suggested for autocomplete
+     */
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args) {
+        return null;
     }
 }

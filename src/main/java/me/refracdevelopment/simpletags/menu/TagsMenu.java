@@ -3,7 +3,6 @@ package me.refracdevelopment.simpletags.menu;
 import de.tr7zw.nbtapi.NBTItem;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.data.Tag;
-import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
 import me.refracdevelopment.simpletags.manager.configuration.cache.Menus;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
 import me.refracdevelopment.simpletags.utilities.Utilities;

@@ -1,0 +1,34 @@
+# This file lets you change the name and aliases for the simpletags command.
+# If you edit the name/aliases at the top of this file, you will need to restart the server to see all the changes applied properly.
+
+# This is used for automatic file updating purposes
+config-version: '1'
+
+name: tags
+aliases:
+  - simpletags
+subcommands:
+  help:
+    name: help
+    aliases: []
+  reload:
+    name: reload
+    aliases: []
+  create:
+    name: create
+    aliases: []
+  list:
+    name: list
+    aliases: []
+  edit:
+    name: edit
+    aliases: []
+  delete:
+    name: delete
+    aliases: []
+  set:
+    name: set
+    aliases: []
+  version:
+    name: version
+    aliases: []

@@ -2,6 +2,7 @@ package me.refracdevelopment.simpletags.menu;
 
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
+import com.cryptomorin.xseries.ReflectionUtils;
 import com.cryptomorin.xseries.XMaterial;
 import de.tr7zw.nbtapi.NBTItem;
 import dev.rosewood.rosegarden.utils.NMSUtil;
@@ -57,31 +58,30 @@ public class TagsItem {
     }
 
     public ItemStack getItem(Player player, Tag tag) {
-        if (headDatabase) {
+        ItemBuilder item = new ItemBuilder(getMaterial().parseMaterial());
+
+        if (isHeadDatabase()) {
             HeadDatabaseAPI api = new HeadDatabaseAPI();
-            ItemBuilder item = new ItemBuilder(api.getItemHead(this.skullOwner));
-
-            return makeItem(item, player, tag);
-        } else if (skulls) {
-            Skull api = Skulls.getAPI().getSkull(Integer.parseInt(this.skullOwner));
-            ItemBuilder item = new ItemBuilder(api.getItemStack());
-
-            return makeItem(item, player, tag);
-        } else if (customData) {
-            ItemBuilder item = new ItemBuilder(this.material.parseMaterial());
-
-            if (NMSUtil.getVersionNumber() >= 14) {
-                item.setCustomModelData(this.customModelData);
+            item = new ItemBuilder(api.getItemHead(getSkullOwner()));
+        } else if (isSkulls()) {
+            Skull api = Skulls.getAPI().getSkull(Integer.parseInt(getSkullOwner()));
+            item = new ItemBuilder(api.getItemStack());
+        } else if (isCustomData()) {
+            if (ReflectionUtils.MINOR_NUMBER >= 14) {
+                item.setCustomModelData(getCustomModelData());
             } else {
                 Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
             }
-
-            return makeItem(item, player, tag);
-        } else {
-            ItemBuilder item = new ItemBuilder(this.material.parseMaterial());
-
-            return makeItem(item, player, tag);
         }
+
+        ItemBuilder finalItem = item;
+
+        finalItem.setDurability(getData());
+        if (!isSkulls()) {
+            finalItem.setSkullOwner(getSkullOwner());
+        }
+
+        return makeItem(finalItem, player, tag);
     }
 
     private ItemStack makeItem(ItemBuilder item, Player player, Tag tag) {

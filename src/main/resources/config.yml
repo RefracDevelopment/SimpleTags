@@ -1,0 +1,36 @@
+#   ___________                __         ___________
+#  /   _____/__| _____ ______ |  |   ____ \__    ___/____     ____   ______
+#  \_____  \|  |/     \\____ \|  | _/ __ \  |    |  \__  \   / ___\ /  ___/
+#  /        \  |  | |  \  |_\ \  |__  ___/_ |    |   / __ \_/ /_/  \\___ \
+# /_______  /__|__|_|  /   ___/____/\___  / |____|  (____  /\___  //____
+#         \/         \/|__|             \/               \//_____/      \/
+
+# The locale to use in the /locale folder
+# Default: en_US
+locale: en_US
+
+# Automatically add tags to chat behind a player's name.
+# Default: false
+use-chat: false
+
+# Choose your data saving type:
+# MYSQL - Database saving
+# FLAT_FILE - Local Json file saving in the playerdata/player.json file
+# Default: FLAT_FILE
+data-type: FLAT_FILE
+mysql:
+
+  # Default: 127.0.0.1
+  host: 127.0.0.1
+
+  # Default: 3306
+  port: '3306'
+
+  # Default: SimpleTags
+  database: SimpleTags
+
+  # Default:
+  username: ''
+
+  # Default:
+  password: ''
