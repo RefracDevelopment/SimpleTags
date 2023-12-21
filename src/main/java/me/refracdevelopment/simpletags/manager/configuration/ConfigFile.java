@@ -91,4 +91,12 @@ public class ConfigFile {
     public Section getSection(String path) {
         return configFile.getSection(path);
     }
+
+    public void set(String path, Object value) {
+        configFile.set(path, value);
+    }
+
+    public void remove(String path) {
+        configFile.remove(path);
+    }
 }

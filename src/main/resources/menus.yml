@@ -1,3 +1,6 @@
+# This is used for automatic file updating purposes
+config-version: '1'
+
 tags:
   title: "&8Tags (%total-tags%)"
   items:

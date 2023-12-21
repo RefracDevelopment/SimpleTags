@@ -16,7 +16,7 @@ public class TagManager {
 
     public void loadTags() {
         loadedTags.clear();
-        SimpleTags.getInstance().getTagsFile().getConfigurationSection("tags").getKeys(false).forEach(tag -> {
+        SimpleTags.getInstance().getTagsFile().getSection("tags").getRoutesAsStrings(false).forEach(tag -> {
             addTag(new Tag(tag, SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".name"), SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".prefix")));
         });
         Color.log("&eLoaded " + loadedTags.size() + " tags.");

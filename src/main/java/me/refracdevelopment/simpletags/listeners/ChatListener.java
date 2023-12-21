@@ -1,7 +1,6 @@
 package me.refracdevelopment.simpletags.listeners;
 
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.manager.configuration.cache.Config;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 import org.bukkit.entity.Player;
@@ -17,8 +16,8 @@ public class ChatListener implements Listener {
         Player player = event.getPlayer();
         ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
-        if (Config.USE_CHAT) {
-            event.setFormat(profile.getTagPrefix() + event.getFormat());
+        if (SimpleTags.getInstance().getSettings().USE_CHAT) {
+            event.setFormat(Color.translate(player, profile.getTagPrefix() + event.getFormat()));
         }
     }
 

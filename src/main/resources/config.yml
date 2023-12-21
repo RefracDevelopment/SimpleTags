@@ -5,6 +5,9 @@
 # /_______  /__|__|_|  /   ___/____/\___  / |____|  (____  /\___  //____
 #         \/         \/|__|             \/               \//_____/      \/
 
+# This is used for automatic file updating purposes
+config-version: '1'
+
 # The locale to use in the /locale folder
 # Default: en_US
 locale: en_US

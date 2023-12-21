@@ -1,6 +1,5 @@
 package me.refracdevelopment.simpletags.utilities.chat;
 
-import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
 import org.bukkit.command.CommandSender;

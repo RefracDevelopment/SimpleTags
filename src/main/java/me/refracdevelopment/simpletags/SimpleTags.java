@@ -4,34 +4,34 @@ import com.cryptomorin.xseries.ReflectionUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.tcoded.folialib.FoliaLib;
-import dev.rosewood.rosegarden.RosePlugin;
-import dev.rosewood.rosegarden.manager.Manager;
-import dev.rosewood.rosegarden.utils.NMSUtil;
 import lombok.Getter;
-import me.refracdevelopment.simpletags.commands.command.SetCommand;
+import me.refracdevelopment.simpletags.commands.*;
 import me.refracdevelopment.simpletags.listeners.ChatListener;
 import me.refracdevelopment.simpletags.listeners.MenuListener;
 import me.refracdevelopment.simpletags.listeners.PlayerListener;
 import me.refracdevelopment.simpletags.manager.CommandManager;
 import me.refracdevelopment.simpletags.manager.MenuManager;
 import me.refracdevelopment.simpletags.manager.TagManager;
+import me.refracdevelopment.simpletags.manager.configuration.ConfigFile;
 import me.refracdevelopment.simpletags.manager.configuration.cache.Commands;
 import me.refracdevelopment.simpletags.manager.configuration.cache.Config;
-import me.refracdevelopment.simpletags.manager.configuration.ConfigFile;
 import me.refracdevelopment.simpletags.manager.configuration.cache.Menus;
 import me.refracdevelopment.simpletags.manager.configuration.cache.Tags;
 import me.refracdevelopment.simpletags.manager.data.DataType;
 import me.refracdevelopment.simpletags.manager.data.MySQLManager;
 import me.refracdevelopment.simpletags.manager.data.SQLiteManager;
-import me.refracdevelopment.simpletags.player.data.ProfileManager;
+import me.refracdevelopment.simpletags.menu.TagsMenu;
+import me.refracdevelopment.simpletags.manager.ProfileManager;
 import me.refracdevelopment.simpletags.utilities.DownloadUtil;
 import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.PAPIExpansion;
+import me.refracdevelopment.simpletags.utilities.command.CommandList;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -121,6 +121,7 @@ public final class SimpleTags extends JavaPlugin {
         loadFiles();
 
         loadManagers();
+        loadCommands();
         loadListeners();
 
         // Loads all available tags
@@ -141,10 +142,15 @@ public final class SimpleTags extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        if (dataType == DataType.MYSQL) {
-            mySQLManager.shutdown();
+        switch (dataType) {
+            case MYSQL:
+                getMySQLManager().shutdown();
+                break;
+            default:
+                getSqLiteManager().shutdown();
+                break;
         }
-        this.getServer().getScheduler().cancelTasks(this);
+        getServer().getScheduler().cancelTasks(this);
     }
 
     public void loadFiles() {
@@ -183,14 +189,12 @@ public final class SimpleTags extends JavaPlugin {
                 mySQLManager = new MySQLManager();
                 getMySQLManager().connect();
                 getMySQLManager().createT();
-                Color.log("&aEnabled MySQL support!");
                 break;
             default:
                 dataType = DataType.SQLITE;
                 sqLiteManager = new SQLiteManager();
                 getSqLiteManager().connect(getDataFolder().getAbsolutePath() + File.separator + "tags.db");
                 getSqLiteManager().createT();
-                Color.log("&aEnabled SQLite support!");
                 break;
         }
 
@@ -203,46 +207,44 @@ public final class SimpleTags extends JavaPlugin {
 
     private void loadCommands() {
         try {
-            getCommandManager().createCoreCommand(this, getCommands().GEMS_COMMAND_NAME,
-                    getLocaleFile().getString("command-help-description"),
-                    "/" + getCommands().GEMS_COMMAND_NAME, new CommandList() {
+            getCommandManager().createCoreCommand(this, getCommands().TAGS_COMMAND_NAME,
+                    getLocaleFile().getString("command-tags-description"),
+                    "/" + getCommands().TAGS_COMMAND_NAME, new CommandList() {
                         @Override
                         public void displayCommandList(CommandSender commandSender, List<SubCommand> list) {
-                            getSettings().GEMS_BALANCE.forEach(message -> {
-                                Color.sendCustomMessage(commandSender, message);
-                            });
+                            // Make sure the sender is a player.
+                            if (!(commandSender instanceof Player)) {
+                                Color.sendMessage(commandSender, "no-console");
+                                return;
+                            }
+
+                            Player player = (Player) commandSender;
+
+                            new TagsMenu(SimpleTags.getInstance().getMenuManager().getPlayerMenuUtility(player)).open();
                         }
-                    }, getCommands().GEMS_COMMAND_ALIASES,
+                    }, getCommands().TAGS_COMMAND_ALIASES,
+                    CreateCommand.class,
+                    DeleteCommand.class,
+                    EditCommand.class,
                     HelpCommand.class,
-                    BalanceCommand.class,
-                    TopCommand.class,
-                    ShopCommand.class,
-                    WithdrawCommand.class,
-                    PayCommand.class,
-                    GiveCommand.class,
-                    TakeCommand.class,
-                    SetCommand.class,
+                    ListCommand.class,
                     ReloadCommand.class,
-                    VersionCommand.class,
-                    UpdateCommand.class,
-                    ResetCommand.class
+                    SetCommand.class,
+                    VersionCommand.class
             );
 
             getSubCommands().addAll(Arrays.asList(
+                    new CreateCommand(),
+                    new DeleteCommand(),
+                    new EditCommand(),
                     new HelpCommand(),
-                    new BalanceCommand(),
-                    new TopCommand(),
-                    new ShopCommand(),
-                    new WithdrawCommand(),
-                    new PayCommand(),
-                    new GiveCommand(),
-                    new TakeCommand(),
-                    new SetCommand(),
+                    new ListCommand(),
                     new ReloadCommand(),
-                    new VersionCommand(),
-                    new UpdateCommand(),
-                    new ResetCommand()
+                    new SetCommand(),
+                    new VersionCommand()
             ));
+
+            Color.log("&aLoaded commands.");
         } catch (NoSuchFieldException | IllegalAccessException e) {
             Color.log("&aFailed to load commands.");
             e.printStackTrace();
