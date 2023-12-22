@@ -3,8 +3,8 @@ package me.refracdevelopment.simpletags.player.data;
 import lombok.Getter;
 import lombok.Setter;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.manager.data.DataType;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -26,43 +26,66 @@ public class ProfileData {
     }
 
     public void load() {
-        if (plugin.getDataType() == DataType.MYSQL) {
-            plugin.getMySQLManager().select("SELECT * FROM SimpleTags WHERE uuid=?", resultSet -> {
-                try {
-                    if (resultSet.next()) {
-                        setTag(resultSet.getString("tag"));
-                        setTagPrefix(resultSet.getString("tagprefix"));
-                        plugin.getMySQLManager().execute("UPDATE SimpleTags SET name=? WHERE uuid=?",
-                                name, uuid.toString());
-                    } else {
-                        plugin.getMySQLManager().execute("INSERT INTO SimpleTags (uuid, name, tag, tagPrefix) VALUES (?,?,?,?)",
-                                uuid.toString(), name, "", "");
+        switch (getPlugin().getDataType()) {
+            case MYSQL:
+                getPlugin().getMySQLManager().select("SELECT * FROM SimpleTags WHERE uuid=?", resultSet -> {
+                    try {
+                        if (resultSet.next()) {
+                            setTag(resultSet.getString("tag"));
+                            setTagPrefix(resultSet.getString("tagPrefix"));
+                            getPlugin().getMySQLManager().updatePlayerName(getUuid(), getName());
+                        } else {
+                            getPlugin().getMySQLManager().execute("INSERT INTO SimpleTags (uuid, name, tag, tagPrefix) VALUES (?,?,?,?)",
+                                    getUuid().toString(), name, "", "");
+                        }
+                    } catch (SQLException exception) {
+                        Color.log(exception.getMessage());
                     }
-                } catch (SQLException exception) {
-                    Color.log(exception.getMessage());
-                }
-            }, uuid.toString());
-        } else if (plugin.getDataType() == DataType.FLAT_FILE) {
-            plugin.getPlayerMapper().loadPlayerFile(uuid);
+                }, getUuid().toString());
+                break;
+            default:
+                getPlugin().getSqLiteManager().select("SELECT * FROM SimpleTags WHERE uuid=?", resultSet -> {
+                    try {
+                        if (resultSet.next()) {
+                            setTag(resultSet.getString("tag"));
+                            setTagPrefix(resultSet.getString("tagPrefix"));
+                            getPlugin().getSqLiteManager().updatePlayerName(getUuid(), getName());
+                        } else {
+                            getPlugin().getSqLiteManager().execute("INSERT INTO SimpleTags (uuid, name, tag, tagPrefix) VALUES (?,?,?,?)",
+                                    getUuid().toString(), name, "", "");
+                        }
+                    } catch (SQLException exception) {
+                        Color.log(exception.getMessage());
+                    }
+                }, getUuid().toString());
+                break;
         }
 
         // Update player tag if any changes were made to it
-        if (plugin.getTagManager().getCachedTag(tag) != null) {
-            setTagPrefix(plugin.getTagManager().getCachedTag(tag).getTagPrefix());
+        if (getPlugin().getTagManager().getCachedTag(tag) == null) {
+            setTag("");
+            setTagPrefix("");
+            return;
         }
+
+        setTagPrefix(getPlugin().getTagManager().getCachedTag(tag).getTagPrefix());
     }
 
     public void save() {
-        if (plugin.getDataType() == DataType.MYSQL) {
-            plugin.getMySQLManager().execute("UPDATE SimpleTags SET tag=?, tagPrefix=? WHERE uuid=?",
-                    tag, tagPrefix, uuid.toString());
-        } else if (plugin.getDataType() == DataType.FLAT_FILE) {
-            plugin.getPlayerMapper().savePlayer(uuid, name, tag, tagPrefix);
+        switch (getPlugin().getDataType()) {
+            case MYSQL:
+                getPlugin().getMySQLManager().execute("UPDATE SimpleTags SET tag=?, tagPrefix=? WHERE uuid=?",
+                        getTag(), getTagPrefix(), getUuid().toString());
+                break;
+            default:
+                getPlugin().getSqLiteManager().execute("UPDATE SimpleTags SET tag=?, tagPrefix=? WHERE uuid=?",
+                        getTag(), getTagPrefix(), getUuid().toString());
+                break;
         }
     }
 
     public Player getPlayer() {
-        return plugin.getServer().getPlayer(uuid);
+        return Bukkit.getPlayer(uuid);
     }
 
 }

@@ -1,0 +1,38 @@
+#   ___________                __         ___________
+#  /   _____/__| _____ ______ |  |   ____ \__    ___/____     ____   ______
+#  \_____  \|  |/     \\____ \|  | _/ __ \  |    |  \__  \   / ___\ /  ___/
+#  /        \  |  | |  \  |_\ \  |__  ___/_ |    |   / __ \_/ /_/  \\___ \
+# /_______  /__|__|_|  /   ___/____/\___  / |____|  (____  /\___  //____
+#         \/         \/|__|             \/               \//_____/      \/
+
+# This is used for automatic file updating purposes
+config-version: '1'
+
+# The locale to use in the /locale folder
+# Default: en_US
+locale: en_US
+
+# Automatically add tags to chat behind a player's name
+# this will use the current format provided by any Chat plugin
+# so Tag -> Rank if applicable -> Player -> message
+# Default: false
+use-chat: false
+
+# Choose your data saving type:
+# MYSQL/MARIADB - Database saving
+# SQLITE - Local database saving in a .db file
+# Default: FLAT_FILE
+data-type: SQLITE
+
+# Either MySQL or MariaDB will work here.
+mysql:
+  # Default: 127.0.0.1
+  host: 127.0.0.1
+  # Default: 3306
+  port: '3306'
+  # Default: SimpleTags
+  database: SimpleTags
+  # Default:
+  username: ''
+  # Default:
+  password: ''

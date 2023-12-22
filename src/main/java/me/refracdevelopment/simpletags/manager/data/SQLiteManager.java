@@ -2,7 +2,6 @@ package me.refracdevelopment.simpletags.manager.data;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 
@@ -11,37 +10,30 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class MySQLManager {
+public class SQLiteManager {
 
     private HikariDataSource dataSource;
-    private final String host = SimpleTags.getInstance().getConfigFile().getString("mysql.host");
-    private final String username = SimpleTags.getInstance().getConfigFile().getString("mysql.username");
-    private final String password = SimpleTags.getInstance().getConfigFile().getString("mysql.password");
-    private final String database = SimpleTags.getInstance().getConfigFile().getString("mysql.database");
-    private final String port = SimpleTags.getInstance().getConfigFile().getString("mysql.port");
 
     public void createT() {
         Tasks.runAsync(this::createTables);
     }
 
-    public boolean connect() {
+    public boolean connect(String path) {
         try {
-            Color.log("&aConnecting to MySQL...");
+            Color.log("&aConnecting to SQLite...");
             HikariConfig config = new HikariConfig();
-            Class.forName("org.mariadb.jdbc.Driver");
-            config.setDriverClassName("org.mariadb.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database + "?allowPublicKeyRetrieval=true&useSSL=false");
-            config.setUsername(username);
-            config.setPassword(password);
+            Class.forName("org.sqlite.JDBC");
+            config.setDriverClassName("org.sqlite.JDBC");
+            config.setJdbcUrl("jdbc:sqlite:" + path);
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
             dataSource = new HikariDataSource(config);
-            Color.log("&aConnected to MySQL!");
+            Color.log("&aConnected to SQLite!");
             return true;
         } catch (Exception exception) {
-            Color.log("&cCould not connect to MySQL! Error: " + exception.getMessage());
+            Color.log("&cCould not connect to SQLite! Error: " + exception.getMessage());
             exception.printStackTrace();
             return false;
         }
@@ -51,13 +43,12 @@ public class MySQLManager {
         close();
     }
 
-
     public void createTables() {
         createTable("SimpleTags",
                 "uuid VARCHAR(255) NOT NULL PRIMARY KEY," +
-                "name VARCHAR(255)," +
-                "tag VARCHAR(255)," +
-                "tagPrefix VARCHAR(255)"
+                        "name VARCHAR(255)," +
+                        "tag VARCHAR(255)," +
+                        "tagPrefix VARCHAR(255)"
         );
     }
 
@@ -110,7 +101,7 @@ public class MySQLManager {
                 statement.execute();
             } catch (SQLException exception) {
                 Color.log("An error occurred while executing an update on the database.");
-                Color.log("MySQL#execute : " + query);
+                Color.log("SQLite#execute : " + query);
                 exception.printStackTrace();
             }
         }).start();
@@ -132,7 +123,7 @@ public class MySQLManager {
                 callback.call(statement.executeQuery());
             } catch (SQLException exception) {
                 Color.log("An error occurred while executing a query on the database.");
-                Color.log("MySQL#select : " + query);
+                Color.log("SQLite#select : " + query);
                 exception.printStackTrace();
             }
         }).start();

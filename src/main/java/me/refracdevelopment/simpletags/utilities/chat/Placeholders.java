@@ -1,8 +1,6 @@
 package me.refracdevelopment.simpletags.utilities.chat;
 
-import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -10,9 +8,7 @@ import org.bukkit.entity.Player;
 public class Placeholders {
 
     public static String setPlaceholders(CommandSender sender, String placeholder) {
-        final LocaleManager locale = SimpleTags.getInstance().getManager(LocaleManager.class);
-
-        placeholder = placeholder.replace("%prefix%", locale.getLocaleMessage("prefix"));
+        placeholder = placeholder.replace("%prefix%", SimpleTags.getInstance().getLocaleFile().getString("prefix"));
         if (sender instanceof Player) {
             Player player = (Player) sender;
             ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
@@ -38,9 +34,8 @@ public class Placeholders {
 
     public static StringPlaceholders setPlaceholders(CommandSender sender) {
         StringPlaceholders.Builder placeholders = StringPlaceholders.builder();
-        final LocaleManager locale = SimpleTags.getInstance().getManager(LocaleManager.class);
 
-        placeholders.add("prefix", locale.getLocaleMessage("prefix"));
+        placeholders.add("prefix", SimpleTags.getInstance().getLocaleFile().getString("prefix"));
         if (sender instanceof Player) {
             Player player = (Player) sender;
             ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();

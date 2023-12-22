@@ -1,179 +1,264 @@
 package me.refracdevelopment.simpletags;
 
+import com.cryptomorin.xseries.ReflectionUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dev.rosewood.rosegarden.RosePlugin;
-import dev.rosewood.rosegarden.manager.Manager;
-import dev.rosewood.rosegarden.utils.NMSUtil;
+import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
-import me.refracdevelopment.simpletags.listeners.ChatListener;
+import me.refracdevelopment.simpletags.commands.*;
 import me.refracdevelopment.simpletags.listeners.MenuListener;
 import me.refracdevelopment.simpletags.listeners.PlayerListener;
 import me.refracdevelopment.simpletags.manager.CommandManager;
 import me.refracdevelopment.simpletags.manager.MenuManager;
+import me.refracdevelopment.simpletags.manager.ProfileManager;
 import me.refracdevelopment.simpletags.manager.TagManager;
-import me.refracdevelopment.simpletags.manager.configuration.ConfigurationManager;
-import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
+import me.refracdevelopment.simpletags.manager.configuration.ConfigFile;
+import me.refracdevelopment.simpletags.manager.configuration.cache.Commands;
 import me.refracdevelopment.simpletags.manager.configuration.cache.Config;
-import me.refracdevelopment.simpletags.manager.configuration.cache.ConfigFile;
 import me.refracdevelopment.simpletags.manager.configuration.cache.Menus;
 import me.refracdevelopment.simpletags.manager.configuration.cache.Tags;
 import me.refracdevelopment.simpletags.manager.data.DataType;
 import me.refracdevelopment.simpletags.manager.data.MySQLManager;
-import me.refracdevelopment.simpletags.manager.data.PlayerMapper;
-import me.refracdevelopment.simpletags.player.data.ProfileManager;
+import me.refracdevelopment.simpletags.manager.data.SQLiteManager;
+import me.refracdevelopment.simpletags.menu.TagsMenu;
 import me.refracdevelopment.simpletags.utilities.DownloadUtil;
-import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.PAPIExpansion;
+import me.refracdevelopment.simpletags.utilities.command.CommandList;
+import me.refracdevelopment.simpletags.utilities.command.SubCommand;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public final class SimpleTags extends RosePlugin {
+public final class SimpleTags extends JavaPlugin {
 
     @Getter
     private static SimpleTags instance;
 
-    private MySQLManager mySQLManager;
+    // Managers
     private DataType dataType;
+    private MySQLManager mySQLManager;
+    private SQLiteManager sqLiteManager;
     private ProfileManager profileManager;
     private TagManager tagManager;
     private MenuManager menuManager;
+    private CommandManager commandManager;
 
+    // Files
+    private ConfigFile configFile;
     private ConfigFile tagsFile;
     private ConfigFile menusFile;
-    private PlayerMapper playerMapper;
+    private ConfigFile commandsFile;
+    private ConfigFile localeFile;
 
-    public SimpleTags() {
-        super(-1, 13205, ConfigurationManager.class, null, LocaleManager.class, CommandManager.class);
-        instance = this;
-    }
+    // Cache
+    private Config settings;
+    private Tags tags;
+    private Menus menus;
+    private Commands commands;
+
+    // Utilities
+    private FoliaLib foliaLib;
+    private final List<SubCommand> subCommands = new ArrayList<>();
 
     @Override
-    public void enable() {
+    public void onEnable() {
         // Plugin startup logic
+        instance = this;
         long startTiming = System.currentTimeMillis();
         PluginManager pluginManager = this.getServer().getPluginManager();
 
+        foliaLib = new FoliaLib(this);
+
         DownloadUtil.downloadAndEnable();
 
+        new Metrics(this, 13205);
+
         // Check if the server is on 1.7
-        if (NMSUtil.getVersionNumber() <= 7) {
-            Color.log("&cSimpleTags 1.7 is in legacy mode, please update to 1.8+");
+        if (ReflectionUtils.MINOR_NUMBER <= 7) {
+            Color.log("&c" + getDescription().getName() + " 1.7 is in legacy mode, please update to 1.8+");
             pluginManager.disablePlugin(this);
             return;
         }
 
+        // Check if the server is on Folia
+        if (getFoliaLib().isFolia()) {
+            Color.log("&cSupport for Folia has not been tested and is only for experimental purposes.");
+        }
+
         // Make sure the server has PlaceholderAPI
-        if (pluginManager.getPlugin("PlaceholderAPI") == null) {
+        if (!pluginManager.isPluginEnabled("PlaceholderAPI")) {
             Color.log("&cPlease install PlaceholderAPI onto your server to use this plugin.");
             pluginManager.disablePlugin(this);
             return;
         }
 
         // Make sure the server has NBTAPI
-        if (pluginManager.getPlugin("NBTAPI") == null) {
+        if (!pluginManager.isPluginEnabled("NBTAPI")) {
             Color.log("&cPlease install NBTAPI onto your server to use this plugin.");
             pluginManager.disablePlugin(this);
             return;
         }
 
-        if (pluginManager.getPlugin("Skulls") != null) {
+        if (pluginManager.isPluginEnabled("Skulls")) {
             Color.log("&eSkulls Detected!");
         }
 
-        if (pluginManager.getPlugin("HeadDatabase") != null) {
+        if (pluginManager.isPluginEnabled("HeadDatabase")) {
             Color.log("&eHeadDatabase Detected!");
         }
 
         loadFiles();
 
         loadManagers();
-        Color.log("&aLoaded commands.");
+        loadCommands();
         loadListeners();
 
         // Loads all available tags
-        Tasks.runAsync(this, () -> tagManager.loadTags());
+        getTagManager().loadTags();
 
         new PAPIExpansion().register();
 
         Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
-        Color.log("&e" + this.getDescription().getName() + " has been enabled. (" + (System.currentTimeMillis() - startTiming) + "ms)");
-        Color.log(" &f[*] &6Version&f: &b" + this.getDescription().getVersion());
-        Color.log(" &f[*] &6Name&f: &b" + this.getDescription().getName());
-        Color.log(" &f[*] &6Author&f: &b" + this.getDescription().getAuthors().get(0));
+        Color.log("&e" + getDescription().getName() + " has been enabled. (took " + (System.currentTimeMillis() - startTiming) + "ms)");
+        Color.log(" &f[*] &6Version&f: &b" + getDescription().getVersion());
+        Color.log(" &f[*] &6Name&f: &b" + getDescription().getName());
+        Color.log(" &f[*] &6Author&f: &b" + getDescription().getAuthors().get(0));
         Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
 
         updateCheck(Bukkit.getConsoleSender(), true);
     }
 
     @Override
-    public void disable() {
+    public void onDisable() {
         // Plugin shutdown logic
-        if (dataType == DataType.MYSQL) {
-            mySQLManager.shutdown();
+        switch (dataType) {
+            case MYSQL:
+                getMySQLManager().shutdown();
+                break;
+            default:
+                getSqLiteManager().shutdown();
+                break;
         }
-        this.getServer().getScheduler().cancelTasks(this);
-    }
-
-    @Override
-    protected List<Class<? extends Manager>> getManagerLoadPriority() {
-        return Collections.emptyList();
+        getServer().getScheduler().cancelTasks(this);
     }
 
     public void loadFiles() {
-        tagsFile = new ConfigFile(this, "tags.yml");
-        menusFile = new ConfigFile(this, "menus.yml");
-        Config.loadConfig();
-        Tags.loadConfig();
-        Menus.loadConfig();
+        // Files
+        configFile = new ConfigFile("config.yml");
+        tagsFile = new ConfigFile("tags.yml");
+        menusFile = new ConfigFile("menus.yml");
+        commandsFile = new ConfigFile("commands/tags.yml");
+        localeFile = new ConfigFile("locale/" + getConfigFile().getString("locale") + ".yml");
+
+        // Cache
+        settings = new Config();
+        tags = new Tags();
+        menus = new Menus();
+        commands = new Commands();
     }
 
     public void reloadFiles() {
-        tagsFile.load();
-        menusFile.load();
-        Config.loadConfig();
-        Tags.loadConfig();
-        Menus.loadConfig();
+        getConfigFile().reload();
+        getTagsFile().reload();
+        getMenusFile().reload();
+        getLocaleFile().reload();
+        getCommandsFile().reload();
+
+        getSettings().loadConfig();
+        getTags().loadConfig();
+        getMenus().loadConfig();
+        getCommands().loadConfig();
     }
 
     private void loadManagers() {
-        switch (Config.DATA_TYPE.toUpperCase()) {
+        switch (getSettings().DATA_TYPE.toUpperCase()) {
+            case "MARIADB":
             case "MYSQL":
                 dataType = DataType.MYSQL;
-                mySQLManager = new MySQLManager(this);
+                mySQLManager = new MySQLManager();
                 getMySQLManager().connect();
                 getMySQLManager().createT();
-                Color.log("&aEnabled MySQL support!");
                 break;
-            case "FLAT_FILE":
-                dataType = DataType.FLAT_FILE;
-                playerMapper = new PlayerMapper(getDataFolder().getAbsolutePath() + File.separator + "playerdata");
-                Color.log("&aEnabled Flat File support!");
+            default:
+                dataType = DataType.SQLITE;
+                sqLiteManager = new SQLiteManager();
+                getSqLiteManager().connect(getDataFolder().getAbsolutePath() + File.separator + "tags.db");
+                getSqLiteManager().createT();
                 break;
         }
 
         profileManager = new ProfileManager();
         tagManager = new TagManager();
         menuManager = new MenuManager();
+        commandManager = new CommandManager();
         Color.log("&aLoaded managers.");
+    }
+
+    private void loadCommands() {
+        try {
+            getCommandManager().createCoreCommand(this, getCommands().TAGS_COMMAND_NAME,
+                    getLocaleFile().getString("command-tags-description"),
+                    "/" + getCommands().TAGS_COMMAND_NAME, new CommandList() {
+                        @Override
+                        public void displayCommandList(CommandSender commandSender, List<SubCommand> list) {
+                            // Make sure the sender is a player.
+                            if (!(commandSender instanceof Player)) {
+                                Color.sendMessage(commandSender, "no-console");
+                                return;
+                            }
+
+                            Player player = (Player) commandSender;
+
+                            new TagsMenu(SimpleTags.getInstance().getMenuManager().getPlayerMenuUtility(player)).open();
+                        }
+                    }, getCommands().TAGS_COMMAND_ALIASES,
+                    CreateCommand.class,
+                    DeleteCommand.class,
+                    EditCommand.class,
+                    HelpCommand.class,
+                    ListCommand.class,
+                    ReloadCommand.class,
+                    SetCommand.class,
+                    VersionCommand.class
+            );
+
+            getSubCommands().addAll(Arrays.asList(
+                    new CreateCommand(),
+                    new DeleteCommand(),
+                    new EditCommand(),
+                    new HelpCommand(),
+                    new ListCommand(),
+                    new ReloadCommand(),
+                    new SetCommand(),
+                    new VersionCommand()
+            ));
+
+            Color.log("&aLoaded commands.");
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            Color.log("&aFailed to load commands.");
+            e.printStackTrace();
+            return;
+        }
     }
 
     private void loadListeners() {
         PluginManager pluginManager = this.getServer().getPluginManager();
         pluginManager.registerEvents(new PlayerListener(), this);
         pluginManager.registerEvents(new MenuListener(), this);
-        pluginManager.registerEvents(new ChatListener(), this);
         Color.log("&aLoaded listeners.");
     }
 
@@ -195,19 +280,19 @@ public final class SimpleTags extends RosePlugin {
 
             if (object.has("plugins")) {
                 JsonObject plugins = object.get("plugins").getAsJsonObject();
-                JsonObject info = plugins.get(this.getDescription().getName()).getAsJsonObject();
+                JsonObject info = plugins.get(getDescription().getName()).getAsJsonObject();
                 String version = info.get("version").getAsString();
-                if (version.equals(this.getDescription().getVersion())) {
+                if (version.equals(getDescription().getVersion())) {
                     if (console) {
-                        sender.sendMessage(Color.translate("&a" + this.getDescription().getName() + " is on the latest version."));
+                        sender.sendMessage(Color.translate("&a" + getDescription().getName() + " is on the latest version."));
                     }
                 } else {
                     sender.sendMessage(Color.translate(""));
                     sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate("&cYour " + this.getDescription().getName() + " version is out of date!"));
+                    sender.sendMessage(Color.translate("&cYour " + getDescription().getName() + " version is out of date!"));
                     sender.sendMessage(Color.translate("&cWe recommend updating ASAP!"));
                     sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate("&cYour Version: &e" + this.getDescription().getVersion()));
+                    sender.sendMessage(Color.translate("&cYour Version: &e" + getDescription().getVersion()));
                     sender.sendMessage(Color.translate("&aNewest Version: &e" + version));
                     sender.sendMessage(Color.translate(""));
                     sender.sendMessage(Color.translate(""));

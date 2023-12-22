@@ -1,40 +1,49 @@
 package me.refracdevelopment.simpletags.utilities.chat;
 
-import dev.rosewood.rosegarden.hook.PlaceholderAPIHook;
-import dev.rosewood.rosegarden.utils.HexUtils;
+import lombok.experimental.UtilityClass;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.manager.configuration.LocaleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@UtilityClass
 public class Color {
 
-    public static String translate(CommandSender sender, String source) {
+    public String translate(CommandSender sender, String source) {
         source = Placeholders.setPlaceholders(sender, source);
 
-        if (sender instanceof Player) {
-            return PlaceholderAPIHook.applyPlaceholders((Player) sender, translate(source));
+        if (sender instanceof Player && Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            return PlaceholderAPI.setPlaceholders((Player) sender, translate(source));
         } else return translate(source);
     }
 
-    public static String translate(String source) {
-        return HexUtils.colorify(source);
+    public String translate(String message) {
+        return HexUtils.colorify(message);
     }
 
-    public static void sendMessage(Player player, String message) {
-        final LocaleManager locale = SimpleTags.getInstance().getManager(LocaleManager.class);
-
-        message = Placeholders.setPlaceholders(player, message);
-
-        locale.sendCustomMessage(player, message);
+    public List<String> translate(List<String> source) {
+        return source.stream().map(Color::translate).collect(Collectors.toList());
     }
 
-    public static void log(String message) {
-        final LocaleManager locale = SimpleTags.getInstance().getManager(LocaleManager.class);
+    public void sendMessage(CommandSender sender, String message) {
+        sendCustomMessage(sender, SimpleTags.getInstance().getLocaleFile().getString(message));
+    }
 
-        String prefix = locale.getLocaleMessage("prefix");
+    public void sendMessage(CommandSender sender, String message, StringPlaceholders placeholders) {
+        sendCustomMessage(sender, placeholders.apply(SimpleTags.getInstance().getLocaleFile().getString(message)));
+    }
 
-        locale.sendCustomMessage(Bukkit.getConsoleSender(), prefix + message);
+    public void sendCustomMessage(CommandSender sender, String message) {
+        if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%") || message.isEmpty()) return;
+
+        HexUtils.sendMessage(sender, Placeholders.setPlaceholders(sender, "%prefix%" + message));
+    }
+
+    public void log(String message) {
+        sendCustomMessage(Bukkit.getConsoleSender(), message);
     }
 }
