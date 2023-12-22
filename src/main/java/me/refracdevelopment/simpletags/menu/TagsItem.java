@@ -89,7 +89,7 @@ public class TagsItem {
                 .replace("%tag-name%", tag.getTagName())
         ));
 
-        if (player.hasPermission("simpletags.tag." + tag.getConfigName()) || player.hasPermission("simpletags.tag.*")) {
+        if (player.hasPermission("simpletags.tag." + tag.getConfigName())) {
             if (!profile.getTag().equals(tag.getConfigName())) {
                 for (String s : SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.lore")) {
                     item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix())));
@@ -105,7 +105,7 @@ public class TagsItem {
                     item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix())));
                 }
             }
-        } else if (!player.hasPermission("simpletags.tag." + tag.getConfigName()) || !player.hasPermission("simpletags.tag.*")) {
+        } else if (!player.hasPermission("simpletags.tag." + tag.getConfigName())) {
             for (String s : SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.no-permission-lore")) {
                 item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix())));
             }

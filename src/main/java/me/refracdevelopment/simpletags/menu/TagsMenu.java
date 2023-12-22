@@ -66,7 +66,7 @@ public class TagsMenu extends PaginatedMenu {
                 tag = plugin.getTagManager().findByName(e.getCurrentItem().getItemMeta().getDisplayName()).get();
             }
 
-            if (!player.hasPermission("simpletags.tag." + tag.getConfigName()) && !player.hasPermission("simpletags.tag.*")) {
+            if (!player.hasPermission("simpletags.tag." + tag.getConfigName())) {
                 Color.sendMessage(player, "tag-not-owned", Placeholders.setPlaceholders(player));
                 player.closeInventory();
                 return;
