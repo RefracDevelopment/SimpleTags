@@ -21,7 +21,7 @@ public class MySQLManager {
     private final String port = SimpleTags.getInstance().getConfigFile().getString("mysql.port");
 
     public void createT() {
-        Tasks.runAsync(() -> createTables());
+        Tasks.runAsync(this::createTables);
     }
 
     public boolean connect() {
