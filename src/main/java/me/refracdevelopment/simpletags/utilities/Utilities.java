@@ -3,7 +3,6 @@ package me.refracdevelopment.simpletags.utilities;
 import com.cryptomorin.xseries.XMaterial;
 import lombok.experimental.UtilityClass;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.manager.data.DataType;
 
 import java.util.UUID;
 
@@ -21,10 +20,13 @@ public class Utilities {
     }
 
     public void saveOfflinePlayer(UUID uuid, String tag, String tagPrefix) {
-        if (SimpleTags.getInstance().getDataType() == DataType.MYSQL) {
-            SimpleTags.getInstance().getMySQLManager().updatePlayerTag(uuid, tag, tagPrefix);
-        } else if (SimpleTags.getInstance().getDataType() == DataType.SQLITE) {
-            SimpleTags.getInstance().getSqLiteManager().updatePlayerTag(uuid, tag, tagPrefix);
+        switch (SimpleTags.getInstance().getDataType()) {
+            case MYSQL:
+                SimpleTags.getInstance().getMySQLManager().updatePlayerTag(uuid, tag, tagPrefix);
+                break;
+            default:
+                SimpleTags.getInstance().getSqLiteManager().updatePlayerTag(uuid, tag, tagPrefix);
+                break;
         }
     }
 

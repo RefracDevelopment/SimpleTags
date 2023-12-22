@@ -2,7 +2,6 @@ package me.refracdevelopment.simpletags.player;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
 
 import java.util.UUID;
@@ -10,8 +9,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Profile {
-
-    private SimpleTags plugin = SimpleTags.getInstance();
 
     private ProfileData data;
     private UUID UUID;

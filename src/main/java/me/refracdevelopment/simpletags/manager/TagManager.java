@@ -15,11 +15,11 @@ public class TagManager {
     private final List<Tag> loadedTags = new ArrayList<>();
 
     public void loadTags() {
-        loadedTags.clear();
+        getLoadedTags().clear();
         SimpleTags.getInstance().getTagsFile().getSection("tags").getRoutesAsStrings(false).forEach(tag -> {
             addTag(new Tag(tag, SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".name"), SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".prefix")));
         });
-        Color.log("&eLoaded " + loadedTags.size() + " tags.");
+        Color.log("&eLoaded " + getLoadedTags().size() + " tags.");
     }
 
     public void updateTags() {
@@ -35,17 +35,17 @@ public class TagManager {
     }
 
     public void addTag(Tag tag) {
-        if (!loadedTags.contains(tag)) {
-            loadedTags.add(tag);
+        if (!getLoadedTags().contains(tag)) {
+            getLoadedTags().add(tag);
         }
     }
 
     public void removeTag(Tag tag) {
-        loadedTags.remove(tag);
+        getLoadedTags().remove(tag);
     }
 
     public Tag getCachedTag(String name) {
-        for (Tag tag : loadedTags) {
+        for (Tag tag : getLoadedTags()) {
             if (tag.getConfigName().equalsIgnoreCase(name)) {
                 return tag;
             }
@@ -54,7 +54,6 @@ public class TagManager {
     }
 
     public Optional<Tag> findByName(String tagName) {
-        return this.loadedTags.stream().filter(tag -> tag.getTagName().equalsIgnoreCase(tagName))
-                .findFirst();
+        return getLoadedTags().stream().filter(tag -> tag.getTagName().equalsIgnoreCase(tagName)).findFirst();
     }
 }

@@ -69,29 +69,27 @@ public class EditCommand extends SubCommand {
             return;
         }
 
-        if (args.length == 3) {
-            // Edit a tag
-            String configName = args[1];
-            String tagPrefix = args[2];
+        // Edit a tag
+        String configName = args[1];
+        String tagPrefix = args[2];
 
-            if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) return;
+        if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) return;
 
-            ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
-            tagsFile.set("tags." + configName + ".prefix", tagPrefix);
-            tagsFile.save();
-            tagsFile.reload();
-            SimpleTags.getInstance().getTags().loadConfig();
+        ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
+        tagsFile.set("tags." + configName + ".prefix", tagPrefix);
+        tagsFile.save();
+        tagsFile.reload();
+        SimpleTags.getInstance().getTags().loadConfig();
 
-            SimpleTags.getInstance().getTagManager().updateTags();
+        SimpleTags.getInstance().getTagManager().updateTags();
 
-            StringPlaceholders placeholders = StringPlaceholders.builder()
-                    .addAll(Placeholders.setPlaceholders(commandSender))
-                    .add("tag-name", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagName())
-                    .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
-                    .build();
+        StringPlaceholders placeholders = StringPlaceholders.builder()
+                .addAll(Placeholders.setPlaceholders(commandSender))
+                .add("tag-name", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagName())
+                .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
+                .build();
 
-            Color.sendMessage(player, "tag-edited", placeholders);
-        }
+        Color.sendMessage(player, "tag-edited", placeholders);
     }
 
     /**

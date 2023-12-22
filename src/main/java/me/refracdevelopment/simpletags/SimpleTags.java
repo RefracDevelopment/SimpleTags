@@ -6,7 +6,6 @@ import com.google.gson.JsonParser;
 import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
 import me.refracdevelopment.simpletags.commands.*;
-import me.refracdevelopment.simpletags.listeners.ChatListener;
 import me.refracdevelopment.simpletags.listeners.MenuListener;
 import me.refracdevelopment.simpletags.listeners.PlayerListener;
 import me.refracdevelopment.simpletags.manager.CommandManager;
@@ -23,7 +22,6 @@ import me.refracdevelopment.simpletags.manager.data.MySQLManager;
 import me.refracdevelopment.simpletags.manager.data.SQLiteManager;
 import me.refracdevelopment.simpletags.menu.TagsMenu;
 import me.refracdevelopment.simpletags.utilities.DownloadUtil;
-import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.PAPIExpansion;
 import me.refracdevelopment.simpletags.utilities.command.CommandList;
@@ -96,6 +94,11 @@ public final class SimpleTags extends JavaPlugin {
             return;
         }
 
+        // Check if the server is on Folia
+        if (getFoliaLib().isFolia()) {
+            Color.log("&cSupport for Folia has not been tested and is only for experimental purposes.");
+        }
+
         // Make sure the server has PlaceholderAPI
         if (!pluginManager.isPluginEnabled("PlaceholderAPI")) {
             Color.log("&cPlease install PlaceholderAPI onto your server to use this plugin.");
@@ -125,15 +128,15 @@ public final class SimpleTags extends JavaPlugin {
         loadListeners();
 
         // Loads all available tags
-        Tasks.runAsync(() -> tagManager.loadTags());
+        getTagManager().loadTags();
 
         new PAPIExpansion().register();
 
         Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
-        Color.log("&e" + this.getDescription().getName() + " has been enabled. (" + (System.currentTimeMillis() - startTiming) + "ms)");
-        Color.log(" &f[*] &6Version&f: &b" + this.getDescription().getVersion());
-        Color.log(" &f[*] &6Name&f: &b" + this.getDescription().getName());
-        Color.log(" &f[*] &6Author&f: &b" + this.getDescription().getAuthors().get(0));
+        Color.log("&e" + getDescription().getName() + " has been enabled. (took " + (System.currentTimeMillis() - startTiming) + "ms)");
+        Color.log(" &f[*] &6Version&f: &b" + getDescription().getVersion());
+        Color.log(" &f[*] &6Name&f: &b" + getDescription().getName());
+        Color.log(" &f[*] &6Author&f: &b" + getDescription().getAuthors().get(0));
         Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
 
         updateCheck(Bukkit.getConsoleSender(), true);
@@ -250,14 +253,12 @@ public final class SimpleTags extends JavaPlugin {
             e.printStackTrace();
             return;
         }
-        Color.log("&aLoaded commands.");
     }
 
     private void loadListeners() {
         PluginManager pluginManager = this.getServer().getPluginManager();
         pluginManager.registerEvents(new PlayerListener(), this);
         pluginManager.registerEvents(new MenuListener(), this);
-        pluginManager.registerEvents(new ChatListener(), this);
         Color.log("&aLoaded listeners.");
     }
 
@@ -279,19 +280,19 @@ public final class SimpleTags extends JavaPlugin {
 
             if (object.has("plugins")) {
                 JsonObject plugins = object.get("plugins").getAsJsonObject();
-                JsonObject info = plugins.get(this.getDescription().getName()).getAsJsonObject();
+                JsonObject info = plugins.get(getDescription().getName()).getAsJsonObject();
                 String version = info.get("version").getAsString();
-                if (version.equals(this.getDescription().getVersion())) {
+                if (version.equals(getDescription().getVersion())) {
                     if (console) {
-                        sender.sendMessage(Color.translate("&a" + this.getDescription().getName() + " is on the latest version."));
+                        sender.sendMessage(Color.translate("&a" + getDescription().getName() + " is on the latest version."));
                     }
                 } else {
                     sender.sendMessage(Color.translate(""));
                     sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate("&cYour " + this.getDescription().getName() + " version is out of date!"));
+                    sender.sendMessage(Color.translate("&cYour " + getDescription().getName() + " version is out of date!"));
                     sender.sendMessage(Color.translate("&cWe recommend updating ASAP!"));
                     sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate("&cYour Version: &e" + this.getDescription().getVersion()));
+                    sender.sendMessage(Color.translate("&cYour Version: &e" + getDescription().getVersion()));
                     sender.sendMessage(Color.translate("&aNewest Version: &e" + version));
                     sender.sendMessage(Color.translate(""));
                     sender.sendMessage(Color.translate(""));

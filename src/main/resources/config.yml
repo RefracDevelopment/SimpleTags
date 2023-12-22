@@ -12,28 +12,27 @@ config-version: '1'
 # Default: en_US
 locale: en_US
 
-# Automatically add tags to chat behind a player's name.
+# Automatically add tags to chat behind a player's name
+# this will use the current format provided by any Chat plugin
+# so Tag -> Rank if applicable -> Player -> message
 # Default: false
 use-chat: false
 
 # Choose your data saving type:
-# MYSQL - Database saving
-# FLAT_FILE - Local Json file saving in the playerdata/player.json file
+# MYSQL/MARIADB - Database saving
+# SQLITE - Local database saving in a .db file
 # Default: FLAT_FILE
-data-type: FLAT_FILE
-mysql:
+data-type: SQLITE
 
+# Either MySQL or MariaDB will work here.
+mysql:
   # Default: 127.0.0.1
   host: 127.0.0.1
-
   # Default: 3306
   port: '3306'
-
   # Default: SimpleTags
   database: SimpleTags
-
   # Default:
   username: ''
-
   # Default:
   password: ''

@@ -3,6 +3,7 @@ package me.refracdevelopment.simpletags.commands;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.manager.configuration.ConfigFile;
 import me.refracdevelopment.simpletags.player.data.Tag;
+import me.refracdevelopment.simpletags.utilities.Permissions;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
 import me.refracdevelopment.simpletags.utilities.chat.StringPlaceholders;
@@ -60,38 +61,41 @@ public class CreateCommand extends SubCommand {
 
         Player player = (Player) commandSender;
 
+        if (!player.hasPermission(Permissions.CREATE_COMMAND)) {
+            Color.sendMessage(player, "no-permission");
+            return;
+        }
+
         if (args.length <= 3) {
             return;
         }
 
-        if (args.length == 4) {
-            // Create a tag
-            String configName = args[1];
-            String tagName = args[2];
-            String tagPrefix = args[3];
+        // Create a tag
+        String configName = args[1];
+        String tagName = args[2];
+        String tagPrefix = args[3];
 
-            if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) != null) {
-                Color.sendMessage(player, "tag-already-exists");
-                return;
-            }
-
-            ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
-            tagsFile.set("tags." + configName + ".name", tagName);
-            tagsFile.set("tags." + configName + ".prefix", tagPrefix);
-            tagsFile.save();
-            tagsFile.reload();
-            SimpleTags.getInstance().getTags().loadConfig();
-
-            SimpleTags.getInstance().getTagManager().addTag(new Tag(configName, tagName, tagPrefix));
-
-            StringPlaceholders placeholders = StringPlaceholders.builder()
-                    .addAll(Placeholders.setPlaceholders(player))
-                    .add("tag-name", tagName)
-                    .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
-                    .build();
-
-            Color.sendMessage(player, "tag-created", placeholders);
+        if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) != null) {
+            Color.sendMessage(player, "tag-already-exists");
+            return;
         }
+
+        ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
+        tagsFile.set("tags." + configName + ".name", tagName);
+        tagsFile.set("tags." + configName + ".prefix", tagPrefix);
+        tagsFile.save();
+        tagsFile.reload();
+        SimpleTags.getInstance().getTags().loadConfig();
+
+        SimpleTags.getInstance().getTagManager().addTag(new Tag(configName, tagName, tagPrefix));
+
+        StringPlaceholders placeholders = StringPlaceholders.builder()
+                .addAll(Placeholders.setPlaceholders(player))
+                .add("tag-name", tagName)
+                .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
+                .build();
+
+        Color.sendMessage(player, "tag-created", placeholders);
     }
 
     /**

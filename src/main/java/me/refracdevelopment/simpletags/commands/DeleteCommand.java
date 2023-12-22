@@ -69,32 +69,30 @@ public class DeleteCommand extends SubCommand {
             return;
         }
 
-        if (args.length == 2) {
-            // Delete a tag
-            String configName = args[1];
+        // Delete a tag
+        String configName = args[1];
 
-            if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
-                Color.sendMessage(player, "invalid-tag");
-                return;
-            }
-
-            StringPlaceholders placeholders = StringPlaceholders.builder()
-                    .addAll(Placeholders.setPlaceholders(player))
-                    .add("tag-name", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagName())
-                    .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
-                    .build();
-
-            ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
-            tagsFile.remove("tags." + configName);
-            tagsFile.save();
-            tagsFile.reload();
-            SimpleTags.getInstance().getTags().loadConfig();
-
-            SimpleTags.getInstance().getTagManager().removeTag(SimpleTags.getInstance().getTagManager().getCachedTag(configName));
-            SimpleTags.getInstance().getTagManager().updateTags();
-
-            Color.sendMessage(player, "tag-deleted", placeholders);
+        if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
+            Color.sendMessage(player, "invalid-tag");
+            return;
         }
+
+        StringPlaceholders placeholders = StringPlaceholders.builder()
+                .addAll(Placeholders.setPlaceholders(player))
+                .add("tag-name", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagName())
+                .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
+                .build();
+
+        ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
+        tagsFile.remove("tags." + configName);
+        tagsFile.save();
+        tagsFile.reload();
+        SimpleTags.getInstance().getTags().loadConfig();
+
+        SimpleTags.getInstance().getTagManager().removeTag(SimpleTags.getInstance().getTagManager().getCachedTag(configName));
+        SimpleTags.getInstance().getTagManager().updateTags();
+
+        Color.sendMessage(player, "tag-deleted", placeholders);
     }
 
     /**
