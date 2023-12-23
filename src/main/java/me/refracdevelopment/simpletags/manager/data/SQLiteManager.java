@@ -1,9 +1,8 @@
 package me.refracdevelopment.simpletags.manager.data;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
+import org.sqlite.SQLiteDataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +11,7 @@ import java.util.UUID;
 
 public class SQLiteManager {
 
-    private HikariDataSource dataSource;
+    private SQLiteDataSource dataSource;
 
     public void createT() {
         Tasks.runAsync(this::createTables);
@@ -21,15 +20,9 @@ public class SQLiteManager {
     public boolean connect(String path) {
         try {
             Color.log("&aConnecting to SQLite...");
-            HikariConfig config = new HikariConfig();
             Class.forName("org.sqlite.JDBC");
-            config.setDriverClassName("org.sqlite.JDBC");
-            config.setJdbcUrl("jdbc:sqlite:" + path);
-            config.addDataSourceProperty("cachePrepStmts", "true");
-            config.addDataSourceProperty("prepStmtCacheSize", "250");
-            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-
-            dataSource = new HikariDataSource(config);
+            dataSource = new SQLiteDataSource();
+            dataSource.setUrl("jdbc:sqlite:" + path);
             Color.log("&aConnected to SQLite!");
             return true;
         } catch (Exception exception) {
@@ -57,7 +50,11 @@ public class SQLiteManager {
     }
 
     public void close() {
-        this.dataSource.close();
+        try {
+            getConnection().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -138,10 +135,10 @@ public class SQLiteManager {
     }
 
     public void delete() {
-        execute("DELETE * FROM SimpleTags");
+        execute("DELETE FROM SimpleTags");
     }
 
     public void deletePlayer(UUID uuid) {
-        execute("DELETE * FROM SimpleTags WHERE uuid=?", uuid.toString());
+        execute("DELETE FROM SimpleTags WHERE uuid=?", uuid.toString());
     }
 }
