@@ -49,25 +49,18 @@ public class ListCommand extends SubCommand {
      */
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        // Make sure the sender is a player.
-        if (!(commandSender instanceof Player)) {
-            Color.sendMessage(commandSender, "no-console");
-            return;
-        }
-
-        Player player = (Player) commandSender;
-
-        if (!player.hasPermission(Permissions.LIST_COMMAND)) {
-            Color.sendMessage(player, "no-permission");
+        // Make sure the player has permission to use this command
+        if (!commandSender.hasPermission(Permissions.LIST_COMMAND)) {
+            Color.sendMessage(commandSender, "no-permission");
             return;
         }
 
         // Show list of all available tags
-        Color.sendCustomMessage(player, "&7-------------------------------------");
+        Color.sendCustomMessage(commandSender, "&7-------------------------------------");
         SimpleTags.getInstance().getTagManager().getLoadedTags().forEach(tag -> {
-            Color.sendCustomMessage(player, "&e" + tag.getConfigName() + "&7(" + tag.getTagName() + "&7) &7- " + tag.getTagPrefix());
+            Color.sendCustomMessage(commandSender, "&e" + tag.getConfigName() + "&7(" + tag.getTagName() + "&7) &7- " + tag.getTagPrefix());
         });
-        Color.sendCustomMessage(player, "&7-------------------------------------");
+        Color.sendCustomMessage(commandSender, "&7-------------------------------------");
     }
 
     /**
