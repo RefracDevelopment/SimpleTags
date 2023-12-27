@@ -8,6 +8,7 @@ import me.refracdevelopment.simpletags.utilities.chat.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Getter
 public class TagManager {
@@ -55,5 +56,9 @@ public class TagManager {
 
     public Optional<Tag> findByName(String tagName) {
         return getLoadedTags().stream().filter(tag -> tag.getTagName().equalsIgnoreCase(tagName)).findFirst();
+    }
+
+    public List<String> getTagNames() {
+        return getLoadedTags().stream().map(Tag::getConfigName).collect(Collectors.toList());
     }
 }

@@ -18,7 +18,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ import java.util.List;
 public class TagsItem {
 
     private final XMaterial material;
-    private final String skullOwner;
+    private final String name, skullOwner;
     private final boolean skulls, headDatabase, customData;
     private final int data, customModelData;
     private final List<String> lore;
@@ -49,6 +48,7 @@ public class TagsItem {
         } else {
             this.customData = false;
         }
+        this.name = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.name");
         this.skullOwner = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.skullOwner");
         this.data = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getInt("tag-item.data");
         this.customModelData = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getInt("tag-item.customModelData");
@@ -85,30 +85,21 @@ public class TagsItem {
     private ItemStack makeItem(ItemBuilder item, Player player, Tag tag) {
         ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
-        item.setName(Color.translate(player, SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.name")
-                .replace("%tag-name%", tag.getTagName())
-        ));
+        item.setName(Color.translate(player, getName().replace("%tag-name%", tag.getTagName())));
 
         if (player.hasPermission("simpletags.tag." + tag.getConfigName())) {
             if (!profile.getTag().equals(tag.getConfigName())) {
-                for (String s : SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.lore")) {
-                    item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix())));
-                }
+                List<String> lore = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.lore");
+                lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix()))));
             } else {
-                // Make equipped tag glow
                 item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
-                ItemMeta itemMeta = item.toItemStack().getItemMeta();
-                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                item.toItemStack().setItemMeta(itemMeta);
-
-                for (String s : SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.equipped-lore")) {
-                    item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix())));
-                }
+                item.setItemFlags(ItemFlag.HIDE_ENCHANTS);
+                List<String> equippedLore = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.equipped-lore");
+                equippedLore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix()))));
             }
-        } else if (!player.hasPermission("simpletags.tag." + tag.getConfigName())) {
-            for (String s : SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.no-permission-lore")) {
-                item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix())));
-            }
+        } else {
+            List<String> noPermissionLore = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.no-permission-lore");
+            noPermissionLore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix()))));
         }
 
         NBTItem nbtItem = new NBTItem(item.toItemStack());

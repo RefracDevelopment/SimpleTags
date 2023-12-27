@@ -52,16 +52,8 @@ public class DeleteCommand extends SubCommand {
      */
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        // Make sure the sender is a player.
-        if (!(commandSender instanceof Player)) {
-            Color.sendMessage(commandSender, "no-console");
-            return;
-        }
-
-        Player player = (Player) commandSender;
-
-        if (!player.hasPermission(Permissions.DELETE_COMMAND)) {
-            Color.sendMessage(player, "no-permission");
+        if (!commandSender.hasPermission(Permissions.DELETE_COMMAND)) {
+            Color.sendMessage(commandSender, "no-permission");
             return;
         }
 
@@ -73,12 +65,12 @@ public class DeleteCommand extends SubCommand {
         String configName = args[1];
 
         if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
-            Color.sendMessage(player, "invalid-tag");
+            Color.sendMessage(commandSender, "invalid-tag");
             return;
         }
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
-                .addAll(Placeholders.setPlaceholders(player))
+                .addAll(Placeholders.setPlaceholders(commandSender))
                 .add("tag-name", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagName())
                 .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
                 .build();
@@ -92,7 +84,7 @@ public class DeleteCommand extends SubCommand {
         SimpleTags.getInstance().getTagManager().removeTag(SimpleTags.getInstance().getTagManager().getCachedTag(configName));
         SimpleTags.getInstance().getTagManager().updateTags();
 
-        Color.sendMessage(player, "tag-deleted", placeholders);
+        Color.sendMessage(commandSender, "tag-deleted", placeholders);
     }
 
     /**
@@ -102,6 +94,11 @@ public class DeleteCommand extends SubCommand {
      */
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args) {
+        List <String> tagNames = SimpleTags.getInstance().getTagManager().getTagNames();
+
+        if (args.length == 2) {
+            return tagNames;
+        }
         return null;
     }
 }

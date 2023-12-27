@@ -53,16 +53,8 @@ public class CreateCommand extends SubCommand {
      */
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        // Make sure the sender is a player.
-        if (!(commandSender instanceof Player)) {
-            Color.sendMessage(commandSender, "no-console");
-            return;
-        }
-
-        Player player = (Player) commandSender;
-
-        if (!player.hasPermission(Permissions.CREATE_COMMAND)) {
-            Color.sendMessage(player, "no-permission");
+        if (!commandSender.hasPermission(Permissions.CREATE_COMMAND)) {
+            Color.sendMessage(commandSender, "no-permission");
             return;
         }
 
@@ -76,7 +68,7 @@ public class CreateCommand extends SubCommand {
         String tagPrefix = args[3];
 
         if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) != null) {
-            Color.sendMessage(player, "tag-already-exists");
+            Color.sendMessage(commandSender, "tag-already-exists");
             return;
         }
 
@@ -90,12 +82,12 @@ public class CreateCommand extends SubCommand {
         SimpleTags.getInstance().getTagManager().addTag(new Tag(configName, tagName, tagPrefix));
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
-                .addAll(Placeholders.setPlaceholders(player))
+                .addAll(Placeholders.setPlaceholders(commandSender))
                 .add("tag-name", tagName)
                 .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
                 .build();
 
-        Color.sendMessage(player, "tag-created", placeholders);
+        Color.sendMessage(commandSender, "tag-created", placeholders);
     }
 
     /**

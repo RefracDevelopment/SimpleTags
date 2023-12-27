@@ -54,6 +54,7 @@ public class TagsMenu extends PaginatedMenu {
             }
         } else if (e.getCurrentItem().getType().equals(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("close.material")).parseMaterial())) {
             player.closeInventory();
+            return;
         }
 
         if (e.getCurrentItem().getType().equals(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.material")).parseMaterial())) {
@@ -73,7 +74,7 @@ public class TagsMenu extends PaginatedMenu {
             }
 
             // Check if their tag is the same if not set it to the new tag
-            if (!profile.getTag().equalsIgnoreCase(tag.getConfigName()) || profile.getTag().equalsIgnoreCase("")) {
+            if (!profile.getTag().equalsIgnoreCase(tag.getConfigName()) || profile.getTag().isEmpty()) {
                 profile.setTag(tag.getConfigName());
                 profile.setTagPrefix(tag.getTagPrefix());
                 Color.sendMessage(player, "tag-updated", Placeholders.setPlaceholders(player));

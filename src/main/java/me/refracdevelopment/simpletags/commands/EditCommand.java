@@ -52,16 +52,8 @@ public class EditCommand extends SubCommand {
      */
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        // Make sure the sender is a player.
-        if (!(commandSender instanceof Player)) {
-            Color.sendMessage(commandSender, "no-console");
-            return;
-        }
-
-        Player player = (Player) commandSender;
-
-        if (!player.hasPermission(Permissions.EDIT_COMMAND)) {
-            Color.sendMessage(player, "no-permission");
+        if (!commandSender.hasPermission(Permissions.EDIT_COMMAND)) {
+            Color.sendMessage(commandSender, "no-permission");
             return;
         }
 
@@ -89,7 +81,7 @@ public class EditCommand extends SubCommand {
                 .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
                 .build();
 
-        Color.sendMessage(player, "tag-edited", placeholders);
+        Color.sendMessage(commandSender, "tag-edited", placeholders);
     }
 
     /**
@@ -99,6 +91,11 @@ public class EditCommand extends SubCommand {
      */
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args) {
+        List <String> tagNames = SimpleTags.getInstance().getTagManager().getTagNames();
+
+        if (args.length == 2) {
+            return tagNames;
+        }
         return null;
     }
 }

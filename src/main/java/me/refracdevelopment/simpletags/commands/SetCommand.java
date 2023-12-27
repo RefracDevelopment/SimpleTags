@@ -58,11 +58,6 @@ public class SetCommand extends SubCommand {
      */
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        if (!commandSender.hasPermission(Permissions.SET_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
-            return;
-        }
-
         if (args.length <= 1) {
             return;
         }
@@ -75,6 +70,11 @@ public class SetCommand extends SubCommand {
 
             Player player = (Player) commandSender;
             String configName = args[1];
+
+            if (!player.hasPermission(Permissions.SET_COMMAND)) {
+                Color.sendMessage(player, "no-permission");
+                return;
+            }
 
             if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
                 Color.sendMessage(commandSender, "invalid-tag", Placeholders.setPlaceholders(player));
@@ -105,15 +105,15 @@ public class SetCommand extends SubCommand {
         }
 
         if (args.length == 3) {
-            OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
             String configName = args[1];
+            OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
+
+            if (!commandSender.hasPermission(Permissions.SET_OTHER_COMMAND)) {
+                Color.sendMessage(commandSender, "no-permission");
+                return;
+            }
 
             if (target.isOnline()) {
-                if (!commandSender.hasPermission(Permissions.SET_OTHER_COMMAND)) {
-                    Color.sendMessage(commandSender, "no-permission");
-                    return;
-                }
-
                 ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(target.getUniqueId()).getData();
                 Tag tag = SimpleTags.getInstance().getTagManager().getCachedTag(configName);
 
