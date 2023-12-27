@@ -1,5 +1,7 @@
 ![](https://i.imgur.com/O57ilA8.png)
 
+[SpigotMC](https://www.spigotmc.org/resources/114078/)
+
 SimpleTags is a plugin that allows you to use custom tags in chat.
 
 ### Issue Reporting/Support
