@@ -49,7 +49,7 @@ public class SetCommand extends SubCommand {
      */
     @Override
     public String getSyntax() {
-        return "[player] <identifier>";
+        return "<identifier> [player]";
     }
 
     /**
