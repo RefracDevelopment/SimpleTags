@@ -58,16 +58,8 @@ public class SetCommand extends SubCommand {
      */
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        // Make sure the sender is a player.
-        if (!(commandSender instanceof Player)) {
-            Color.sendMessage(commandSender, "no-console");
-            return;
-        }
-
-        Player player = (Player) commandSender;
-
-        if (!player.hasPermission(Permissions.SET_COMMAND)) {
-            Color.sendMessage(player, "no-permission");
+        if (!commandSender.hasPermission(Permissions.SET_COMMAND)) {
+            Color.sendMessage(commandSender, "no-permission");
             return;
         }
 
@@ -76,10 +68,16 @@ public class SetCommand extends SubCommand {
         }
 
         if (args.length == 2) {
+            if (!(commandSender instanceof Player)) {
+                Color.sendMessage(commandSender, "no-console");
+                return;
+            }
+
+            Player player = (Player) commandSender;
             String configName = args[1];
 
             if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
-                Color.sendMessage(player, "invalid-tag", Placeholders.setPlaceholders(player));
+                Color.sendMessage(commandSender, "invalid-tag", Placeholders.setPlaceholders(player));
                 return;
             }
 
@@ -107,12 +105,12 @@ public class SetCommand extends SubCommand {
         }
 
         if (args.length == 3) {
-            OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-            String configName = args[2];
+            OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
+            String configName = args[1];
 
             if (target.isOnline()) {
-                if (!player.hasPermission(Permissions.SET_OTHER_COMMAND)) {
-                    Color.sendMessage(player, "no-permission");
+                if (!commandSender.hasPermission(Permissions.SET_OTHER_COMMAND)) {
+                    Color.sendMessage(commandSender, "no-permission");
                     return;
                 }
 
@@ -120,8 +118,8 @@ public class SetCommand extends SubCommand {
                 Tag tag = SimpleTags.getInstance().getTagManager().getCachedTag(configName);
 
                 StringPlaceholders placeholders = StringPlaceholders.builder()
-                        .addAll(Placeholders.setPlaceholders(player))
-                        .add("player", target.getPlayer().getName())
+                        .addAll(Placeholders.setPlaceholders(commandSender))
+                        .add("player", profile.getPlayer().getName())
                         .add("tag-name", tag.getTagName())
                         .add("tag-prefix", tag.getTagPrefix())
                         .build();
@@ -130,13 +128,13 @@ public class SetCommand extends SubCommand {
                 profile.setTagPrefix(tag.getTagPrefix());
                 Tasks.runAsync(profile::save);
 
-                Color.sendMessage(player, "tag-set", placeholders);
+                Color.sendMessage(commandSender, "tag-set", placeholders);
                 Color.sendMessage(profile.getPlayer(), "tag-updated", placeholders);
             } else {
                 Tag tag = SimpleTags.getInstance().getTagManager().getCachedTag(configName);
 
                 StringPlaceholders placeholders = StringPlaceholders.builder()
-                        .addAll(Placeholders.setPlaceholders(player))
+                        .addAll(Placeholders.setPlaceholders(commandSender))
                         .add("player", target.getName())
                         .add("tag-name", tag.getTagName())
                         .add("tag-prefix", tag.getTagPrefix())
@@ -144,7 +142,7 @@ public class SetCommand extends SubCommand {
 
                 Tasks.runAsync(() -> Utilities.saveOfflinePlayer(target.getUniqueId(), tag.getTagName(), tag.getTagPrefix()));
 
-                Color.sendMessage(player, "tag-set", placeholders);
+                Color.sendMessage(commandSender, "tag-set", placeholders);
             }
         }
     }
@@ -156,6 +154,7 @@ public class SetCommand extends SubCommand {
      */
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args) {
+        List <String> tagNames = SimpleTags.getInstance().getTagManager().getTagNames();
         List<String> names = new ArrayList<>();
 
         Bukkit.getOnlinePlayers().forEach(p -> {
@@ -163,6 +162,10 @@ public class SetCommand extends SubCommand {
         });
 
         if (args.length == 2) {
+            return tagNames;
+        }
+
+        if (args.length == 3) {
             return names;
         }
         return null;

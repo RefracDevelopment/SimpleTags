@@ -15,13 +15,10 @@ public class Placeholders {
 
             placeholder = placeholder.replace("%player%", player.getName());
             placeholder = placeholder.replace("%displayname%", player.getDisplayName());
-            placeholder = placeholder.replace("%tag%", profile.getTagPrefix());
-            if (SimpleTags.getInstance().getTagManager().getCachedTag(profile.getTag()) != null) {
-                placeholder = placeholder.replace("%tag-name%", SimpleTags.getInstance().getTagManager().getCachedTag(profile.getTag()).getTagName());
-            } else {
-                placeholder = placeholder.replace("%tag-name%", "");
-            }
+            placeholder = placeholder.replace("%tag-name%", profile.getTag());
             placeholder = placeholder.replace("%tag-prefix%", profile.getTagPrefix());
+            placeholder = placeholder.replace("%tag-name%", "");
+            placeholder = placeholder.replace("%tag-prefix%", "");
         }
         placeholder = placeholder.replace("%arrow%", "\u00BB");
         placeholder = placeholder.replace("%arrow_2%", "\u27A5");
@@ -42,12 +39,7 @@ public class Placeholders {
 
             placeholders.add("player", player.getName());
             placeholders.add("displayname", player.getDisplayName());
-            placeholders.add("tag", profile.getTagPrefix());
-            if (SimpleTags.getInstance().getTagManager().getCachedTag(profile.getTag()) != null) {
-                placeholders.add("tag-name", SimpleTags.getInstance().getTagManager().getCachedTag(profile.getTag()).getTagName());
-            } else {
-                placeholders.add("tag-name", "");
-            }
+            placeholders.add("tag-name", profile.getTag());
             placeholders.add("tag-prefix", profile.getTagPrefix());
         }
         placeholders.add("arrow", "\u00BB");

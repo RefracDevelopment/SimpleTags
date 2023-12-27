@@ -24,7 +24,6 @@ import me.refracdevelopment.simpletags.menu.TagsMenu;
 import me.refracdevelopment.simpletags.utilities.DownloadUtil;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.PAPIExpansion;
-import me.refracdevelopment.simpletags.utilities.command.CommandList;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -87,6 +86,8 @@ public final class SimpleTags extends JavaPlugin {
 
         new Metrics(this, 13205);
 
+        loadFiles();
+
         // Check if the server is on 1.7
         if (ReflectionUtils.MINOR_NUMBER <= 7) {
             Color.log("&c" + getDescription().getName() + " 1.7 is in legacy mode, please update to 1.8+");
@@ -120,8 +121,6 @@ public final class SimpleTags extends JavaPlugin {
         if (pluginManager.isPluginEnabled("HeadDatabase")) {
             Color.log("&eHeadDatabase Detected!");
         }
-
-        loadFiles();
 
         loadManagers();
         loadCommands();
@@ -212,19 +211,16 @@ public final class SimpleTags extends JavaPlugin {
         try {
             getCommandManager().createCoreCommand(this, getCommands().TAGS_COMMAND_NAME,
                     getLocaleFile().getString("command-tags-description"),
-                    "/" + getCommands().TAGS_COMMAND_NAME, new CommandList() {
-                        @Override
-                        public void displayCommandList(CommandSender commandSender, List<SubCommand> list) {
-                            // Make sure the sender is a player.
-                            if (!(commandSender instanceof Player)) {
-                                Color.sendMessage(commandSender, "no-console");
-                                return;
-                            }
-
-                            Player player = (Player) commandSender;
-
-                            new TagsMenu(SimpleTags.getInstance().getMenuManager().getPlayerMenuUtility(player)).open();
+                    "/" + getCommands().TAGS_COMMAND_NAME, (commandSender, list) -> {
+                        // Make sure the sender is a player.
+                        if (!(commandSender instanceof Player)) {
+                            Color.sendMessage(commandSender, "no-console");
+                            return;
                         }
+
+                        Player player = (Player) commandSender;
+
+                        new TagsMenu(SimpleTags.getInstance().getMenuManager().getPlayerMenuUtility(player)).open();
                     }, getCommands().TAGS_COMMAND_ALIASES,
                     CreateCommand.class,
                     DeleteCommand.class,
