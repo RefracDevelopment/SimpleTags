@@ -4,6 +4,7 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
 import me.refracdevelopment.simpletags.player.data.Tag;
+import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.Utilities;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
@@ -77,6 +78,7 @@ public class TagsMenu extends PaginatedMenu {
             if (!profile.getTag().equalsIgnoreCase(tag.getConfigName()) || profile.getTag().isEmpty()) {
                 profile.setTag(tag.getConfigName());
                 profile.setTagPrefix(tag.getTagPrefix());
+                Tasks.runAsync(profile::save);
                 Color.sendMessage(player, "tag-updated", Placeholders.setPlaceholders(player));
                 player.closeInventory();
                 return;
@@ -84,6 +86,7 @@ public class TagsMenu extends PaginatedMenu {
 
             profile.setTag("");
             profile.setTagPrefix("");
+            Tasks.runAsync(profile::save);
             Color.sendMessage(player, "tag-reset", Placeholders.setPlaceholders(player));
             player.closeInventory();
         }
