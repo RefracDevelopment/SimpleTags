@@ -130,7 +130,7 @@ public class SetCommand extends SubCommand {
 
                 Color.sendMessage(commandSender, "tag-set", placeholders);
                 Color.sendMessage(profile.getPlayer(), "tag-updated", placeholders);
-            } else {
+            } else if (target.hasPlayedBefore()) {
                 Tag tag = SimpleTags.getInstance().getTagManager().getCachedTag(configName);
 
                 StringPlaceholders placeholders = StringPlaceholders.builder()

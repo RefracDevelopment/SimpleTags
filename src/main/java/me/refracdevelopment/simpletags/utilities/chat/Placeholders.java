@@ -16,9 +16,13 @@ public class Placeholders {
             placeholder = placeholder.replace("%player%", player.getName());
             placeholder = placeholder.replace("%displayname%", player.getDisplayName());
             if (SimpleTags.getInstance().getTagManager().getCachedTag(profile.getTag()) != null) {
+                placeholder = placeholder.replace("%identifier%", profile.getTag());
+                placeholder = placeholder.replace("%tag%", profile.getTagPrefix());
                 placeholder = placeholder.replace("%tag-name%", profile.getTag());
                 placeholder = placeholder.replace("%tag-prefix%", profile.getTagPrefix());
             } else {
+                placeholder = placeholder.replace("%identifier%", "");
+                placeholder = placeholder.replace("%tag%", "");
                 placeholder = placeholder.replace("%tag-name%", "");
                 placeholder = placeholder.replace("%tag-prefix%", "");
             }

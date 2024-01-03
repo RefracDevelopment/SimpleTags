@@ -32,14 +32,25 @@ public class PAPIExpansion extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, @NotNull String params) {
         ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
-        if (params.equalsIgnoreCase("tag")) {
-            if (profile == null) {
-                return "";
-            }
-            if (profile.getTagPrefix().equals("")) {
-                return "";
-            }
-            return Color.translate(profile.getTagPrefix());
+        switch (params) {
+            case "tag-prefix":
+            case "tag":
+                if (profile == null) {
+                    return "N/A";
+                }
+                if (profile.getTagPrefix().isEmpty()) {
+                    return "N/A";
+                }
+                return Color.translate(profile.getTagPrefix());
+            case "tag-name":
+            case "identifier":
+                if (profile == null) {
+                    return "N/A";
+                }
+                if (profile.getTag().isEmpty()) {
+                    return "N/A";
+                }
+                return profile.getTag();
         }
 
         return null;
