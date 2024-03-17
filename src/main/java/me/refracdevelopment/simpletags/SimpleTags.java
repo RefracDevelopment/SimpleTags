@@ -40,6 +40,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 public final class SimpleTags extends JavaPlugin {
@@ -144,14 +145,11 @@ public final class SimpleTags extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        switch (dataType) {
-            case MYSQL:
-                getMySQLManager().shutdown();
-                break;
-            default:
-                getSqLiteManager().shutdown();
-                break;
-        }
+        if (Objects.requireNonNull(dataType) == DataType.MYSQL)
+            getMySQLManager().shutdown();
+        else
+            getSqLiteManager().shutdown();
+
         getServer().getScheduler().cancelTasks(this);
     }
 
@@ -168,19 +166,10 @@ public final class SimpleTags extends JavaPlugin {
         tags = new Tags();
         menus = new Menus();
         commands = new Commands();
-    }
 
-    public void reloadFiles() {
-        getConfigFile().reload();
-        getTagsFile().reload();
-        getMenusFile().reload();
-        getLocaleFile().reload();
-        getCommandsFile().reload();
-
-        getSettings().loadConfig();
-        getTags().loadConfig();
-        getMenus().loadConfig();
-        getCommands().loadConfig();
+        Color.log("&c==========================================");
+        Color.log("&eAll files have been loaded correctly!");
+        Color.log("&c==========================================");
     }
 
     private void loadManagers() {
@@ -189,14 +178,10 @@ public final class SimpleTags extends JavaPlugin {
             case "MYSQL":
                 dataType = DataType.MYSQL;
                 mySQLManager = new MySQLManager();
-                getMySQLManager().connect();
-                getMySQLManager().createT();
                 break;
             default:
                 dataType = DataType.SQLITE;
-                sqLiteManager = new SQLiteManager();
-                getSqLiteManager().connect(getDataFolder().getAbsolutePath() + File.separator + "tags.db");
-                getSqLiteManager().createT();
+                sqLiteManager = new SQLiteManager(getDataFolder().getAbsolutePath() + File.separator + "tags.db");
                 break;
         }
 
@@ -247,7 +232,6 @@ public final class SimpleTags extends JavaPlugin {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             Color.log("&aFailed to load commands.");
             e.printStackTrace();
-            return;
         }
     }
 
@@ -267,32 +251,30 @@ public final class SimpleTags extends JavaPlugin {
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String input;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             while ((input = reader.readLine()) != null) {
                 response.append(input);
             }
             reader.close();
-            JsonObject object = new JsonParser().parse(response.toString()).getAsJsonObject();
+            JsonObject object = JsonParser.parseString(response.toString()).getAsJsonObject();
 
             if (object.has("plugins")) {
                 JsonObject plugins = object.get("plugins").getAsJsonObject();
                 JsonObject info = plugins.get(getDescription().getName()).getAsJsonObject();
                 String version = info.get("version").getAsString();
-                if (version.equals(getDescription().getVersion())) {
+                boolean archived = info.get("archived").getAsBoolean();
+
+                if (archived) {
+                    sender.sendMessage(Color.translate("&cThis plugin has been marked as &e&l'Archived' &cby RefracDevelopment."));
+                    sender.sendMessage(Color.translate("&cThis version will continue to work but will not receive updates or support."));
+                } else if (version.equals(getDescription().getVersion())) {
                     if (console) {
                         sender.sendMessage(Color.translate("&a" + getDescription().getName() + " is on the latest version."));
                     }
                 } else {
                     sender.sendMessage(Color.translate(""));
+                    sender.sendMessage(Color.translate("&cYour " + getDescription().getName() + " version &7(" + getDescription().getVersion() + ") &cis out of date! Newest: &e&lv" + version));
                     sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate("&cYour " + getDescription().getName() + " version is out of date!"));
-                    sender.sendMessage(Color.translate("&cWe recommend updating ASAP!"));
-                    sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate("&cYour Version: &e" + getDescription().getVersion()));
-                    sender.sendMessage(Color.translate("&aNewest Version: &e" + version));
-                    sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate(""));
-                    return;
                 }
             } else {
                 sender.sendMessage(Color.translate("&cWrong response from update API, contact plugin developer!"));

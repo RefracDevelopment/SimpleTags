@@ -18,7 +18,9 @@ public class TagManager {
     public void loadTags() {
         getLoadedTags().clear();
         SimpleTags.getInstance().getTagsFile().getSection("tags").getRoutesAsStrings(false).forEach(tag -> {
-            addTag(new Tag(tag, SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".name"), SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".prefix")));
+            addTag(new Tag(tag, SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".name"),
+                    SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".prefix"),
+                    SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".item")));
         });
         Color.log("&eLoaded " + getLoadedTags().size() + " tags.");
     }
@@ -46,11 +48,9 @@ public class TagManager {
     }
 
     public Tag getCachedTag(String name) {
-        for (Tag tag : getLoadedTags()) {
-            if (tag.getConfigName().equalsIgnoreCase(name)) {
+        for (Tag tag : getLoadedTags())
+            if (tag.getConfigName().equalsIgnoreCase(name))
                 return tag;
-            }
-        }
         return null;
     }
 

@@ -1,5 +1,5 @@
 # This is used for automatic file updating purposes
-config-version: '1'
+config-version: '2'
 
 tags:
   # The tag name used in permissions or commands
@@ -7,3 +7,4 @@ tags:
   darkredheart:
     name: "&4Dark Red Heart" # Menu item name
     prefix: '&4❤ ' # Chat prefix
+    item: 'REDSTONE' # Menu item material

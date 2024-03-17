@@ -98,7 +98,7 @@ public class SetCommand extends SubCommand {
 
             profile.setTag(configName);
             profile.setTagPrefix(tag.getTagPrefix());
-            Tasks.runAsync(profile::save);
+            Tasks.runAsync(() -> profile.save(player));
 
             Color.sendMessage(player, "tag-updated", placeholders);
             return;
@@ -119,17 +119,17 @@ public class SetCommand extends SubCommand {
 
                 StringPlaceholders placeholders = StringPlaceholders.builder()
                         .addAll(Placeholders.setPlaceholders(commandSender))
-                        .add("player", profile.getPlayer().getName())
+                        .add("player", target.getPlayer().getName())
                         .add("tag-name", tag.getTagName())
                         .add("tag-prefix", tag.getTagPrefix())
                         .build();
 
                 profile.setTag(configName);
                 profile.setTagPrefix(tag.getTagPrefix());
-                Tasks.runAsync(profile::save);
+                Tasks.runAsync(() -> profile.save(target.getPlayer()));
 
                 Color.sendMessage(commandSender, "tag-set", placeholders);
-                Color.sendMessage(profile.getPlayer(), "tag-updated", placeholders);
+                Color.sendMessage(target.getPlayer(), "tag-updated", placeholders);
             } else if (target.hasPlayedBefore()) {
                 Tag tag = SimpleTags.getInstance().getTagManager().getCachedTag(configName);
 
@@ -140,7 +140,7 @@ public class SetCommand extends SubCommand {
                         .add("tag-prefix", tag.getTagPrefix())
                         .build();
 
-                Tasks.runAsync(() -> Utilities.saveOfflinePlayer(target.getUniqueId(), tag.getTagName(), tag.getTagPrefix()));
+                Tasks.runAsync(() -> Utilities.saveOfflinePlayer(target.getUniqueId().toString(), tag.getTagName(), tag.getTagPrefix()));
 
                 Color.sendMessage(commandSender, "tag-set", placeholders);
             }

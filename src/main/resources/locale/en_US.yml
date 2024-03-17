@@ -1,15 +1,15 @@
 # en_US translation by Refrac
 
 # This is used for automatic file updating purposes
-config-version: '1'
+config-version: '2'
 
 # Plugin Message Prefix
-prefix: <g:#8A2387:#E94057:#F27121>SimpleTags &8| &f
+prefix: '<g:#8A2387:#E94057:#F27121>SimpleTags &8| &f'
 
 # Generic Command Messages
 no-permission: '&cYou don''t have permission for that!'
 no-console: '&cOnly players may execute this command.'
-unknown-command: Unknown command, use &d/%cmd%&f help for more info
+unknown-command: 'Unknown command, use &d/%cmd%&f help for more info'
 tag-already-exists: '&cThis tag already exists.'
 invalid-tag: '&cThis tag doesn''t exist.'
 tag-not-owned: '&cYou don''t own this tag!'
@@ -29,32 +29,35 @@ base-command-help: '&eUse &b/%cmd% help &efor command information.'
 
 # Help Command
 command-help-title: '&fAvailable Commands:'
-command-help-description: Displays the help menu.
+command-help-description: 'Displays the help menu.'
 command-help-list-description: '&8 - &d/%cmd% %subcmd% %args% &7- %desc%'
 command-help-list-description-no-args: '&8 - &d/%cmd% %subcmd% &7- %desc%'
 
 # Tags Command
-command-tags-description: Opens the tags menu.
+command-tags-description: 'Opens the tags menu.'
 
 # Create Command
-command-create-description: Allows you to create a tag.
+command-create-description: 'Allows you to create a tag.'
 
 # Delete Command
-command-delete-description: Allows you to delete a tag.
+command-delete-description: 'Allows you to delete a tag.'
 
 # Edit Command
-command-edit-description: Allows you to edit a tag's prefix.
+command-edit-description: 'Allows you to edit a tag''s prefix.'
 
 # List Command
-command-list-description: Displays a list of available tags.
+command-list-description: 'Displays a list of available tags.'
 
 # Set Command
-command-set-description: Allows you to set your or another players tag.
+command-set-description: 'Allows you to set your or another player''s tag.'
 
 # Reload Command
-command-reload-description: Reloads the plugin
+command-reload-description: 'Reloads the plugin'
 command-reload-usage: '&cUsage: &e/%cmd% reload'
 command-reload-success: '&aConfiguration and locale files were reloaded.'
 
 # Version Command
-command-version-description: Displays the version info for SimpleTags.
+command-version-description: 'Displays the version info for SimpleTags.'
+
+# Reset Command
+command-reset-description: 'Resets either the entire database or a specified player''s data.'

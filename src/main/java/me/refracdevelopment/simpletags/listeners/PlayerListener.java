@@ -28,7 +28,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
-        Tasks.runAsync(() -> profile.getData().load());
+        Tasks.runAsync(() -> profile.getData().load(player));
 
         if (profile == null || profile.getData() == null) {
             player.kickPlayer(Color.translate(SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
@@ -49,7 +49,7 @@ public class PlayerListener implements Listener {
         if (profile == null) return;
         if (profile.getData() == null) return;
 
-        Tasks.runAsync(() -> profile.getData().save());
+        Tasks.runAsync(() -> profile.getData().save(player));
         SimpleTags.getInstance().getProfileManager().getProfiles().remove(player.getUniqueId());
     }
 

@@ -66,6 +66,7 @@ public class CreateCommand extends SubCommand {
         String configName = args[1];
         String tagName = args[2];
         String tagPrefix = args[3];
+        String material = "NAME_TAG";
 
         if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) != null) {
             Color.sendMessage(commandSender, "tag-already-exists");
@@ -79,7 +80,7 @@ public class CreateCommand extends SubCommand {
         tagsFile.reload();
         SimpleTags.getInstance().getTags().loadConfig();
 
-        SimpleTags.getInstance().getTagManager().addTag(new Tag(configName, tagName, tagPrefix));
+        SimpleTags.getInstance().getTagManager().addTag(new Tag(configName, tagName, tagPrefix, material));
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
                 .addAll(Placeholders.setPlaceholders(commandSender))

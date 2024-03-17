@@ -33,21 +33,18 @@ public class TagsItem {
 
     public TagsItem() {
         this.material = Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.material"));
-        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.head-database")) {
+        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.head-database"))
             this.headDatabase = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.head-database", false);
-        } else {
+        else
             this.headDatabase = false;
-        }
-        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.skulls")) {
+        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.skulls"))
             this.skulls = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.skulls", false);
-        } else {
+        else
             this.skulls = false;
-        }
-        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.customData")) {
+        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.customData"))
             this.customData = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.customData", false);
-        } else {
+        else
             this.customData = false;
-        }
         this.name = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.name");
         this.skullOwner = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.skullOwner");
         this.data = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getInt("tag-item.data");
@@ -56,7 +53,11 @@ public class TagsItem {
     }
 
     public ItemStack getItem(Player player, Tag tag) {
-        ItemBuilder item = new ItemBuilder(getMaterial().parseMaterial());
+        ItemBuilder item;
+        if (tag.getMaterial() == null || tag.getMaterial().isEmpty())
+            item = new ItemBuilder(getMaterial().parseMaterial());
+        else
+            item = new ItemBuilder(Utilities.getMaterial(tag.getMaterial()).parseMaterial());
 
         if (isHeadDatabase()) {
             HeadDatabaseAPI api = new HeadDatabaseAPI();
@@ -65,19 +66,18 @@ public class TagsItem {
             Skull api = Skulls.getAPI().getSkull(Integer.parseInt(getSkullOwner()));
             item = new ItemBuilder(api.getItemStack());
         } else if (isCustomData()) {
-            if (ReflectionUtils.MINOR_NUMBER >= 14) {
+            if (ReflectionUtils.MINOR_NUMBER >= 14)
                 item.setCustomModelData(getCustomModelData());
-            } else {
+            else
                 Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
-            }
         }
 
         ItemBuilder finalItem = item;
 
         finalItem.setDurability(getData());
-        if (!isSkulls()) {
+
+        if (!isSkulls() && !isHeadDatabase())
             finalItem.setSkullOwner(getSkullOwner());
-        }
 
         return makeItem(finalItem, player, tag);
     }

@@ -10,5 +10,6 @@ public class Permissions {
     public static final String VERSION_COMMAND = "simpletags.command.version";
     public static final String RELOAD_COMMAND = "simpletags.command.reload";
     public static final String SET_OTHER_COMMAND = "simpletags.command.set.other";
+    public static final String RESET_COMMAND = "simpletags.command.reset";
 
 }

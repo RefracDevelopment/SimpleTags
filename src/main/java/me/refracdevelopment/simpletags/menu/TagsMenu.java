@@ -42,12 +42,11 @@ public class TagsMenu extends PaginatedMenu {
         if (e.getCurrentItem().getItemMeta() == null) return;
 
         if (e.getCurrentItem().getType().equals(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("left.material")).parseMaterial())) {
-            if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Left")) {
+            if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Left"))
                 if (page != 0) {
                     page = page - 1;
                     super.open();
                 }
-            }
         } else if (e.getCurrentItem().getType().equals(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("right.material")).parseMaterial())) {
             if (!((index + 1) >= plugin.getTagManager().getLoadedTags().size())) {
                 page = page + 1;
@@ -62,11 +61,10 @@ public class TagsMenu extends PaginatedMenu {
             Tag tag;
 
             NBTItem nbtItem = new NBTItem(e.getCurrentItem());
-            if (nbtItem.hasTag("tag-name")) {
+            if (nbtItem.hasTag("tag-name"))
                 tag = plugin.getTagManager().getCachedTag(nbtItem.getString("tag-name"));
-            } else {
+            else
                 tag = plugin.getTagManager().findByName(e.getCurrentItem().getItemMeta().getDisplayName()).get();
-            }
 
             if (!player.hasPermission("simpletags.tag." + tag.getConfigName())) {
                 Color.sendMessage(player, "tag-not-owned", Placeholders.setPlaceholders(player));
@@ -78,7 +76,7 @@ public class TagsMenu extends PaginatedMenu {
             if (!profile.getTag().equalsIgnoreCase(tag.getConfigName()) || profile.getTag().isEmpty()) {
                 profile.setTag(tag.getConfigName());
                 profile.setTagPrefix(tag.getTagPrefix());
-                Tasks.runAsync(profile::save);
+                Tasks.runAsync(() -> profile.save(player));
                 Color.sendMessage(player, "tag-updated", Placeholders.setPlaceholders(player));
                 player.closeInventory();
                 return;
@@ -86,7 +84,7 @@ public class TagsMenu extends PaginatedMenu {
 
             profile.setTag("");
             profile.setTagPrefix("");
-            Tasks.runAsync(profile::save);
+            Tasks.runAsync(() -> profile.save(player));
             Color.sendMessage(player, "tag-reset", Placeholders.setPlaceholders(player));
             player.closeInventory();
         }
@@ -102,9 +100,8 @@ public class TagsMenu extends PaginatedMenu {
             for (int i = 0; i < getMaxItemsPerPage(); i++) {
                 index = getMaxItemsPerPage() * page + i;
                 if (index >= tags.size()) break;
-                if (tags.get(index) != null) {
+                if (tags.get(index) != null)
                     inventory.addItem(tags.get(index).toItemStack(playerMenuUtility.getOwner(), tags.get(index).getConfigName()));
-                }
             }
         }
     }

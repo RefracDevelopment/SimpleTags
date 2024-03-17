@@ -33,6 +33,9 @@ public class Commands {
     public String VERSION_COMMAND_NAME;
     public List<String> VERSION_COMMAND_ALIASES;
 
+    public String RESET_COMMAND_NAME;
+    public List<String> RESET_COMMAND_ALIASES;
+
     public Commands() {
         loadConfig();
     }
@@ -64,5 +67,8 @@ public class Commands {
 
         VERSION_COMMAND_NAME = SimpleTags.getInstance().getCommandsFile().getString("subcommands.version.name");
         VERSION_COMMAND_ALIASES = SimpleTags.getInstance().getCommandsFile().getStringList("subcommands.version.aliases");
+
+        RESET_COMMAND_NAME = SimpleTags.getInstance().getCommandsFile().getString("subcommands.reset.name");
+        RESET_COMMAND_ALIASES = SimpleTags.getInstance().getCommandsFile().getStringList("subcommands.reset.aliases");
     }
 }

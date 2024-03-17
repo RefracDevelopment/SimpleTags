@@ -36,19 +36,19 @@ public class PAPIExpansion extends PlaceholderExpansion {
             case "tag-prefix":
             case "tag":
                 if (profile == null) {
-                    return "N/A";
+                    return "";
                 }
                 if (profile.getTagPrefix().isEmpty()) {
-                    return "N/A";
+                    return "";
                 }
                 return Color.translate(profile.getTagPrefix());
             case "tag-name":
             case "identifier":
                 if (profile == null) {
-                    return "N/A";
+                    return "";
                 }
                 if (profile.getTag().isEmpty()) {
-                    return "N/A";
+                    return "";
                 }
                 return profile.getTag();
         }

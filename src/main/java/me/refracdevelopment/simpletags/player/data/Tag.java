@@ -11,12 +11,13 @@ import org.bukkit.inventory.ItemStack;
 @Setter
 public class Tag {
 
-    private String configName, tagName, tagPrefix;
+    private String configName, tagName, tagPrefix, material;
 
-    public Tag(String configName, String tagName, String tagPrefix) {
+    public Tag(String configName, String tagName, String tagPrefix, String material) {
         this.configName = configName;
         this.tagName = tagName;
         this.tagPrefix = tagPrefix;
+        this.material = material;
     }
 
     public ItemStack toItemStack(Player player, String tag) {

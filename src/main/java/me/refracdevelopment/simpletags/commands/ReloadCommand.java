@@ -55,7 +55,7 @@ public class ReloadCommand extends SubCommand {
             return;
         }
 
-        SimpleTags.getInstance().reloadFiles();
+        reloadFiles();
         Tasks.runAsync(() -> {
             SimpleTags.getInstance().getTagManager().loadTags();
             SimpleTags.getInstance().getTagManager().updateTags();
@@ -71,5 +71,22 @@ public class ReloadCommand extends SubCommand {
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args) {
         return null;
+    }
+
+    private void reloadFiles() {
+        SimpleTags.getInstance().getConfigFile().reload();
+        SimpleTags.getInstance().getTagsFile().reload();
+        SimpleTags.getInstance().getMenusFile().reload();
+        SimpleTags.getInstance().getLocaleFile().reload();
+        SimpleTags.getInstance().getCommandsFile().reload();
+
+        SimpleTags.getInstance().getSettings().loadConfig();
+        SimpleTags.getInstance().getTags().loadConfig();
+        SimpleTags.getInstance().getMenus().loadConfig();
+        SimpleTags.getInstance().getCommands().loadConfig();
+
+        Color.log("&c==========================================");
+        Color.log("&eAll files have been reloaded correctly!");
+        Color.log("&c==========================================");
     }
 }
