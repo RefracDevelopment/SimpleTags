@@ -19,8 +19,8 @@ public class PlayerListener implements Listener {
     private final UUID getDevUUID2 = UUID.fromString("ab898e40-9088-45eb-9d69-e0b78e872627");
 
     @EventHandler
-    public void onPreLogin(AsyncPlayerPreLoginEvent event) {
-        SimpleTags.getInstance().getProfileManager().handleProfileCreation(event.getUniqueId(), event.getName());
+    public void onPreLogin(PlayerLoginEvent event) {
+        SimpleTags.getInstance().getProfileManager().handleProfileCreation(event.getPlayer().getUniqueId(), event.getPlayer().getName());
     }
 
     @EventHandler
