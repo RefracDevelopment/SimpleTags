@@ -14,7 +14,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TagsMenu extends PaginatedMenu {
@@ -64,6 +63,7 @@ public class TagsMenu extends PaginatedMenu {
         Tag tag = null;
 
         NBTItem nbtItem = new NBTItem(e.getCurrentItem());
+
         if (nbtItem.hasTag("tag-name"))
             tag = plugin.getTagManager().getCachedTag(nbtItem.getString("tag-name"));
 
@@ -97,7 +97,7 @@ public class TagsMenu extends PaginatedMenu {
     public void setMenuItems() {
         addMenuBorder();
 
-        List<Tag> tags = new ArrayList<>(plugin.getTagManager().getLoadedTags());
+        List<Tag> tags = plugin.getTagManager().getLoadedTags();
 
         if (!tags.isEmpty()) {
             for (int i = 0; i < getMaxItemsPerPage(); i++) {

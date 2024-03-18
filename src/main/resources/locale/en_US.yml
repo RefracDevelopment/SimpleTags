@@ -53,7 +53,7 @@ command-list-description: 'Displays a list of available tags.'
 command-set-description: 'Allows you to set your or another player''s tag.'
 
 # Reload Command
-command-reload-description: 'Reloads the plugin'
+command-reload-description: 'Reloads the plugin.'
 command-reload-usage: '&cUsage: &e/%cmd% reload'
 command-reload-success: '&aConfiguration and locale files were reloaded.'
 

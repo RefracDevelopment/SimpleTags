@@ -84,6 +84,9 @@ public class CreateCommand extends SubCommand {
 
         SimpleTags.getInstance().getTagManager().addTag(new Tag(configName, tagName, tagPrefix, material));
 
+        if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null)
+            return;
+
         StringPlaceholders placeholders = StringPlaceholders.builder()
                 .addAll(Placeholders.setPlaceholders(commandSender))
                 .add("tag-name", tagName)

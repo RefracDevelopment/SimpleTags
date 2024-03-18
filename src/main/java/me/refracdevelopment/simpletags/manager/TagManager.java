@@ -7,7 +7,6 @@ import me.refracdevelopment.simpletags.utilities.chat.Color;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -17,11 +16,10 @@ public class TagManager {
 
     public void loadTags() {
         getLoadedTags().clear();
-        SimpleTags.getInstance().getTagsFile().getSection("tags").getRoutesAsStrings(false).forEach(tag -> {
-            addTag(new Tag(tag, SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".name"),
-                    SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".prefix"),
-                    SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".item")));
-        });
+        SimpleTags.getInstance().getTags().TAGS.getRoutesAsStrings(false).forEach(tag ->
+                addTag(new Tag(tag, SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".name"),
+                SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".prefix"),
+                SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".item"))));
         Color.log("&eLoaded " + getLoadedTags().size() + " tags.");
     }
 
@@ -47,8 +45,11 @@ public class TagManager {
         getLoadedTags().remove(tag);
     }
 
-    public Tag getCachedTag(String tagName) {
-        return getLoadedTags().stream().filter(tag -> tag.getTagName().equalsIgnoreCase(tagName)).findFirst().get();
+    public Tag getCachedTag(String name) {
+        for (Tag tag : getLoadedTags())
+            if (tag.getConfigName().equalsIgnoreCase(name))
+                return tag;
+        return null;
     }
 
     public List<String> getTagNames() {
