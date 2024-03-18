@@ -57,7 +57,9 @@ public class DeleteCommand extends SubCommand {
             return;
         }
 
-        if (args.length <= 1) {
+        if (args.length != 2) {
+            Color.sendMessage(commandSender, "usage", StringPlaceholders.builder()
+                    .add("cmd", getName()).add("args", getSyntax()).build());
             return;
         }
 
@@ -65,7 +67,7 @@ public class DeleteCommand extends SubCommand {
         String configName = args[1];
 
         if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
-            Color.sendMessage(commandSender, "invalid-tag");
+            Color.sendMessage(commandSender, "invalid-tag", Placeholders.setPlaceholders(commandSender));
             return;
         }
 

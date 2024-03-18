@@ -46,6 +46,7 @@ public class PlayerListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         Profile profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
         if (profile == null) return;
         if (profile.getData() == null) return;
 
@@ -58,9 +59,8 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
-        if (SimpleTags.getInstance().getSettings().USE_CHAT) {
+        if (SimpleTags.getInstance().getSettings().USE_CHAT)
             event.setFormat(Color.translate(player, profile.getTagPrefix() + event.getFormat()));
-        }
     }
 
     @EventHandler
@@ -73,7 +73,6 @@ public class PlayerListener implements Listener {
     }
 
     private void sendDevMessage(Player player) {
-
         player.sendMessage("");
         Color.sendCustomMessage(player, "&aWelcome " + SimpleTags.getInstance().getDescription().getName() + " Developer!");
         Color.sendCustomMessage(player, "&aThis server is currently running " + SimpleTags.getInstance().getDescription().getName() + " &bv" + SimpleTags.getInstance().getDescription().getVersion() + "&a.");

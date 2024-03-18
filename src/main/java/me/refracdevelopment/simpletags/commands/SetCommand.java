@@ -59,6 +59,8 @@ public class SetCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         if (args.length <= 1) {
+            Color.sendMessage(commandSender, "usage", StringPlaceholders.builder()
+                    .add("cmd", getName()).add("args", getSyntax()).build());
             return;
         }
 
@@ -110,6 +112,11 @@ public class SetCommand extends SubCommand {
 
             if (!commandSender.hasPermission(Permissions.SET_OTHER_COMMAND)) {
                 Color.sendMessage(commandSender, "no-permission");
+                return;
+            }
+
+            if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
+                Color.sendMessage(commandSender, "invalid-tag", Placeholders.setPlaceholders(commandSender));
                 return;
             }
 

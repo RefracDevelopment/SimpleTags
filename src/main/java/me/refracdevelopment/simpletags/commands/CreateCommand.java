@@ -59,6 +59,8 @@ public class CreateCommand extends SubCommand {
         }
 
         if (args.length <= 3) {
+            Color.sendMessage(commandSender, "usage", StringPlaceholders.builder()
+                    .add("cmd", getName()).add("args", getSyntax()).build());
             return;
         }
 

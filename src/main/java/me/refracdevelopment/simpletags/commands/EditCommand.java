@@ -57,7 +57,9 @@ public class EditCommand extends SubCommand {
             return;
         }
 
-        if (args.length <= 2) {
+        if (args.length != 3) {
+            Color.sendMessage(commandSender, "usage", StringPlaceholders.builder()
+                    .add("cmd", getName()).add("args", getSyntax()).build());
             return;
         }
 
@@ -65,7 +67,10 @@ public class EditCommand extends SubCommand {
         String configName = args[1];
         String tagPrefix = args[2];
 
-        if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) return;
+        if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
+            Color.sendMessage(commandSender, "invalid-tag", Placeholders.setPlaceholders(commandSender));
+            return;
+        }
 
         ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
         tagsFile.set("tags." + configName + ".prefix", tagPrefix);

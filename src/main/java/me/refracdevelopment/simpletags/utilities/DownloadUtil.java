@@ -11,17 +11,17 @@ public class DownloadUtil {
         Library lib = Library.builder()
                 .groupId("org{}mariadb{}jdbc") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("mariadb-java-client")
-                .version("3.3.2")
+                .version("3.3.3")
                 .build();
         Library lib2 = Library.builder()
                 .groupId("org{}slf4j") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("slf4j-reload4j")
-                .version("2.0.11")
+                .version("2.0.12")
                 .build();
         Library lib3 = Library.builder()
                 .groupId("org{}xerial") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("sqlite-jdbc")
-                .version("3.44.1.0")
+                .version("3.45.2.0")
                 .build();
         Library lib4 = Library.builder()
                 .groupId("com{}zaxxer") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin

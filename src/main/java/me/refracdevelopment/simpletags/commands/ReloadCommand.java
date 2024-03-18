@@ -2,7 +2,6 @@ package me.refracdevelopment.simpletags.commands;
 
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.utilities.Permissions;
-import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
@@ -56,10 +55,8 @@ public class ReloadCommand extends SubCommand {
         }
 
         reloadFiles();
-        Tasks.runAsync(() -> {
-            SimpleTags.getInstance().getTagManager().loadTags();
-            SimpleTags.getInstance().getTagManager().updateTags();
-        });
+        SimpleTags.getInstance().getTagManager().loadTags();
+        SimpleTags.getInstance().getTagManager().updateTags();
         Color.sendMessage(commandSender, "command-reload-success");
     }
 

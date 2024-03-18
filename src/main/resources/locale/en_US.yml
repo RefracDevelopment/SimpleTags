@@ -7,6 +7,7 @@ config-version: '2'
 prefix: '<g:#8A2387:#E94057:#F27121>SimpleTags &8| &f'
 
 # Generic Command Messages
+usage: '/gems %cmd% %args%'
 no-permission: '&cYou don''t have permission for that!'
 no-console: '&cOnly players may execute this command.'
 unknown-command: 'Unknown command, use &d/%cmd%&f help for more info'

@@ -3,7 +3,6 @@ package me.refracdevelopment.simpletags.menu;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.ReflectionUtils;
-import com.cryptomorin.xseries.XMaterial;
 import de.tr7zw.nbtapi.NBTItem;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +13,7 @@ import me.refracdevelopment.simpletags.player.data.Tag;
 import me.refracdevelopment.simpletags.utilities.ItemBuilder;
 import me.refracdevelopment.simpletags.utilities.Utilities;
 import me.refracdevelopment.simpletags.utilities.chat.Color;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -25,14 +25,14 @@ import java.util.List;
 @Setter
 public class TagsItem {
 
-    private final XMaterial material;
+    private final Material material;
     private final String name, skullOwner;
     private final boolean skulls, headDatabase, customData;
     private final int data, customModelData;
     private final List<String> lore;
 
     public TagsItem() {
-        this.material = Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.material"));
+        this.material = Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.material")).parseMaterial();
         if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.head-database"))
             this.headDatabase = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.head-database", false);
         else
@@ -55,7 +55,7 @@ public class TagsItem {
     public ItemStack getItem(Player player, Tag tag) {
         ItemBuilder item;
         if (tag.getMaterial() == null || tag.getMaterial().isEmpty())
-            item = new ItemBuilder(getMaterial().parseMaterial());
+            item = new ItemBuilder(getMaterial());
         else
             item = new ItemBuilder(Utilities.getMaterial(tag.getMaterial()).parseMaterial());
 

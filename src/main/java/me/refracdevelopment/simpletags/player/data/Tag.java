@@ -21,7 +21,8 @@ public class Tag {
     }
 
     public ItemStack toItemStack(Player player, String tag) {
-        if (SimpleTags.getInstance().getTagManager().getCachedTag(tag) == null) return null;
+        if (SimpleTags.getInstance().getTagManager().getCachedTag(tag) == null)
+            return null;
 
         return new TagsItem().getItem(player, SimpleTags.getInstance().getTagManager().getCachedTag(tag));
     }

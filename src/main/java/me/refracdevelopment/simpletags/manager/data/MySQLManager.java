@@ -23,6 +23,7 @@ public class MySQLManager {
     public MySQLManager() {
         Color.log("&eEnabling MySQL support!");
         Exception ex = connect();
+
         if (ex != null) {
             Color.log("&cThere was an error connecting to your database. Here's the suspect: &e" + ex.getLocalizedMessage());
             ex.printStackTrace();

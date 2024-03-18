@@ -16,6 +16,7 @@ public class SQLiteManager {
     public SQLiteManager(String path) {
         Color.log("&eEnabling SQLite support!");
         Exception ex = connect(path);
+
         if (ex != null) {
             Color.log("&cThere was an error connecting to your database. Here's the suspect: &e" + ex.getLocalizedMessage());
             ex.printStackTrace();

@@ -47,15 +47,8 @@ public class TagManager {
         getLoadedTags().remove(tag);
     }
 
-    public Tag getCachedTag(String name) {
-        for (Tag tag : getLoadedTags())
-            if (tag.getConfigName().equalsIgnoreCase(name))
-                return tag;
-        return null;
-    }
-
-    public Optional<Tag> findByName(String tagName) {
-        return getLoadedTags().stream().filter(tag -> tag.getTagName().equalsIgnoreCase(tagName)).findFirst();
+    public Tag getCachedTag(String tagName) {
+        return getLoadedTags().stream().filter(tag -> tag.getTagName().equalsIgnoreCase(tagName)).findFirst().get();
     }
 
     public List<String> getTagNames() {

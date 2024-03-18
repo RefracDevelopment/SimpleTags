@@ -61,7 +61,7 @@ public class ProfileData {
         }
 
         // Update player tag if any changes were made to it
-        if (getPlugin().getTagManager().getCachedTag(tag) == null || tag.isEmpty()) {
+        if (getPlugin().getTagManager().getCachedTag(tag) == null) {
             setTag("");
             setTagPrefix("");
         } else
