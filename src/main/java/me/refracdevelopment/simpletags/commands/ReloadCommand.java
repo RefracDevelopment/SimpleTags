@@ -2,7 +2,7 @@ package me.refracdevelopment.simpletags.commands;
 
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.utilities.Permissions;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,14 +50,15 @@ public class ReloadCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         if (!commandSender.hasPermission(Permissions.RELOAD_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+            RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
             return;
         }
 
+        SimpleTags.getInstance().getPaperLib().scheduling().cancelGlobalTasks();
         reloadFiles();
         SimpleTags.getInstance().getTagManager().loadTags();
         SimpleTags.getInstance().getTagManager().updateTags();
-        Color.sendMessage(commandSender, "command-reload-success");
+        RyMessageUtils.sendPluginMessage(commandSender, "command-reload-success");
     }
 
     /**
@@ -82,8 +83,6 @@ public class ReloadCommand extends SubCommand {
         SimpleTags.getInstance().getMenus().loadConfig();
         SimpleTags.getInstance().getCommands().loadConfig();
 
-        Color.log("&c==========================================");
-        Color.log("&eAll files have been reloaded correctly!");
-        Color.log("&c==========================================");
+        RyMessageUtils.sendConsole(true, "&aReloaded all files.");
     }
 }

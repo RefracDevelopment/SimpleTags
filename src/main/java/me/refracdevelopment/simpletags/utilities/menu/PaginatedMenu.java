@@ -3,7 +3,7 @@ package me.refracdevelopment.simpletags.utilities.menu;
 import lombok.Getter;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.utilities.Utilities;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 
 /**
  * A class extending the functionality of the regular Menu, but making it Paginated
@@ -20,11 +20,11 @@ public abstract class PaginatedMenu extends Menu {
     }
 
     public void addMenuBorder() {
-        inventory.setItem(48, makeItem(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("left.material")).parseMaterial(), Color.translate(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("left.name"))));
+        inventory.setItem(48, makeItem(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("left.material")).parseMaterial(), RyMessageUtils.translate(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("left.name"))));
 
-        inventory.setItem(49, makeItem(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("close.material")).parseMaterial(), Color.translate(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("close.name"))));
+        inventory.setItem(49, makeItem(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("close.material")).parseMaterial(), RyMessageUtils.translate(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("close.name"))));
 
-        inventory.setItem(50, makeItem(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("right.material")).parseMaterial(), Color.translate(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("right.name"))));
+        inventory.setItem(50, makeItem(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("right.material")).parseMaterial(), RyMessageUtils.translate(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("right.name"))));
 
         for (int i = 0; i < 10; i++) {
             if (inventory.getItem(i) == null) {

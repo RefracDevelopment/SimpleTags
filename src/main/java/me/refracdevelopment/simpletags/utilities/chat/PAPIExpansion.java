@@ -41,7 +41,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
                 if (profile.getTagPrefix().isEmpty()) {
                     return "";
                 }
-                return Color.translate(profile.getTagPrefix());
+                return RyMessageUtils.translate(profile.getTagPrefix());
             case "tag-name":
             case "identifier":
                 if (profile == null) {

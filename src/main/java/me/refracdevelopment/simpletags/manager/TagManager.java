@@ -3,7 +3,7 @@ package me.refracdevelopment.simpletags.manager;
 import lombok.Getter;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.data.Tag;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +16,13 @@ public class TagManager {
 
     public void loadTags() {
         getLoadedTags().clear();
+
         SimpleTags.getInstance().getTags().TAGS.getRoutesAsStrings(false).forEach(tag ->
                 addTag(new Tag(tag, SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".name"),
-                SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".prefix"),
-                SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".item"))));
-        Color.log("&eLoaded " + getLoadedTags().size() + " tags.");
+                        SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".prefix"),
+                        SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".item"))));
+
+        RyMessageUtils.sendConsole(true, "&aLoaded &e" + getLoadedTags().size() + " &atags.");
     }
 
     public void updateTags() {
@@ -36,9 +38,8 @@ public class TagManager {
     }
 
     public void addTag(Tag tag) {
-        if (!getLoadedTags().contains(tag)) {
+        if (!getLoadedTags().contains(tag))
             getLoadedTags().add(tag);
-        }
     }
 
     public void removeTag(Tag tag) {

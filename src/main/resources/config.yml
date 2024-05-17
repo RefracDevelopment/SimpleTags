@@ -13,8 +13,8 @@ config-version: '1'
 locale: en_US
 
 # Automatically add tags to chat behind a player's name
-# this will use the current format provided by any Chat plugin
-# so Tag -> Rank if applicable -> Player -> message
+# This setting should only be used if
+# you don't have a chat plugin
 # Default: false
 use-chat: false
 

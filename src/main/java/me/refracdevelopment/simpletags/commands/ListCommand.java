@@ -2,7 +2,7 @@ package me.refracdevelopment.simpletags.commands;
 
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.utilities.Permissions;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,17 +50,27 @@ public class ListCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         // Make sure the player has permission to use this command
+        if (!(commandSender instanceof Player player)) {
+            RyMessageUtils.sendPluginMessage(commandSender, "no-console");
+            return;
+        }
+
         if (!commandSender.hasPermission(Permissions.LIST_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+            RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
+            return;
+        }
+
+        if (SimpleTags.getInstance().getTagManager().getLoadedTags().stream().noneMatch(tag -> player.hasPermission("simpletags.tag." + tag.getConfigName()))) {
+            RyMessageUtils.sendPluginMessage(player, "no-available-tags");
             return;
         }
 
         // Show list of all available tags
-        Color.sendCustomMessage(commandSender, "&7-------------------------------------");
+        RyMessageUtils.sendSender(player, "&7-------------------------------------");
         SimpleTags.getInstance().getTagManager().getLoadedTags().forEach(tag -> {
-            Color.sendCustomMessage(commandSender, "&e" + tag.getConfigName() + "&7(" + tag.getTagName() + "&7) &7- " + tag.getTagPrefix());
+            RyMessageUtils.sendPlayer(player, "&e" + tag.getConfigName() + "&7(" + tag.getTagName() + "&7) &7- " + tag.getTagPrefix());
         });
-        Color.sendCustomMessage(commandSender, "&7-------------------------------------");
+        RyMessageUtils.sendSender(player, "&7-------------------------------------");
     }
 
     /**

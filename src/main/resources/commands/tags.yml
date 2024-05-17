@@ -10,25 +10,25 @@ aliases:
 subcommands:
   help:
     name: help
-    aliases: []
+    aliases: [ ]
   reload:
     name: reload
-    aliases: []
+    aliases: [ ]
   create:
     name: create
-    aliases: []
+    aliases: [ ]
   list:
     name: list
-    aliases: []
+    aliases: [ ]
   edit:
     name: edit
-    aliases: []
+    aliases: [ ]
   delete:
     name: delete
-    aliases: []
+    aliases: [ ]
   set:
     name: set
-    aliases: []
+    aliases: [ ]
   version:
     name: version
-    aliases: []
+    aliases: [ ]

@@ -6,8 +6,8 @@ import me.refracdevelopment.simpletags.player.data.ProfileData;
 import me.refracdevelopment.simpletags.player.data.Tag;
 import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.Utilities;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simpletags.utilities.menu.PaginatedMenu;
 import me.refracdevelopment.simpletags.utilities.menu.PlayerMenuUtility;
 import org.bukkit.ChatColor;
@@ -24,7 +24,7 @@ public class TagsMenu extends PaginatedMenu {
 
     @Override
     public String getMenuName() {
-        return Color.translate(SimpleTags.getInstance().getMenus().TAGS_TITLE.replace("%total-tags%", String.valueOf(SimpleTags.getInstance().getTagManager().getLoadedTags().size())));
+        return RyMessageUtils.translate(SimpleTags.getInstance().getMenus().TAGS_TITLE.replace("%total-tags%", String.valueOf(SimpleTags.getInstance().getTagManager().getLoadedTags().size())));
     }
 
     @Override
@@ -48,12 +48,14 @@ public class TagsMenu extends PaginatedMenu {
                 page = page - 1;
                 super.open();
             }
+
             return;
         } else if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("right.name"))) {
             if (!((index + 1) >= plugin.getTagManager().getLoadedTags().size())) {
                 page = page + 1;
                 super.open();
             }
+
             return;
         } else if (e.getCurrentItem().getType().equals(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("close.material")).parseMaterial())) {
             player.closeInventory();
@@ -71,7 +73,7 @@ public class TagsMenu extends PaginatedMenu {
             return;
 
         if (!player.hasPermission("simpletags.tag." + tag.getConfigName())) {
-            Color.sendMessage(player, "tag-not-owned", Placeholders.setPlaceholders(player));
+            RyMessageUtils.sendPluginMessage(player, "tag-not-owned", Placeholders.setPlaceholders(player));
             player.closeInventory();
             return;
         }
@@ -81,7 +83,7 @@ public class TagsMenu extends PaginatedMenu {
             profile.setTag(tag.getConfigName());
             profile.setTagPrefix(tag.getTagPrefix());
             Tasks.runAsync(() -> profile.save(player));
-            Color.sendMessage(player, "tag-updated", Placeholders.setPlaceholders(player));
+            RyMessageUtils.sendPluginMessage(player, "tag-updated", Placeholders.setPlaceholders(player));
             player.closeInventory();
             return;
         }
@@ -89,7 +91,7 @@ public class TagsMenu extends PaginatedMenu {
         profile.setTag("");
         profile.setTagPrefix("");
         Tasks.runAsync(() -> profile.save(player));
-        Color.sendMessage(player, "tag-reset", Placeholders.setPlaceholders(player));
+        RyMessageUtils.sendPluginMessage(player, "tag-reset", Placeholders.setPlaceholders(player));
         player.closeInventory();
     }
 
@@ -102,8 +104,11 @@ public class TagsMenu extends PaginatedMenu {
         if (!tags.isEmpty()) {
             for (int i = 0; i < getMaxItemsPerPage(); i++) {
                 index = getMaxItemsPerPage() * page + i;
-                if (index >= tags.size()) break;
-                if (tags.get(index) != null)
+
+                if (index >= tags.size())
+                    break;
+
+                if (tags.get(index) != null && playerMenuUtility.getOwner().hasPermission("simpletags.tag." + tags.get(index).getConfigName()))
                     inventory.addItem(tags.get(index).toItemStack(playerMenuUtility.getOwner(), tags.get(index).getConfigName()));
             }
         }

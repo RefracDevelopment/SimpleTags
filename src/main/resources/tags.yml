@@ -5,6 +5,9 @@ tags:
   # The tag name used in permissions or commands
   # simpletags.tag.darkredheart for example
   darkredheart:
-    name: "&4Dark Red Heart" # Menu item name
-    prefix: '&4❤ ' # Chat prefix
-    item: 'REDSTONE' # Menu item material
+    # Menu item name
+    name: "&4Dark Red Heart"
+    # Chat prefix
+    prefix: '&4❤ '
+    # Menu item material
+    item: 'REDSTONE'

@@ -2,13 +2,15 @@ name: SimpleTags
 version: '${project.version}'
 main: me.refracdevelopment.simpletags.SimpleTags
 authors:
-  - Refrac
+  - RefracDevelopment
 api-version: "1.13"
-softdepend:
+depend:
   - NBTAPI
+softdepend:
   - PlaceholderAPI
   - Skulls
   - HeadDatabase
+  - ItemsAdder
 description: SimpleTags is a plugin that allows you to use custom tags in chat.
 website: https://discord.gg/EFeSKPg739
 folia-supported: true

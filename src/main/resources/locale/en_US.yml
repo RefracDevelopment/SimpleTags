@@ -1,10 +1,10 @@
 # en_US translation by Refrac
 
 # This is used for automatic file updating purposes
-config-version: '3'
+config-version: '4'
 
 # Plugin Message Prefix
-prefix: '<g:#8A2387:#E94057:#F27121>SimpleTags &8| &f'
+prefix: '<gradient:#8A2387:#E94057:#F27121:0>SimpleTags &8| &f'
 
 # Generic Command Messages
 usage: '/gems %cmd% %args%'
@@ -20,6 +20,7 @@ tag-edited: '&aThe tag %tag-name%''s &aprefix has been updated to %tag-preifx%&a
 tag-set: '&aSet %player%''s &atag to %tag-name%&a.'
 tag-updated: '&aYour tag has been updated to %tag-prefix%&a.'
 tag-reset: '&aYour tag has been reset.'
+no-available-tags: '&cYou have no available tags.'
 
 # Kick Messages
 kick-messages-error: '&cERROR: Profile returned null.'

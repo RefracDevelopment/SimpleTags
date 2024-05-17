@@ -1,11 +1,11 @@
 package me.refracdevelopment.simpletags;
 
-import com.cryptomorin.xseries.ReflectionUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.tcoded.folialib.FoliaLib;
+import io.papermc.lib.PaperLib;
 import lombok.Getter;
 import me.refracdevelopment.simpletags.commands.*;
+import me.refracdevelopment.simpletags.hooks.ItemsAdderListener;
 import me.refracdevelopment.simpletags.listeners.MenuListener;
 import me.refracdevelopment.simpletags.listeners.PlayerListener;
 import me.refracdevelopment.simpletags.manager.CommandManager;
@@ -22,24 +22,21 @@ import me.refracdevelopment.simpletags.manager.data.MySQLManager;
 import me.refracdevelopment.simpletags.manager.data.SQLiteManager;
 import me.refracdevelopment.simpletags.menu.TagsMenu;
 import me.refracdevelopment.simpletags.utilities.DownloadUtil;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
+import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.PAPIExpansion;
-import me.refracdevelopment.simpletags.utilities.command.SubCommand;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import space.arim.morepaperlib.MorePaperLib;
+import space.arim.morepaperlib.adventure.MorePaperLibAdventure;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -71,75 +68,42 @@ public final class SimpleTags extends JavaPlugin {
     private Commands commands;
 
     // Utilities
-    private FoliaLib foliaLib;
-    private final List<SubCommand> subCommands = new ArrayList<>();
+    private MorePaperLib paperLib;
+    private MorePaperLibAdventure paperLibAdventure;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
         instance = this;
-        long startTiming = System.currentTimeMillis();
-        PluginManager pluginManager = this.getServer().getPluginManager();
-
-        foliaLib = new FoliaLib(this);
 
         DownloadUtil.downloadAndEnable();
 
         new Metrics(this, 13205);
 
+        paperLib = new MorePaperLib(this);
+        paperLibAdventure = new MorePaperLibAdventure(paperLib);
+
         loadFiles();
 
-        // Check if the server is on 1.7
-        if (ReflectionUtils.MINOR_NUMBER <= 7) {
-            Color.log("&c" + getDescription().getName() + " 1.7 is in legacy mode, please update to 1.8+");
-            pluginManager.disablePlugin(this);
-            return;
-        }
-
-        // Check if the server is on Folia
-        if (getFoliaLib().isFolia()) {
-            Color.log("&cSupport for Folia has not been tested and is only for experimental purposes.");
-        }
-
-        // Make sure the server has PlaceholderAPI
-        if (!pluginManager.isPluginEnabled("PlaceholderAPI")) {
-            Color.log("&cPlease install PlaceholderAPI onto your server to use this plugin.");
-            pluginManager.disablePlugin(this);
-            return;
-        }
-
-        // Make sure the server has NBTAPI
-        if (!pluginManager.isPluginEnabled("NBTAPI")) {
-            Color.log("&cPlease install NBTAPI onto your server to use this plugin.");
-            pluginManager.disablePlugin(this);
-            return;
-        }
-
-        if (pluginManager.isPluginEnabled("Skulls")) {
-            Color.log("&eSkulls Detected!");
-        }
-
-        if (pluginManager.isPluginEnabled("HeadDatabase")) {
-            Color.log("&eHeadDatabase Detected!");
-        }
+        RyMessageUtils.sendConsole(false,
+                "<#A020F0> _____ _           _     _____               " + "Running <#7D0DC3>v" + getDescription().getVersion(),
+                "<#A020F0>|   __|_|_____ ___| |___|_   _| __ ___ ___   " + "Server <#7D0DC3>" + getServer().getName() + " <#A020F0>v" + getServer().getVersion(),
+                "<#A020F0>|__   | |     | . | | -_| | |  |. | . |_ -|  " + "Discord support: <#7D0DC3>" + getDescription().getWebsite(),
+                "<#7D0DC3>|_____|_|_|_|_|  _|_|___| |_| |___|_  |___|  " + "Thanks for using my plugin ❤ !",
+                "<#7D0DC3>              |_|                 |___|    ",
+                "        <#A020F0>Developed by <#7D0DC3>RefracDevelopment",
+                ""
+        );
 
         loadManagers();
         loadCommands();
         loadListeners();
+        loadHooks();
 
-        // Loads all available tags
-        getTagManager().loadTags();
+        // Paper is recommended but not required
+        PaperLib.suggestPaper(this);
 
-        new PAPIExpansion().register();
-
-        Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
-        Color.log("&e" + getDescription().getName() + " has been enabled. (took " + (System.currentTimeMillis() - startTiming) + "ms)");
-        Color.log(" &f[*] &6Version&f: &b" + getDescription().getVersion());
-        Color.log(" &f[*] &6Name&f: &b" + getDescription().getName());
-        Color.log(" &f[*] &6Author&f: &b" + getDescription().getAuthors().get(0));
-        Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
-
-        updateCheck(Bukkit.getConsoleSender(), true);
+        Tasks.runAsync(this::updateCheck);
     }
 
     @Override
@@ -147,19 +111,19 @@ public final class SimpleTags extends JavaPlugin {
         // Plugin shutdown logic
         if (Objects.requireNonNull(dataType) == DataType.MYSQL)
             getMySQLManager().shutdown();
-        else
+        else if (Objects.requireNonNull(dataType) == DataType.SQLITE)
             getSqLiteManager().shutdown();
 
-        getServer().getScheduler().cancelTasks(this);
+        paperLib.scheduling().cancelGlobalTasks();
     }
 
     public void loadFiles() {
         // Files
-        configFile = new ConfigFile("config.yml");
-        tagsFile = new ConfigFile("tags.yml");
-        menusFile = new ConfigFile("menus.yml");
-        commandsFile = new ConfigFile("commands/tags.yml");
-        localeFile = new ConfigFile("locale/" + getConfigFile().getString("locale") + ".yml");
+        configFile = new ConfigFile("config.yml", true);
+        tagsFile = new ConfigFile("tags.yml", false);
+        menusFile = new ConfigFile("menus.yml", false);
+        commandsFile = new ConfigFile("commands/tags.yml", true);
+        localeFile = new ConfigFile("locale/" + getConfigFile().getString("locale") + ".yml", true);
 
         // Cache
         settings = new Config();
@@ -167,9 +131,7 @@ public final class SimpleTags extends JavaPlugin {
         menus = new Menus();
         commands = new Commands();
 
-        Color.log("&c==========================================");
-        Color.log("&eAll files have been loaded correctly!");
-        Color.log("&c==========================================");
+        RyMessageUtils.sendConsole(true, "&aLoaded all files.");
     }
 
     private void loadManagers() {
@@ -189,7 +151,14 @@ public final class SimpleTags extends JavaPlugin {
         tagManager = new TagManager();
         menuManager = new MenuManager();
         commandManager = new CommandManager();
-        Color.log("&aLoaded managers.");
+
+        // Loads all available tags
+        if (getServer().getPluginManager().isPluginEnabled("ItemsAdder"))
+            getServer().getPluginManager().registerEvents(new ItemsAdderListener(), this);
+        else
+            getTagManager().loadTags();
+
+        RyMessageUtils.sendConsole(true, "&aLoaded managers.");
     }
 
     private void loadCommands() {
@@ -198,15 +167,19 @@ public final class SimpleTags extends JavaPlugin {
                     getLocaleFile().getString("command-tags-description"),
                     "/" + getCommands().TAGS_COMMAND_NAME, (commandSender, list) -> {
                         // Make sure the sender is a player.
-                        if (!(commandSender instanceof Player)) {
-                            Color.sendMessage(commandSender, "no-console");
+                        if (!(commandSender instanceof Player player)) {
+                            RyMessageUtils.sendPluginMessage(commandSender, "no-console");
                             return;
                         }
 
-                        Player player = (Player) commandSender;
+                        if (getTagManager().getLoadedTags().stream().noneMatch(tag -> player.hasPermission("simpletags.tag." + tag.getConfigName()))) {
+                            RyMessageUtils.sendPluginMessage(player, "no-available-tags");
+                            return;
+                        }
 
                         new TagsMenu(SimpleTags.getInstance().getMenuManager().getPlayerMenuUtility(player)).open();
-                    }, getCommands().TAGS_COMMAND_ALIASES,
+                    },
+                    getCommands().TAGS_COMMAND_ALIASES,
                     CreateCommand.class,
                     DeleteCommand.class,
                     EditCommand.class,
@@ -217,32 +190,44 @@ public final class SimpleTags extends JavaPlugin {
                     VersionCommand.class
             );
 
-            getSubCommands().addAll(Arrays.asList(
-                    new CreateCommand(),
-                    new DeleteCommand(),
-                    new EditCommand(),
-                    new HelpCommand(),
-                    new ListCommand(),
-                    new ReloadCommand(),
-                    new SetCommand(),
-                    new VersionCommand()
-            ));
-
-            Color.log("&aLoaded commands.");
+            RyMessageUtils.sendConsole(true, "&aLoaded commands.");
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            Color.log("&aFailed to load commands.");
+            RyMessageUtils.sendConsole(true, "&cFailed to load commands.");
             e.printStackTrace();
         }
     }
 
     private void loadListeners() {
         PluginManager pluginManager = this.getServer().getPluginManager();
+
         pluginManager.registerEvents(new PlayerListener(), this);
         pluginManager.registerEvents(new MenuListener(), this);
-        Color.log("&aLoaded listeners.");
+
+        RyMessageUtils.sendConsole(true, "&aLoaded listeners.");
     }
 
-    public void updateCheck(CommandSender sender, boolean console) {
+    private void loadHooks() {
+        PluginManager pluginManager = getServer().getPluginManager();
+
+        if (pluginManager.isPluginEnabled("Skulls")) {
+            RyMessageUtils.sendConsole(true, "&aHooked into Skulls for heads support.");
+        }
+
+        if (pluginManager.isPluginEnabled("HeadDatabase")) {
+            RyMessageUtils.sendConsole(true, "&aHooked into HeadDatabase for heads support.");
+        }
+
+        if (pluginManager.isPluginEnabled("ItemsAdder")) {
+            RyMessageUtils.sendConsole(true, "&aHooked into ItemsAdder for custom items support.");
+        }
+
+        if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
+            new PAPIExpansion().register();
+            RyMessageUtils.sendConsole(true, "&aHooked into PlaceholderAPI for placeholders.");
+        }
+    }
+
+    public void updateCheck() {
         try {
             String urlString = "https://refracdev-updatecheck.refracdev.workers.dev/";
             URL url = new URL(urlString);
@@ -256,7 +241,7 @@ public final class SimpleTags extends JavaPlugin {
                 response.append(input);
             }
             reader.close();
-            JsonObject object = JsonParser.parseString(response.toString()).getAsJsonObject();
+            JsonObject object = new JsonParser().parse(response.toString()).getAsJsonObject();
 
             if (object.has("plugins")) {
                 JsonObject plugins = object.get("plugins").getAsJsonObject();
@@ -265,23 +250,19 @@ public final class SimpleTags extends JavaPlugin {
                 boolean archived = info.get("archived").getAsBoolean();
 
                 if (archived) {
-                    sender.sendMessage(Color.translate("&cThis plugin has been marked as &e&l'Archived' &cby RefracDevelopment."));
-                    sender.sendMessage(Color.translate("&cThis version will continue to work but will not receive updates or support."));
+                    RyMessageUtils.sendConsole(true, "&cThis plugin has been marked as &e&l'Archived' &cby RefracDevelopment.");
+                    RyMessageUtils.sendConsole(true, "&cThis version will continue to work but will not receive updates or support.");
                 } else if (version.equals(getDescription().getVersion())) {
-                    if (console) {
-                        sender.sendMessage(Color.translate("&a" + getDescription().getName() + " is on the latest version."));
-                    }
+                    RyMessageUtils.sendConsole(true, "&a" + getDescription().getName() + " is on the latest version.");
                 } else {
-                    sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate("&cYour " + getDescription().getName() + " version &7(" + getDescription().getVersion() + ") &cis out of date! Newest: &e&lv" + version));
-                    sender.sendMessage(Color.translate(""));
+                    RyMessageUtils.sendConsole(true, "&cYour " + getDescription().getName() + " version &7(" + getDescription().getVersion() + ") &cis out of date! Newest: &e&lv" + version);
                 }
             } else {
-                sender.sendMessage(Color.translate("&cWrong response from update API, contact plugin developer!"));
+                RyMessageUtils.sendConsole(true, "&cWrong response from update API, contact plugin developer!");
             }
         } catch (
                 Exception ex) {
-            sender.sendMessage(Color.translate("&cFailed to get updater check. (" + ex.getMessage() + ")"));
+            RyMessageUtils.sendConsole(true, "&cFailed to get updater check. (" + ex.getMessage() + ")");
         }
     }
 }

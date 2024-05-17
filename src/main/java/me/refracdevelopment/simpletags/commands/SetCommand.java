@@ -6,8 +6,8 @@ import me.refracdevelopment.simpletags.player.data.Tag;
 import me.refracdevelopment.simpletags.utilities.Permissions;
 import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.Utilities;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simpletags.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bukkit.Bukkit;
@@ -54,32 +54,31 @@ public class SetCommand extends SubCommand {
 
     /**
      * @param commandSender The thing that ran the command
-     * @param args   The args passed into the command when run
+     * @param args          The args passed into the command when run
      */
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         if (args.length <= 1) {
-            Color.sendMessage(commandSender, "usage", StringPlaceholders.builder()
+            RyMessageUtils.sendPluginMessage(commandSender, "usage", StringPlaceholders.builder()
                     .add("cmd", getName()).add("args", getSyntax()).build());
             return;
         }
 
         if (args.length == 2) {
-            if (!(commandSender instanceof Player)) {
-                Color.sendMessage(commandSender, "no-console");
+            if (!(commandSender instanceof Player player)) {
+                RyMessageUtils.sendPluginMessage(commandSender, "no-console");
                 return;
             }
 
-            Player player = (Player) commandSender;
             String configName = args[1];
 
             if (!player.hasPermission(Permissions.SET_COMMAND)) {
-                Color.sendMessage(player, "no-permission");
+                RyMessageUtils.sendPluginMessage(player, "no-permission");
                 return;
             }
 
             if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
-                Color.sendMessage(commandSender, "invalid-tag", Placeholders.setPlaceholders(player));
+                RyMessageUtils.sendPluginMessage(commandSender, "invalid-tag", Placeholders.setPlaceholders(player));
                 return;
             }
 
@@ -94,7 +93,7 @@ public class SetCommand extends SubCommand {
                     .build();
 
             if (!player.hasPermission("simpletags.tag." + configName)) {
-                Color.sendMessage(player, "tag-not-owned");
+                RyMessageUtils.sendPluginMessage(player, "tag-not-owned");
                 return;
             }
 
@@ -102,7 +101,7 @@ public class SetCommand extends SubCommand {
             profile.setTagPrefix(tag.getTagPrefix());
             Tasks.runAsync(() -> profile.save(player));
 
-            Color.sendMessage(player, "tag-updated", placeholders);
+            RyMessageUtils.sendPluginMessage(player, "tag-updated", placeholders);
             return;
         }
 
@@ -111,12 +110,12 @@ public class SetCommand extends SubCommand {
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
 
             if (!commandSender.hasPermission(Permissions.SET_OTHER_COMMAND)) {
-                Color.sendMessage(commandSender, "no-permission");
+                RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
                 return;
             }
 
             if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
-                Color.sendMessage(commandSender, "invalid-tag", Placeholders.setPlaceholders(commandSender));
+                RyMessageUtils.sendPluginMessage(commandSender, "invalid-tag", Placeholders.setPlaceholders(commandSender));
                 return;
             }
 
@@ -135,8 +134,8 @@ public class SetCommand extends SubCommand {
                 profile.setTagPrefix(tag.getTagPrefix());
                 Tasks.runAsync(() -> profile.save(target.getPlayer()));
 
-                Color.sendMessage(commandSender, "tag-set", placeholders);
-                Color.sendMessage(target.getPlayer(), "tag-updated", placeholders);
+                RyMessageUtils.sendPluginMessage(commandSender, "tag-set", placeholders);
+                RyMessageUtils.sendPluginMessage(target.getPlayer(), "tag-updated", placeholders);
             } else if (target.hasPlayedBefore()) {
                 Tag tag = SimpleTags.getInstance().getTagManager().getCachedTag(configName);
 
@@ -149,7 +148,7 @@ public class SetCommand extends SubCommand {
 
                 Tasks.runAsync(() -> Utilities.saveOfflinePlayer(target.getUniqueId().toString(), tag.getTagName(), tag.getTagPrefix()));
 
-                Color.sendMessage(commandSender, "tag-set", placeholders);
+                RyMessageUtils.sendPluginMessage(commandSender, "tag-set", placeholders);
             }
         }
     }
@@ -161,7 +160,7 @@ public class SetCommand extends SubCommand {
      */
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args) {
-        List <String> tagNames = SimpleTags.getInstance().getTagManager().getTagNames();
+        List<String> tagNames = SimpleTags.getInstance().getTagManager().getTagNames();
         List<String> names = new ArrayList<>();
 
         Bukkit.getOnlinePlayers().forEach(p -> {

@@ -8,7 +8,7 @@ import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -19,21 +19,21 @@ public class ConfigFile {
 
     private YamlDocument configFile;
 
-    public ConfigFile(String name) {
+    public ConfigFile(String name, boolean autoUpdate) {
         try {
             configFile = YamlDocument.create(new File(SimpleTags.getInstance().getDataFolder(), name),
                     getClass().getResourceAsStream("/" + name),
-                    GeneralSettings.builder().setUseDefaults(false).build(),
-                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    GeneralSettings.builder().setUseDefaults(autoUpdate).build(),
+                    LoaderSettings.builder().setAutoUpdate(autoUpdate).build(),
                     DumperSettings.DEFAULT,
                     UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version"))
-                            .setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS).build()
+                            .setOptionSorting(autoUpdate ? UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS : UpdaterSettings.OptionSorting.NONE).build()
             );
 
             configFile.update();
             configFile.save();
         } catch (IOException e) {
-            Color.log("&cFailed to load config file! The plugin will now shutdown.");
+            RyMessageUtils.sendConsole(true, "&cFailed to load " + name + " file! The plugin will now shutdown.");
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(SimpleTags.getInstance());
         }

@@ -10,8 +10,7 @@ public class Placeholders {
     public static String setPlaceholders(CommandSender sender, String placeholder) {
         placeholder = placeholder.replace("%prefix%", SimpleTags.getInstance().getLocaleFile().getString("prefix"));
 
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
             placeholder = placeholder.replace("%player%", player.getName());
@@ -44,8 +43,7 @@ public class Placeholders {
 
         placeholders.add("prefix", SimpleTags.getInstance().getLocaleFile().getString("prefix"));
 
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
             placeholders.add("player", player.getName());

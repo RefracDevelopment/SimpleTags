@@ -4,8 +4,9 @@ import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.Profile;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
 import me.refracdevelopment.simpletags.utilities.Tasks;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,7 +20,7 @@ public class PlayerListener implements Listener {
     private final UUID getDevUUID2 = UUID.fromString("ab898e40-9088-45eb-9d69-e0b78e872627");
 
     @EventHandler
-    public void onPreLogin(PlayerLoginEvent event) {
+    public void onLogin(PlayerLoginEvent event) {
         SimpleTags.getInstance().getProfileManager().handleProfileCreation(event.getPlayer().getUniqueId(), event.getPlayer().getName());
     }
 
@@ -31,7 +32,7 @@ public class PlayerListener implements Listener {
         Tasks.runAsync(() -> profile.getData().load(player));
 
         if (profile == null || profile.getData() == null) {
-            player.kickPlayer(Color.translate(SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
+            SimpleTags.getInstance().getPaperLibAdventure().kickPlayer(player, RyMessageUtils.adventureTranslate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
             return;
         }
 
@@ -47,8 +48,10 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
-        if (profile == null) return;
-        if (profile.getData() == null) return;
+        if (profile == null)
+            return;
+        if (profile.getData() == null)
+            return;
 
         Tasks.runAsync(() -> profile.getData().save(player));
         SimpleTags.getInstance().getProfileManager().getProfiles().remove(player.getUniqueId());
@@ -60,25 +63,26 @@ public class PlayerListener implements Listener {
         ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
         if (SimpleTags.getInstance().getSettings().USE_CHAT)
-            event.setFormat(Color.translate(player, profile.getTagPrefix() + event.getFormat()));
+            event.setFormat(ChatColor.translateAlternateColorCodes('&', profile.getTagPrefix() + event.getFormat()));
     }
 
     @EventHandler
     public void onReload(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
 
-        if (!event.getMessage().equalsIgnoreCase("/reload confirm")) return;
+        if (!event.getMessage().equalsIgnoreCase("/reload confirm"))
+            return;
 
-        Color.sendCustomMessage(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
+        RyMessageUtils.sendSender(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
     }
 
     private void sendDevMessage(Player player) {
-        player.sendMessage("");
-        Color.sendCustomMessage(player, "&aWelcome " + SimpleTags.getInstance().getDescription().getName() + " Developer!");
-        Color.sendCustomMessage(player, "&aThis server is currently running " + SimpleTags.getInstance().getDescription().getName() + " &bv" + SimpleTags.getInstance().getDescription().getVersion() + "&a.");
-        Color.sendCustomMessage(player, "&aPlugin name&7: &f" + SimpleTags.getInstance().getDescription().getName());
-        player.sendMessage("");
-        Color.sendCustomMessage(player, "&aServer version&7: &f" + Bukkit.getVersion());
-        player.sendMessage("");
+        RyMessageUtils.sendPlayer(player, " ");
+        RyMessageUtils.sendPlayer(player, "&aWelcome " + SimpleTags.getInstance().getDescription().getName() + " Developer!");
+        RyMessageUtils.sendPlayer(player, "&aThis server is currently running " + SimpleTags.getInstance().getDescription().getName() + " &bv" + SimpleTags.getInstance().getDescription().getVersion() + "&a.");
+        RyMessageUtils.sendPlayer(player, "&aPlugin name&7: &f" + SimpleTags.getInstance().getDescription().getName());
+        RyMessageUtils.sendPlayer(player, " ");
+        RyMessageUtils.sendPlayer(player, "&aServer version&7: &f" + Bukkit.getVersion());
+        RyMessageUtils.sendPlayer(player, " ");
     }
 }

@@ -2,7 +2,7 @@ package me.refracdevelopment.simpletags.commands;
 
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.utilities.Permissions;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simpletags.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
@@ -46,19 +46,19 @@ public class VersionCommand extends SubCommand {
 
     /**
      * @param commandSender The thing that ran the command
-     * @param args   The args passed into the command when run
+     * @param args          The args passed into the command when run
      */
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         if (!commandSender.hasPermission(Permissions.VERSION_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+            RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
             return;
         }
 
         String baseColor = SimpleTags.getInstance().getLocaleFile().getString("base-command-color");
-        Color.sendCustomMessage(commandSender, baseColor + "Running " + SimpleTags.getInstance().getDescription().getName() + baseColor + " v" + SimpleTags.getInstance().getDescription().getVersion());
-        Color.sendCustomMessage(commandSender, baseColor + "Plugin created by: <g:#41E0F0:#FF8DCE>" + SimpleTags.getInstance().getDescription().getAuthors().get(0));
-        Color.sendMessage(commandSender, "base-command-help", StringPlaceholders.of("cmd", SimpleTags.getInstance().getCommands().TAGS_COMMAND_NAME));
+        RyMessageUtils.sendSender(commandSender, baseColor + "Running <gradient:#8A2387:#E94057:#F27121:0>" + SimpleTags.getInstance().getDescription().getName() + baseColor + " v" + SimpleTags.getInstance().getDescription().getVersion());
+        RyMessageUtils.sendSender(commandSender, baseColor + "Plugin created by: <gradient:#41E0F0:#FF8DCE:0>" + SimpleTags.getInstance().getDescription().getAuthors().get(0));
+        RyMessageUtils.sendPluginMessage(commandSender, "base-command-help", StringPlaceholders.of("cmd", SimpleTags.getInstance().getCommands().TAGS_COMMAND_NAME));
     }
 
     /**

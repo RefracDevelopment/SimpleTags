@@ -4,8 +4,8 @@ import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.manager.configuration.ConfigFile;
 import me.refracdevelopment.simpletags.player.data.Tag;
 import me.refracdevelopment.simpletags.utilities.Permissions;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simpletags.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
@@ -53,13 +53,18 @@ public class CreateCommand extends SubCommand {
      */
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        if (!commandSender.hasPermission(Permissions.CREATE_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+        if (!(commandSender instanceof Player player)) {
+            RyMessageUtils.sendPluginMessage(commandSender, "no-console");
+            return;
+        }
+
+        if (!player.hasPermission(Permissions.CREATE_COMMAND)) {
+            RyMessageUtils.sendPluginMessage(player, "no-permission");
             return;
         }
 
         if (args.length <= 3) {
-            Color.sendMessage(commandSender, "usage", StringPlaceholders.builder()
+            RyMessageUtils.sendPluginMessage(player, "usage", StringPlaceholders.builder()
                     .add("cmd", getName()).add("args", getSyntax()).build());
             return;
         }
@@ -71,13 +76,14 @@ public class CreateCommand extends SubCommand {
         String material = "NAME_TAG";
 
         if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) != null) {
-            Color.sendMessage(commandSender, "tag-already-exists");
+            RyMessageUtils.sendPluginMessage(player, "tag-already-exists");
             return;
         }
 
         ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
         tagsFile.set("tags." + configName + ".name", tagName);
         tagsFile.set("tags." + configName + ".prefix", tagPrefix);
+        tagsFile.set("tags." + configName + ".item", material);
         tagsFile.save();
         tagsFile.reload();
         SimpleTags.getInstance().getTags().loadConfig();
@@ -88,12 +94,12 @@ public class CreateCommand extends SubCommand {
             return;
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
-                .addAll(Placeholders.setPlaceholders(commandSender))
+                .addAll(Placeholders.setPlaceholders(player))
                 .add("tag-name", tagName)
                 .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
                 .build();
 
-        Color.sendMessage(commandSender, "tag-created", placeholders);
+        RyMessageUtils.sendPluginMessage(player, "tag-created", placeholders);
     }
 
     /**

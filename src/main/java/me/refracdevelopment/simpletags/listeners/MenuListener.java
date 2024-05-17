@@ -12,18 +12,18 @@ import org.bukkit.inventory.InventoryHolder;
 public class MenuListener implements Listener {
 
     @EventHandler
-    public void onMenuClick(InventoryClickEvent e) {
-        InventoryHolder holder = e.getInventory().getHolder();
+    public void onMenuClick(InventoryClickEvent event) {
+        InventoryHolder holder = event.getInventory().getHolder();
 
-        if (holder instanceof Menu) {
-            e.setCancelled(true);
+        if (!(holder instanceof Menu menu))
+            return;
 
-            if (e.getCurrentItem() == null)
-                return;
+        event.setCancelled(true);
 
-            Menu menu = (Menu) holder;
-            menu.handleMenu(e);
-        }
+        if (event.getCurrentItem() == null)
+            return;
+
+        menu.handleMenu(event);
     }
 
     @EventHandler
@@ -31,8 +31,10 @@ public class MenuListener implements Listener {
         InventoryHolder holder = event.getInventory().getHolder();
         Player player = (Player) event.getPlayer();
 
-        if (holder instanceof Menu)
-            SimpleTags.getInstance().getMenuManager().remove(player);
+        if (!(holder instanceof Menu))
+            return;
+
+        SimpleTags.getInstance().getMenuManager().remove(player);
     }
 
 }

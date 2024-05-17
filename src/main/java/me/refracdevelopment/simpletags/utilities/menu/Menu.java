@@ -1,6 +1,7 @@
 package me.refracdevelopment.simpletags.utilities.menu;
 
 import me.refracdevelopment.simpletags.SimpleTags;
+import me.refracdevelopment.simpletags.utilities.ItemBuilder;
 import me.refracdevelopment.simpletags.utilities.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -8,9 +9,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Arrays;
 
 /**
  * Defines the behavior and attributes of all menus in our plugin
@@ -49,14 +47,11 @@ public abstract class Menu implements InventoryHolder {
 
     public ItemStack makeItem(Material material, String displayName, String... lore) {
 
-        ItemStack item = new ItemStack(material);
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(displayName);
+        ItemBuilder item = new ItemBuilder(material);
+        item.setName(displayName);
+        item.setLore(lore);
 
-        itemMeta.setLore(Arrays.asList(lore));
-        item.setItemMeta(itemMeta);
-
-        return item;
+        return item.toItemStack();
     }
 
 }

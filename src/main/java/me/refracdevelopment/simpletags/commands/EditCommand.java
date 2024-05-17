@@ -3,8 +3,8 @@ package me.refracdevelopment.simpletags.commands;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.manager.configuration.ConfigFile;
 import me.refracdevelopment.simpletags.utilities.Permissions;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simpletags.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
@@ -52,13 +52,18 @@ public class EditCommand extends SubCommand {
      */
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        if (!commandSender.hasPermission(Permissions.EDIT_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+        if (!(commandSender instanceof Player player)) {
+            RyMessageUtils.sendPluginMessage(commandSender, "no-console");
+            return;
+        }
+
+        if (!player.hasPermission(Permissions.EDIT_COMMAND)) {
+            RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
             return;
         }
 
         if (args.length != 3) {
-            Color.sendMessage(commandSender, "usage", StringPlaceholders.builder()
+            RyMessageUtils.sendPluginMessage(player, "usage", StringPlaceholders.builder()
                     .add("cmd", getName()).add("args", getSyntax()).build());
             return;
         }
@@ -68,7 +73,7 @@ public class EditCommand extends SubCommand {
         String tagPrefix = args[2];
 
         if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
-            Color.sendMessage(commandSender, "invalid-tag", Placeholders.setPlaceholders(commandSender));
+            RyMessageUtils.sendPluginMessage(player, "invalid-tag", Placeholders.setPlaceholders(commandSender));
             return;
         }
 
@@ -81,12 +86,12 @@ public class EditCommand extends SubCommand {
         SimpleTags.getInstance().getTagManager().updateTags();
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
-                .addAll(Placeholders.setPlaceholders(commandSender))
+                .addAll(Placeholders.setPlaceholders(player))
                 .add("tag-name", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagName())
                 .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
                 .build();
 
-        Color.sendMessage(commandSender, "tag-edited", placeholders);
+        RyMessageUtils.sendPluginMessage(player, "tag-edited", placeholders);
     }
 
     /**
@@ -96,11 +101,12 @@ public class EditCommand extends SubCommand {
      */
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args) {
-        List <String> tagNames = SimpleTags.getInstance().getTagManager().getTagNames();
+        List<String> tagNames = SimpleTags.getInstance().getTagManager().getTagNames();
 
         if (args.length == 2) {
             return tagNames;
         }
+
         return null;
     }
 }

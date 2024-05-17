@@ -3,8 +3,8 @@ package me.refracdevelopment.simpletags.commands;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.manager.configuration.ConfigFile;
 import me.refracdevelopment.simpletags.utilities.Permissions;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
+import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simpletags.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
@@ -52,13 +52,18 @@ public class DeleteCommand extends SubCommand {
      */
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        if (!commandSender.hasPermission(Permissions.DELETE_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+        if (!(commandSender instanceof Player player)) {
+            RyMessageUtils.sendPluginMessage(commandSender, "no-console");
+            return;
+        }
+
+        if (!player.hasPermission(Permissions.DELETE_COMMAND)) {
+            RyMessageUtils.sendPluginMessage(player, "no-permission");
             return;
         }
 
         if (args.length != 2) {
-            Color.sendMessage(commandSender, "usage", StringPlaceholders.builder()
+            RyMessageUtils.sendPluginMessage(player, "usage", StringPlaceholders.builder()
                     .add("cmd", getName()).add("args", getSyntax()).build());
             return;
         }
@@ -67,12 +72,12 @@ public class DeleteCommand extends SubCommand {
         String configName = args[1];
 
         if (SimpleTags.getInstance().getTagManager().getCachedTag(configName) == null) {
-            Color.sendMessage(commandSender, "invalid-tag", Placeholders.setPlaceholders(commandSender));
+            RyMessageUtils.sendPluginMessage(player, "invalid-tag", Placeholders.setPlaceholders(player));
             return;
         }
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
-                .addAll(Placeholders.setPlaceholders(commandSender))
+                .addAll(Placeholders.setPlaceholders(player))
                 .add("tag-name", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagName())
                 .add("tag-prefix", SimpleTags.getInstance().getTagManager().getCachedTag(configName).getTagPrefix())
                 .build();
@@ -86,7 +91,7 @@ public class DeleteCommand extends SubCommand {
         SimpleTags.getInstance().getTagManager().removeTag(SimpleTags.getInstance().getTagManager().getCachedTag(configName));
         SimpleTags.getInstance().getTagManager().updateTags();
 
-        Color.sendMessage(commandSender, "tag-deleted", placeholders);
+        RyMessageUtils.sendPluginMessage(player, "tag-deleted", placeholders);
     }
 
     /**
@@ -96,11 +101,12 @@ public class DeleteCommand extends SubCommand {
      */
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args) {
-        List <String> tagNames = SimpleTags.getInstance().getTagManager().getTagNames();
+        List<String> tagNames = SimpleTags.getInstance().getTagManager().getTagNames();
 
         if (args.length == 2) {
             return tagNames;
         }
+
         return null;
     }
 }

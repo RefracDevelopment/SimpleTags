@@ -3,10 +3,8 @@ package me.refracdevelopment.simpletags.player.data;
 import lombok.Getter;
 import lombok.Setter;
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.utilities.chat.Color;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 @Getter
@@ -28,33 +26,25 @@ public class ProfileData {
         switch (getPlugin().getDataType()) {
             case MYSQL:
                 getPlugin().getMySQLManager().select("SELECT * FROM SimpleTags WHERE uuid=?", resultSet -> {
-                    try {
-                        if (resultSet.next()) {
-                            setTag(resultSet.getString("tag"));
-                            setTagPrefix(resultSet.getString("tagPrefix"));
-                            getPlugin().getMySQLManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
-                        } else {
-                            getPlugin().getMySQLManager().execute("INSERT INTO SimpleTags (uuid, name, tag, tagPrefix) VALUES (?,?,?,?)",
-                                    player.getUniqueId().toString(), player.getName(), "", "");
-                        }
-                    } catch (SQLException exception) {
-                        Color.log(exception.getMessage());
+                    if (resultSet.next()) {
+                        setTag(resultSet.getString("tag"));
+                        setTagPrefix(resultSet.getString("tagPrefix"));
+                        getPlugin().getMySQLManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
+                    } else {
+                        getPlugin().getMySQLManager().execute("INSERT INTO SimpleTags (uuid, name, tag, tagPrefix) VALUES (?,?,?,?)",
+                                player.getUniqueId().toString(), player.getName(), "", "");
                     }
                 }, player.getUniqueId().toString());
                 break;
             default:
                 getPlugin().getSqLiteManager().select("SELECT * FROM SimpleTags WHERE uuid=?", resultSet -> {
-                    try {
-                        if (resultSet.next()) {
-                            setTag(resultSet.getString("tag"));
-                            setTagPrefix(resultSet.getString("tagPrefix"));
-                            getPlugin().getSqLiteManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
-                        } else {
-                            getPlugin().getSqLiteManager().execute("INSERT INTO SimpleTags (uuid, name, tag, tagPrefix) VALUES (?,?,?,?)",
-                                    player.getUniqueId().toString(), player.getName(), "", "");
-                        }
-                    } catch (SQLException exception) {
-                        Color.log(exception.getMessage());
+                    if (resultSet.next()) {
+                        setTag(resultSet.getString("tag"));
+                        setTagPrefix(resultSet.getString("tagPrefix"));
+                        getPlugin().getSqLiteManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
+                    } else {
+                        getPlugin().getSqLiteManager().execute("INSERT INTO SimpleTags (uuid, name, tag, tagPrefix) VALUES (?,?,?,?)",
+                                player.getUniqueId().toString(), player.getName(), "", "");
                     }
                 }, player.getUniqueId().toString());
                 break;
