@@ -1,5 +1,5 @@
 # This is used for automatic file updating purposes
-config-version: '2'
+config-version: '3'
 
 tags:
   # The tag name used in permissions or commands
@@ -10,4 +10,4 @@ tags:
     # Chat prefix
     prefix: '&4❤ '
     # Menu item material
-    item: 'REDSTONE'
+    item: ''

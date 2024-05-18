@@ -107,8 +107,8 @@ public class TagsItem {
                 List<String> lore = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.lore");
                 lore.forEach(s -> finalItem.addLoreLine(RyMessageUtils.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix()))));
             } else {
-                item.addEnchant(XEnchantment.POWER.getEnchant(), 1);
-                item.setItemFlags(ItemFlag.HIDE_ENCHANTS);
+                finalItem.addEnchant(XEnchantment.POWER.getEnchant(), 1);
+                finalItem.setItemFlags(ItemFlag.HIDE_ENCHANTS);
                 List<String> equippedLore = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.equipped-lore");
                 equippedLore.forEach(s -> finalItem.addLoreLine(RyMessageUtils.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix()))));
             }
@@ -120,13 +120,13 @@ public class TagsItem {
         if (!isSkulls() && !isHeadDatabase())
             finalItem.setSkullOwner(getSkullOwner());
 
-        NBTItem nbtItem = new NBTItem(item.toItemStack());
-        nbtItem.setString("tag-name", tag.getConfigName());
-        nbtItem.applyNBT(item.toItemStack());
-
         finalItem.setDurability(getData());
 
-        return item.toItemStack();
+        NBTItem nbtItem = new NBTItem(finalItem.toItemStack());
+        nbtItem.setString("tag-name", tag.getConfigName());
+        nbtItem.applyNBT(finalItem.toItemStack());
+
+        return nbtItem.getItem();
     }
 
 }
