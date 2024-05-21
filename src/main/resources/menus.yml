@@ -20,7 +20,6 @@ tags:
       customData: false
       customModelData: "YOURIDHERE"
       itemsAdder: false
-      oraxen: false
       name: "%tag-name%"
       lore:
         - "&bPrefix: %tag-prefix%"

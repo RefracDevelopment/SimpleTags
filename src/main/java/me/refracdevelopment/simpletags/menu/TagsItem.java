@@ -27,7 +27,7 @@ public class TagsItem {
 
     private String material;
     private String name, skullOwner;
-    private boolean skulls, headDatabase, customData, itemsAdder, oraxen;
+    private boolean skulls, headDatabase, customData, itemsAdder;
     private int data, customModelData;
     private List<String> lore;
 
@@ -58,11 +58,6 @@ public class TagsItem {
             this.itemsAdder = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.itemsAdder", false);
         else
             this.itemsAdder = false;
-
-        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.oraxen"))
-            this.oraxen = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.oraxen", false);
-        else
-            this.oraxen = false;
     }
 
     public ItemStack getItem(Player player, Tag tag) {
