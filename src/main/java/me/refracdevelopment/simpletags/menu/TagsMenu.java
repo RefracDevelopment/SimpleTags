@@ -108,8 +108,12 @@ public class TagsMenu extends PaginatedMenu {
                 if (index >= tags.size())
                     break;
 
-                if (tags.get(index) != null && playerMenuUtility.getOwner().hasPermission("simpletags.tag." + tags.get(index).getConfigName()))
-                    inventory.addItem(tags.get(index).toItemStack(playerMenuUtility.getOwner(), tags.get(index).getConfigName()));
+                if (tags.get(index) != null) {
+                    if (plugin.getSettings().REQUIRE_PERMISSION && !playerMenuUtility.getOwner().hasPermission("simpletags.tag." + tags.get(index).getConfigName()))
+                        continue;
+
+                    inventory.addItem(tags.get(index).toItemStack(playerMenuUtility.getOwner()));
+                }
             }
         }
     }

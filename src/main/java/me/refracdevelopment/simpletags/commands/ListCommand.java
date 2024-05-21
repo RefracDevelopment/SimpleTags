@@ -66,11 +66,11 @@ public class ListCommand extends SubCommand {
         }
 
         // Show list of all available tags
-        RyMessageUtils.sendSender(player, "&7-------------------------------------");
+        RyMessageUtils.sendPlayer(player, "&7-------------------------------------");
         SimpleTags.getInstance().getTagManager().getLoadedTags().forEach(tag -> {
             RyMessageUtils.sendPlayer(player, "&e" + tag.getConfigName() + "&7(" + tag.getTagName() + "&7) &7- " + tag.getTagPrefix());
         });
-        RyMessageUtils.sendSender(player, "&7-------------------------------------");
+        RyMessageUtils.sendPlayer(player, "&7-------------------------------------");
     }
 
     /**

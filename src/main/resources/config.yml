@@ -6,11 +6,17 @@
 #         \/         \/|__|             \/               \//_____/      \/
 
 # This is used for automatic file updating purposes
-config-version: '1'
+config-version: '2'
 
 # The locale to use in the /locale folder
 # Default: en_US
 locale: en_US
+
+# Should player's be required to have the tag permission
+# in order to see it in commands and menus
+# they will still need to have the permission to equip the tag either way
+# Default: false
+require-permission: false
 
 # Automatically add tags to chat behind a player's name
 # This setting should only be used if
@@ -21,7 +27,7 @@ use-chat: false
 # Choose your data saving type:
 # MYSQL/MARIADB - Database saving
 # SQLITE - Local database saving in a .db file
-# Default: FLAT_FILE
+# Default: SQLITE
 data-type: SQLITE
 
 # Either MySQL or MariaDB will work here.

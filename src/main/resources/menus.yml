@@ -1,5 +1,5 @@
 # This is used for automatic file updating purposes
-config-version: '2'
+config-version: '3'
 
 tags:
   title: "&8Tags (%total-tags%)"
@@ -17,9 +17,6 @@ tags:
     tag-item:
       material: NAME_TAG
       data: 0
-      customData: false
-      customModelData: "YOURIDHERE"
-      itemsAdder: false
       name: "%tag-name%"
       lore:
         - "&bPrefix: %tag-prefix%"

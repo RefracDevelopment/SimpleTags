@@ -63,7 +63,7 @@ public class PlayerListener implements Listener {
         ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
         if (SimpleTags.getInstance().getSettings().USE_CHAT)
-            event.setFormat(ChatColor.translateAlternateColorCodes('&', profile.getTagPrefix() + event.getFormat()));
+            event.setFormat(ChatColor.translateAlternateColorCodes('&', profile.getTagPrefix() + ChatColor.RESET + event.getFormat()));
     }
 
     @EventHandler
@@ -73,7 +73,7 @@ public class PlayerListener implements Listener {
         if (!event.getMessage().equalsIgnoreCase("/reload confirm"))
             return;
 
-        RyMessageUtils.sendSender(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
+        RyMessageUtils.sendPlayer(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
     }
 
     private void sendDevMessage(Player player) {

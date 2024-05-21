@@ -31,31 +31,31 @@ public class TagsItem {
     private int data, customModelData;
     private List<String> lore;
 
-    public TagsItem() {
+    public TagsItem(Tag tag) {
         this.material = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.material");
         this.name = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.name");
         this.skullOwner = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.skullOwner");
         this.data = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getInt("tag-item.data");
-        this.customModelData = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getInt("tag-item.customModelData");
+        this.customModelData = SimpleTags.getInstance().getTags().TAGS.getInt(tag.getConfigName() + ".item.customModelData");
         this.lore = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.lore");
 
-        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.head-database"))
+        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.get("tag-item.head-database") != null)
             this.headDatabase = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.head-database", false);
         else
             this.headDatabase = false;
 
-        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.skulls"))
+        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.get("tag-item.skulls") != null)
             this.skulls = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.skulls", false);
         else
             this.skulls = false;
 
-        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.customData"))
-            this.customData = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.customData", false);
+        if (SimpleTags.getInstance().getTags().TAGS.get("tag-item.customData") != null)
+            this.customData = SimpleTags.getInstance().getTags().TAGS.getBoolean(tag.getConfigName() + ".item.customData", false);
         else
             this.customData = false;
 
-        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.itemsAdder"))
-            this.itemsAdder = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.itemsAdder", false);
+        if (SimpleTags.getInstance().getTags().TAGS.get(tag.getConfigName() + ".itemsAdder") != null)
+            this.itemsAdder = SimpleTags.getInstance().getTags().TAGS.getBoolean(tag.getConfigName() + ".item.itemsAdder", false);
         else
             this.itemsAdder = false;
     }

@@ -20,7 +20,7 @@ public class TagManager {
         SimpleTags.getInstance().getTags().TAGS.getRoutesAsStrings(false).forEach(tag ->
                 addTag(new Tag(tag, SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".name"),
                         SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".prefix"),
-                        SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".item"))));
+                        SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".item.material"))));
 
         RyMessageUtils.sendConsole(true, "&aLoaded &e" + getLoadedTags().size() + " &atags.");
     }

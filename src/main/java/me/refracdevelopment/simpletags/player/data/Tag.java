@@ -20,10 +20,7 @@ public class Tag {
         this.material = material;
     }
 
-    public ItemStack toItemStack(Player player, String tag) {
-        if (SimpleTags.getInstance().getTagManager().getCachedTag(tag) == null)
-            return null;
-
-        return new TagsItem().getItem(player, SimpleTags.getInstance().getTagManager().getCachedTag(tag));
+    public ItemStack toItemStack(Player player) {
+        return new TagsItem(this).getItem(player, this);
     }
 }
