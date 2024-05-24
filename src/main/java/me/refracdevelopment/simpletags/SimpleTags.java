@@ -154,6 +154,7 @@ public final class SimpleTags extends JavaPlugin {
 
         // Loads all available tags
         if (getServer().getPluginManager().isPluginEnabled("ItemsAdder"))
+            // Wait for ItemsAdder custom items to be loaded first
             getServer().getPluginManager().registerEvents(new ItemsAdderListener(), this);
         else
             getTagManager().loadTags();

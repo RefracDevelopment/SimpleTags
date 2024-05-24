@@ -18,3 +18,8 @@ tags:
       # Custom Model Data
       customData: false
       customModelData: "YOURIDHERE"
+      # Custom Heads
+      skulls: false
+      headDatabase: false
+      # Either put a player name or a HeadDatabase or Skulls plugin skull id
+      skullOwner: ""

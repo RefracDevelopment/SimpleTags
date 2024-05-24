@@ -17,6 +17,11 @@ tags:
     tag-item:
       material: NAME_TAG
       data: 0
+      headDatabase: false
+      skulls: false
+      itemsAdder: false
+      customData: false
+      customModelData: "YOURIDHERE"
       name: "%tag-name%"
       lore:
         - "&bPrefix: %tag-prefix%"

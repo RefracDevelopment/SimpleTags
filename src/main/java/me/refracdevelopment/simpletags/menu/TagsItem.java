@@ -31,16 +31,20 @@ public class TagsItem {
     private int data, customModelData;
     private List<String> lore;
 
+    private final Tag tag;
+
     public TagsItem(Tag tag) {
+        this.tag = tag;
+
         this.material = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.material");
         this.name = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.name");
         this.skullOwner = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("tag-item.skullOwner");
         this.data = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getInt("tag-item.data");
-        this.customModelData = SimpleTags.getInstance().getTags().TAGS.getInt(tag.getConfigName() + ".item.customModelData");
+        this.customModelData = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getInt("tag-item.customModelData");
         this.lore = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.lore");
 
         if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.get("tag-item.head-database") != null)
-            this.headDatabase = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.head-database", false);
+            this.headDatabase = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.headDatabase", false);
         else
             this.headDatabase = false;
 
@@ -49,13 +53,13 @@ public class TagsItem {
         else
             this.skulls = false;
 
-        if (SimpleTags.getInstance().getTags().TAGS.get("tag-item.customData") != null)
-            this.customData = SimpleTags.getInstance().getTags().TAGS.getBoolean(tag.getConfigName() + ".item.customData", false);
+        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.get("tag-item.customData") != null)
+            this.customData = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.customData", false);
         else
             this.customData = false;
 
-        if (SimpleTags.getInstance().getTags().TAGS.get(tag.getConfigName() + ".itemsAdder") != null)
-            this.itemsAdder = SimpleTags.getInstance().getTags().TAGS.getBoolean(tag.getConfigName() + ".item.itemsAdder", false);
+        if (SimpleTags.getInstance().getMenus().TAGS_ITEMS.get("tag-item.itemsAdder") != null)
+            this.itemsAdder = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getBoolean("tag-item.itemsAdder", false);
         else
             this.itemsAdder = false;
     }
@@ -99,11 +103,12 @@ public class TagsItem {
 
         if (player.hasPermission("simpletags.tag." + tag.getConfigName())) {
             if (!profile.getTag().equals(tag.getConfigName())) {
-                List<String> lore = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.lore");
                 lore.forEach(s -> finalItem.addLoreLine(RyMessageUtils.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix()))));
             } else {
+                // Add Glow effect for equipped tag
                 finalItem.addEnchant(XEnchantment.POWER.getEnchant(), 1);
                 finalItem.setItemFlags(ItemFlag.HIDE_ENCHANTS);
+
                 List<String> equippedLore = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.equipped-lore");
                 equippedLore.forEach(s -> finalItem.addLoreLine(RyMessageUtils.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix()))));
             }
