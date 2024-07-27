@@ -3,6 +3,7 @@ package me.refracdevelopment.simpletags.utilities.chat;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,10 +39,12 @@ public class PAPIExpansion extends PlaceholderExpansion {
                 if (profile == null) {
                     return "";
                 }
+
                 if (profile.getTagPrefix().isEmpty()) {
                     return "";
                 }
-                return RyMessageUtils.translate(profile.getTagPrefix());
+
+                return MiniMessage.miniMessage().serialize(RyMessageUtils.translate(profile.getTagPrefix()));
             case "tag-name":
             case "identifier":
                 if (profile == null) {

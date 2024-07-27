@@ -11,9 +11,9 @@ import java.util.List;
 public interface CommandList {
 
     /**
-     * @param commandSender  The thing that ran the command
+     * @param sender         The thing that ran the command
      * @param subCommandList A list of all the subcommands you can display
      */
-    void displayCommandList(CommandSender commandSender, List<SubCommand> subCommandList);
+    void displayCommandList(CommandSender sender, List<SubCommand> subCommandList);
 
 }

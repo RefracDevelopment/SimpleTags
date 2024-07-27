@@ -1,9 +1,5 @@
-package me.refracdevelopment.simpletags.manager;
+package me.refracdevelopment.simpletags.utilities.command;
 
-import lombok.Getter;
-import me.refracdevelopment.simpletags.utilities.command.CommandList;
-import me.refracdevelopment.simpletags.utilities.command.CoreCommand;
-import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
@@ -19,10 +15,7 @@ import java.util.List;
 /**
  * An Advanced Command-Managing system allowing you to register subcommands under a core command.
  */
-@Getter
 public class CommandManager {
-
-    private final ArrayList<SubCommand> commands = new ArrayList<>();
 
     /**
      * @param plugin             An instance of your plugin that is using this API. If called within plugin main class, provide this keyword
@@ -33,12 +26,14 @@ public class CommandManager {
      * @param subcommands        Class reference to each SubCommand you create for this core command
      */
     @SafeVarargs
-    public final void createCoreCommand(JavaPlugin plugin, String commandName,
-                                        String commandDescription,
-                                        String commandUsage,
-                                        @Nullable CommandList commandList,
-                                        List<String> aliases,
-                                        Class<? extends SubCommand>... subcommands) throws NoSuchFieldException, IllegalAccessException {
+    public static void createCoreCommand(JavaPlugin plugin, String commandName,
+                                         String commandDescription,
+                                         String commandUsage,
+                                         @Nullable CommandList commandList,
+                                         List<String> aliases,
+                                         Class<? extends SubCommand>... subcommands) throws NoSuchFieldException, IllegalAccessException {
+
+        ArrayList<SubCommand> commands = new ArrayList<>();
 
         Arrays.stream(subcommands).map(subcommand -> {
             try {
@@ -67,11 +62,11 @@ public class CommandManager {
      * @param subcommands        Class reference to each SubCommand you create for this core command
      */
     @SafeVarargs
-    public final void createCoreCommand(JavaPlugin plugin, String commandName,
-                                        String commandDescription,
-                                        String commandUsage,
-                                        @Nullable CommandList commandList,
-                                        Class<? extends SubCommand>... subcommands) throws NoSuchFieldException, IllegalAccessException {
+    public static void createCoreCommand(JavaPlugin plugin, String commandName,
+                                         String commandDescription,
+                                         String commandUsage,
+                                         @Nullable CommandList commandList,
+                                         Class<? extends SubCommand>... subcommands) throws NoSuchFieldException, IllegalAccessException {
         createCoreCommand(plugin, commandName, commandDescription, commandUsage, commandList, Collections.singletonList(""), subcommands);
     }
 

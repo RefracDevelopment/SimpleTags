@@ -34,7 +34,7 @@ public class HelpCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         RyMessageUtils.sendPluginMessage(commandSender, "command-help-title");
-        SimpleTags.getInstance().getCommandManager().getCommands().forEach(command -> {
+        SimpleTags.getInstance().getCommandsList().forEach(command -> {
             StringPlaceholders placeholders;
 
             if (!command.getSyntax().isEmpty()) {

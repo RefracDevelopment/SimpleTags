@@ -2,7 +2,6 @@ package me.refracdevelopment.simpletags.player.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.menu.TagsItem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

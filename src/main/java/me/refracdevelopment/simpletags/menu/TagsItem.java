@@ -1,6 +1,5 @@
 package me.refracdevelopment.simpletags.menu;
 
-import ca.tweetzy.flight.comp.ReflectionUtils;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.XEnchantment;
@@ -25,13 +24,12 @@ import java.util.List;
 @Setter
 public class TagsItem {
 
+    private final Tag tag;
     private String material;
     private String name, skullOwner;
     private boolean skulls, headDatabase, customData, itemsAdder;
     private int data, customModelData;
     private List<String> lore;
-
-    private final Tag tag;
 
     public TagsItem(Tag tag) {
         this.tag = tag;
@@ -79,10 +77,7 @@ public class TagsItem {
             Skull api = Skulls.getAPI().getSkull(Integer.parseInt(getSkullOwner()));
             item = new ItemBuilder(api.getItemStack());
         } else if (isCustomData()) {
-            if (ReflectionUtils.supports(14))
-                item.setCustomModelData(getCustomModelData());
-            else
-                RyMessageUtils.sendPluginError("An error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
+            item.setCustomModelData(getCustomModelData());
         } else if (isItemsAdder()) {
             CustomStack api = CustomStack.getInstance(getMaterial());
 

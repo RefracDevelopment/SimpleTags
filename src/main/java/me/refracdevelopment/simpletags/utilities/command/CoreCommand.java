@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Represents a main command that has subcommands within it. Like /stafftools freeze is /[corecommand] [subcommand]
  */
-public class CoreCommand extends Command {
+class CoreCommand extends Command {
 
     private final ArrayList<SubCommand> subcommands;
     private final CommandList commandList;
@@ -29,23 +29,23 @@ public class CoreCommand extends Command {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender commandSender, @NotNull String commandLabel, String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, String[] args) {
 
         if (args.length > 0) {
             for (int i = 0; i < getSubCommands().size(); i++) {
                 if (args[0].equalsIgnoreCase(getSubCommands().get(i).getName()) || (getSubCommands().get(i).getAliases() != null && getSubCommands().get(i).getAliases().contains(args[0]))) {
-                    getSubCommands().get(i).perform(commandSender, args);
+                    getSubCommands().get(i).perform(sender, args);
                 }
             }
         } else {
             if (commandList == null) {
-                commandSender.sendMessage("--------------------------------");
+                sender.sendMessage("--------------------------------");
                 for (SubCommand subcommand : subcommands) {
-                    commandSender.sendMessage(subcommand.getSyntax() + " - " + subcommand.getDescription());
+                    sender.sendMessage(subcommand.getSyntax() + " - " + subcommand.getDescription());
                 }
-                commandSender.sendMessage("--------------------------------");
+                sender.sendMessage("--------------------------------");
             } else {
-                commandList.displayCommandList(commandSender, subcommands);
+                commandList.displayCommandList(sender, subcommands);
             }
         }
 

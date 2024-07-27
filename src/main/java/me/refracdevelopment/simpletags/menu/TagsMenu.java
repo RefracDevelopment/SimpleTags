@@ -8,22 +8,38 @@ import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.Utilities;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;
 import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
-import me.refracdevelopment.simpletags.utilities.menu.PaginatedMenu;
-import me.refracdevelopment.simpletags.utilities.menu.PlayerMenuUtility;
-import org.bukkit.ChatColor;
+import me.refracdevelopment.simpletags.utilities.exceptions.MenuManagerException;
+import me.refracdevelopment.simpletags.utilities.exceptions.MenuManagerNotSetupException;
+import me.refracdevelopment.simpletags.utilities.paginated.PaginatedMenu;
+import me.refracdevelopment.simpletags.utilities.paginated.PlayerMenuUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class TagsMenu extends PaginatedMenu {
 
-    public TagsMenu(PlayerMenuUtility playerMenuUtility) {
-        super(playerMenuUtility);
+    public TagsMenu(PlayerMenuUtil playerMenuUtil) {
+        super(playerMenuUtil);
     }
 
     @Override
-    public String getMenuName() {
+    public List<Tag> dataToItems() {
+        return SimpleTags.getInstance().getTagManager().getLoadedTags();
+    }
+
+    @Nullable
+    @Override
+    public HashMap<Integer, ItemStack> getCustomMenuBorderItems() {
+        return null;
+    }
+
+    @Override
+    public Component getMenuName() {
         return RyMessageUtils.translate(SimpleTags.getInstance().getMenus().TAGS_TITLE.replace("%total-tags%", String.valueOf(SimpleTags.getInstance().getTagManager().getLoadedTags().size())));
     }
 
@@ -33,41 +49,47 @@ public class TagsMenu extends PaginatedMenu {
     }
 
     @Override
-    public void handleMenu(InventoryClickEvent e) {
-        Player player = (Player) e.getWhoClicked();
-        ProfileData profile = plugin.getProfileManager().getProfile(player.getUniqueId()).getData();
+    public void handleMenu(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
-        if (e.getCurrentItem() == null)
+        event.setCancelled(true);
+
+        if (event.getCurrentItem() == null)
             return;
 
-        if (e.getCurrentItem().getItemMeta() == null)
+        if (event.getCurrentItem().getItemMeta() == null)
             return;
 
-        if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("left.name"))) {
-            if (page != 0) {
-                page = page - 1;
-                super.open();
+        if (event.getCurrentItem().getType().equals(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("left.material")).parseMaterial()) && page != 0) {
+            try {
+                prevPage();
+            } catch (MenuManagerNotSetupException menuManagerNotSetupException) {
+                RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
+            } catch (MenuManagerException menuManagerException) {
+                menuManagerException.printStackTrace();
             }
-
             return;
-        } else if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("right.name"))) {
-            if (!((index + 1) >= plugin.getTagManager().getLoadedTags().size())) {
-                page = page + 1;
-                super.open();
+        } else if (event.getCurrentItem().getType().equals(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("right.material")).parseMaterial()) && !((page + 1) * maxItemsPerPage >= dataToItems().size())) {
+            try {
+                nextPage();
+            } catch (MenuManagerNotSetupException menuManagerNotSetupException) {
+                RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
+            } catch (MenuManagerException menuManagerException) {
+                menuManagerException.printStackTrace();
             }
-
             return;
-        } else if (e.getCurrentItem().getType().equals(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("close.material")).parseMaterial())) {
+        } else if (event.getCurrentItem().getType().equals(Utilities.getMaterial(SimpleTags.getInstance().getMenus().TAGS_ITEMS.getString("close.material")).parseMaterial())) {
             player.closeInventory();
             return;
         }
 
         Tag tag = null;
 
-        NBTItem nbtItem = new NBTItem(e.getCurrentItem());
+        NBTItem nbtItem = new NBTItem(event.getCurrentItem());
 
         if (nbtItem.hasTag("tag-name"))
-            tag = plugin.getTagManager().getCachedTag(nbtItem.getString("tag-name"));
+            tag = SimpleTags.getInstance().getTagManager().getCachedTag(nbtItem.getString("tag-name"));
 
         if (tag == null)
             return;
@@ -93,28 +115,5 @@ public class TagsMenu extends PaginatedMenu {
         Tasks.runAsync(() -> profile.save(player));
         RyMessageUtils.sendPluginMessage(player, "tag-reset", Placeholders.setPlaceholders(player));
         player.closeInventory();
-    }
-
-    @Override
-    public void setMenuItems() {
-        addMenuBorder();
-
-        List<Tag> tags = plugin.getTagManager().getLoadedTags();
-
-        if (!tags.isEmpty()) {
-            for (int i = 0; i < getMaxItemsPerPage(); i++) {
-                index = getMaxItemsPerPage() * page + i;
-
-                if (index >= tags.size())
-                    break;
-
-                if (tags.get(index) != null) {
-                    if (plugin.getSettings().REQUIRE_PERMISSION && !playerMenuUtility.getOwner().hasPermission("simpletags.tag." + tags.get(index).getConfigName()))
-                        continue;
-
-                    inventory.addItem(tags.get(index).toItemStack(playerMenuUtility.getOwner()));
-                }
-            }
-        }
     }
 }

@@ -2,11 +2,7 @@ package me.refracdevelopment.simpletags.manager.configuration;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.block.implementation.Section;
-import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
-import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
 import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
-import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
-import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
@@ -19,18 +15,13 @@ public class ConfigFile {
 
     private YamlDocument configFile;
 
-    public ConfigFile(String name, boolean autoUpdate) {
+    public ConfigFile(String name) {
         try {
             configFile = YamlDocument.create(new File(SimpleTags.getInstance().getDataFolder(), name),
                     getClass().getResourceAsStream("/" + name),
-                    GeneralSettings.builder().setUseDefaults(autoUpdate).build(),
-                    LoaderSettings.builder().setAutoUpdate(autoUpdate).build(),
-                    DumperSettings.DEFAULT,
-                    UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version"))
-                            .setOptionSorting(autoUpdate ? UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS : UpdaterSettings.OptionSorting.NONE).build()
+                    GeneralSettings.builder().setUseDefaults(false).build()
             );
 
-            configFile.update();
             configFile.save();
         } catch (IOException e) {
             RyMessageUtils.sendConsole(true, "&cFailed to load " + name + " file! The plugin will now shutdown.");

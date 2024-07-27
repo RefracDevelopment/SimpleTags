@@ -2,14 +2,11 @@ package me.refracdevelopment.simpletags;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.papermc.lib.PaperLib;
+import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
 import me.refracdevelopment.simpletags.commands.*;
 import me.refracdevelopment.simpletags.hooks.ItemsAdderListener;
-import me.refracdevelopment.simpletags.listeners.MenuListener;
 import me.refracdevelopment.simpletags.listeners.PlayerListener;
-import me.refracdevelopment.simpletags.manager.CommandManager;
-import me.refracdevelopment.simpletags.manager.MenuManager;
 import me.refracdevelopment.simpletags.manager.ProfileManager;
 import me.refracdevelopment.simpletags.manager.TagManager;
 import me.refracdevelopment.simpletags.manager.configuration.ConfigFile;
@@ -22,21 +19,23 @@ import me.refracdevelopment.simpletags.manager.data.MySQLManager;
 import me.refracdevelopment.simpletags.manager.data.SQLiteManager;
 import me.refracdevelopment.simpletags.menu.TagsMenu;
 import me.refracdevelopment.simpletags.utilities.DownloadUtil;
-import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.PAPIExpansion;
 import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
+import me.refracdevelopment.simpletags.utilities.command.CommandManager;
+import me.refracdevelopment.simpletags.utilities.command.SubCommand;
+import me.refracdevelopment.simpletags.utilities.exceptions.MenuManagerNotSetupException;
+import me.refracdevelopment.simpletags.utilities.paginated.MenuManager;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import space.arim.morepaperlib.MorePaperLib;
-import space.arim.morepaperlib.adventure.MorePaperLibAdventure;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -51,8 +50,6 @@ public final class SimpleTags extends JavaPlugin {
     private SQLiteManager sqLiteManager;
     private ProfileManager profileManager;
     private TagManager tagManager;
-    private MenuManager menuManager;
-    private CommandManager commandManager;
 
     // Files
     private ConfigFile configFile;
@@ -68,20 +65,17 @@ public final class SimpleTags extends JavaPlugin {
     private Commands commands;
 
     // Utilities
-    private MorePaperLib paperLib;
-    private MorePaperLibAdventure paperLibAdventure;
+    private List<SubCommand> commandsList;
+    private FoliaLib foliaLib;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
         instance = this;
 
+        foliaLib = new FoliaLib(this);
+
         DownloadUtil.downloadAndEnable();
-
-        new Metrics(this, 13205);
-
-        paperLib = new MorePaperLib(this);
-        paperLibAdventure = new MorePaperLibAdventure(paperLib);
 
         loadFiles();
 
@@ -100,30 +94,32 @@ public final class SimpleTags extends JavaPlugin {
         loadListeners();
         loadHooks();
 
-        // Paper is recommended but not required
-        PaperLib.suggestPaper(this);
+        updateCheck();
 
-        Tasks.runAsync(this::updateCheck);
+        new Metrics(this, 13205);
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        if (Objects.requireNonNull(dataType) == DataType.MYSQL)
-            getMySQLManager().shutdown();
-        else if (Objects.requireNonNull(dataType) == DataType.SQLITE)
-            getSqLiteManager().shutdown();
+        try {
+            if (Objects.requireNonNull(dataType) == DataType.MYSQL)
+                getMySQLManager().shutdown();
+            else if (Objects.requireNonNull(dataType) == DataType.SQLITE)
+                getSqLiteManager().shutdown();
 
-        paperLib.scheduling().cancelGlobalTasks();
+            getFoliaLib().getImpl().cancelAllTasks();
+        } catch (Exception ignored) {
+        }
     }
 
     public void loadFiles() {
         // Files
-        configFile = new ConfigFile("config.yml", true);
-        tagsFile = new ConfigFile("tags.yml", false);
-        menusFile = new ConfigFile("menus.yml", false);
-        commandsFile = new ConfigFile("commands/tags.yml", true);
-        localeFile = new ConfigFile("locale/" + getConfigFile().getString("locale") + ".yml", true);
+        configFile = new ConfigFile("config.yml");
+        tagsFile = new ConfigFile("tags.yml");
+        menusFile = new ConfigFile("menus.yml");
+        commandsFile = new ConfigFile("commands/tags.yml");
+        localeFile = new ConfigFile("locale/" + getConfigFile().getString("locale") + ".yml");
 
         // Cache
         settings = new Config();
@@ -149,8 +145,8 @@ public final class SimpleTags extends JavaPlugin {
 
         profileManager = new ProfileManager();
         tagManager = new TagManager();
-        menuManager = new MenuManager();
-        commandManager = new CommandManager();
+
+        MenuManager.setup(getServer(), this);
 
         // Loads all available tags
         if (getServer().getPluginManager().isPluginEnabled("ItemsAdder"))
@@ -164,9 +160,11 @@ public final class SimpleTags extends JavaPlugin {
 
     private void loadCommands() {
         try {
-            getCommandManager().createCoreCommand(this, getCommands().TAGS_COMMAND_NAME,
+            CommandManager.createCoreCommand(this, getCommands().TAGS_COMMAND_NAME,
                     getLocaleFile().getString("command-tags-description"),
                     "/" + getCommands().TAGS_COMMAND_NAME, (commandSender, list) -> {
+                        commandsList = list;
+
                         // Make sure the sender is a player.
                         if (!(commandSender instanceof Player player)) {
                             RyMessageUtils.sendPluginMessage(commandSender, "no-console");
@@ -178,7 +176,11 @@ public final class SimpleTags extends JavaPlugin {
                             return;
                         }
 
-                        new TagsMenu(SimpleTags.getInstance().getMenuManager().getPlayerMenuUtility(player)).open();
+                        try {
+                            new TagsMenu(MenuManager.getPlayerMenuUtil(player)).open();
+                        } catch (MenuManagerNotSetupException e) {
+                            RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
+                        }
                     },
                     getCommands().TAGS_COMMAND_ALIASES,
                     CreateCommand.class,
@@ -202,7 +204,6 @@ public final class SimpleTags extends JavaPlugin {
         PluginManager pluginManager = this.getServer().getPluginManager();
 
         pluginManager.registerEvents(new PlayerListener(), this);
-        pluginManager.registerEvents(new MenuListener(), this);
 
         RyMessageUtils.sendConsole(true, "&aLoaded listeners.");
     }

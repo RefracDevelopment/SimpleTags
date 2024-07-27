@@ -1,7 +1,8 @@
 package me.refracdevelopment.simpletags.utilities;
 
-import com.cryptomorin.xseries.ReflectionUtils;
 import com.cryptomorin.xseries.XMaterial;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -11,6 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -27,19 +30,11 @@ public class ItemBuilder {
     }
 
     public ItemBuilder(Material m, int amount) {
-        if (ReflectionUtils.MINOR_NUMBER == 7) {
-            is = new ItemStack(m, amount);
-        } else {
-            is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).parseMaterial()), amount);
-        }
+        is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).parseMaterial()), amount);
     }
 
     public ItemBuilder(Material m, int amount, byte durability) {
-        if (ReflectionUtils.MINOR_NUMBER == 7) {
-            is = new ItemStack(m, amount, durability);
-        } else {
-            is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).parseMaterial()), amount, durability);
-        }
+        is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).parseMaterial()), amount, durability);
     }
 
     public ItemBuilder clone() {
@@ -56,23 +51,23 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setName(String name) {
+    public ItemBuilder setName(Component name) {
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils.translate(name));
+        im.displayName(name);
         is.setItemMeta(im);
         return this;
     }
 
-    public ItemBuilder setUnColoredName(String name) {
+    public ItemBuilder setUnColoredName(Component name) {
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(name);
+        im.displayName(name);
         is.setItemMeta(im);
         return this;
     }
 
-    public ItemBuilder setUnTranslatedName(String name) {
+    public ItemBuilder setUnTranslatedName(Component name) {
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(name);
+        im.displayName(name);
         is.setItemMeta(im);
         return this;
     }
@@ -93,7 +88,7 @@ public class ItemBuilder {
     public ItemBuilder setSkullOwner(String owner) {
         try {
             SkullMeta im = (SkullMeta) is.getItemMeta();
-            im.setOwner(owner);
+            im.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
             is.setItemMeta(im);
         } catch (ClassCastException expected) {
         }
@@ -120,49 +115,49 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setLore(String... lore) {
+    public ItemBuilder setLore(Component... lore) {
         ItemMeta im = is.getItemMeta();
-        im.setLore(me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils.translate(Arrays.asList(lore)));
+        im.lore(Arrays.asList(lore));
         is.setItemMeta(im);
         return this;
     }
 
-    public ItemBuilder setLore(List<String> lore) {
+    public ItemBuilder setLore(List<Component> lore) {
         ItemMeta im = is.getItemMeta();
-        im.setLore(me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils.translate(lore));
+        im.lore(lore);
         is.setItemMeta(im);
         return this;
     }
 
-    public ItemBuilder removeLoreLine(String line) {
+    public ItemBuilder removeLoreLine(Component line) {
         ItemMeta im = is.getItemMeta();
-        List<String> lore = new ArrayList<>(im.getLore());
+        List<Component> lore = new ArrayList<>(im.lore());
         if (!lore.contains(line))
             return this;
         lore.remove(line);
-        im.setLore(lore);
+        im.lore(lore);
         is.setItemMeta(im);
         return this;
     }
 
     public ItemBuilder removeLoreLine(int index) {
         ItemMeta im = is.getItemMeta();
-        List<String> lore = new ArrayList<>(im.getLore());
+        List<Component> lore = new ArrayList<>(im.lore());
         if (index < 0 || index > lore.size())
             return this;
         lore.remove(index);
-        im.setLore(lore);
+        im.lore(lore);
         is.setItemMeta(im);
         return this;
     }
 
-    public ItemBuilder addLoreLine(String line) {
+    public ItemBuilder addLoreLine(Component line) {
         ItemMeta im = is.getItemMeta();
-        List<String> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         if (im.hasLore())
-            lore = new ArrayList<>(im.getLore());
+            lore = new ArrayList<>(im.lore());
         lore.add(line);
-        im.setLore(me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils.translate(lore));
+        im.lore(lore);
         is.setItemMeta(im);
         return this;
     }
@@ -182,7 +177,7 @@ public class ItemBuilder {
         ItemMeta im = is.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         lore.set(pos, line);
-        im.setLore(me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils.translate(lore));
+        im.setLore(lore);
         is.setItemMeta(im);
         return this;
     }
@@ -215,6 +210,11 @@ public class ItemBuilder {
         im.addItemFlags(flags);
         is.setItemMeta(im);
         return this;
+    }
+
+    public @NotNull PersistentDataContainer getPersistentDataContainer() {
+        ItemMeta im = is.getItemMeta();
+        return im.getPersistentDataContainer();
     }
 
     public ItemStack toItemStack() {

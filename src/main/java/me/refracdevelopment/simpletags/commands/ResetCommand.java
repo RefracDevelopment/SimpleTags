@@ -9,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import space.arim.morepaperlib.adventure.MorePaperLibAdventure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +42,6 @@ public class ResetCommand extends SubCommand {
             return;
         }
 
-        MorePaperLibAdventure paperLibAdventure = SimpleTags.getInstance().getPaperLibAdventure();
-
         if (args.length == 1) {
             Tasks.runAsync(() -> {
                 switch (SimpleTags.getInstance().getDataType()) {
@@ -52,14 +49,14 @@ public class ResetCommand extends SubCommand {
                         SimpleTags.getInstance().getMySQLManager().delete();
 
                         Bukkit.getOnlinePlayers().forEach(player -> {
-                            paperLibAdventure.kickPlayer(player, RyMessageUtils.adventureTranslate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            player.kick(RyMessageUtils.translate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
                         });
                         break;
                     case SQLITE:
                         SimpleTags.getInstance().getSqLiteManager().delete();
 
                         Bukkit.getOnlinePlayers().forEach(player -> {
-                            paperLibAdventure.kickPlayer(player, RyMessageUtils.adventureTranslate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            player.kick(RyMessageUtils.translate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
                         });
                         break;
                     default:
@@ -77,13 +74,13 @@ public class ResetCommand extends SubCommand {
                             SimpleTags.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                             RyMessageUtils.sendPluginMessage(commandSender, "tags-reset-player");
-                            paperLibAdventure.kickPlayer(target.getPlayer(), RyMessageUtils.adventureTranslate(target.getPlayer(), SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            target.getPlayer().kick(RyMessageUtils.translate(target.getPlayer(), SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
                             break;
                         case SQLITE:
                             SimpleTags.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                             RyMessageUtils.sendPluginMessage(commandSender, "tags-reset-player");
-                            paperLibAdventure.kickPlayer(target.getPlayer(), RyMessageUtils.adventureTranslate(target.getPlayer(), SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            target.getPlayer().kick(RyMessageUtils.translate(target.getPlayer(), SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
                             break;
                         default:
                             RyMessageUtils.sendSender(commandSender, "This command is only available for MySQL, MariaDB and SQLite.");

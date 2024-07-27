@@ -54,7 +54,7 @@ public class ReloadCommand extends SubCommand {
             return;
         }
 
-        SimpleTags.getInstance().getPaperLib().scheduling().cancelGlobalTasks();
+        SimpleTags.getInstance().getFoliaLib().getImpl().cancelAllTasks();
         reloadFiles();
         SimpleTags.getInstance().getTagManager().loadTags();
         SimpleTags.getInstance().getTagManager().updateTags();

@@ -4,6 +4,8 @@ import lombok.Getter;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.data.Tag;
 import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 public class TagManager {
 
     private final List<Tag> loadedTags = new ArrayList<>();
+    private final List<ItemStack> loadedTagItems = new ArrayList<>();
 
     public void loadTags() {
         getLoadedTags().clear();
@@ -20,7 +23,9 @@ public class TagManager {
         SimpleTags.getInstance().getTags().TAGS.getRoutesAsStrings(false).forEach(tag ->
                 addTag(new Tag(tag, SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".name"),
                         SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".prefix"),
-                        SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".item.material"))));
+                        SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".item.material")
+                ))
+        );
 
         RyMessageUtils.sendConsole(true, "&aLoaded &e" + getLoadedTags().size() + " &atags.");
     }
@@ -50,10 +55,17 @@ public class TagManager {
         for (Tag tag : getLoadedTags())
             if (tag.getConfigName().equalsIgnoreCase(name))
                 return tag;
+
         return null;
     }
 
     public List<String> getTagNames() {
         return getLoadedTags().stream().map(Tag::getConfigName).collect(Collectors.toList());
+    }
+
+    public List<ItemStack> getTagItems(Player player) {
+        getLoadedTags().forEach(tag -> loadedTagItems.add(tag.toItemStack(player)));
+
+        return loadedTagItems;
     }
 }
