@@ -53,27 +53,27 @@
                     <relocations>
                         <relocation>
                             <pattern>com.cryptomorin.xseries</pattern>
-                            <shadedPattern>me.refracdevelopment.simplegems.libs.xseries</shadedPattern>
+                            <shadedPattern>me.refracdevelopment.libs.xseries</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>net.byteflux.libby</pattern>
-                            <shadedPattern>me.refracdevelopment.simplegems.libs.libby</shadedPattern>
+                            <shadedPattern>me.refracdevelopment.libs.libby</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>me.gabytm.util.actions</pattern>
-                            <shadedPattern>me.refracdevelopment.simplegems.libs.actions</shadedPattern>
+                            <shadedPattern>me.refracdevelopment.libs.actions</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>me.refracdevelopment.simplegems.libs.bstats</shadedPattern>
+                            <shadedPattern>me.refracdevelopment.libs.bstats</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>dev.dejvokep.boostedyaml</pattern>
-                            <shadedPattern>me.refracdevelopment.simplegems.libs.boostedyaml</shadedPattern>
+                            <shadedPattern>me.refracdevelopment.libs.boostedyaml</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.tcoded.folialib</pattern>
-                            <shadedPattern>me.refracdevelopment.simplegems.libs.folialib</shadedPattern>
+                            <shadedPattern>me.refracdevelopment.libs.folialib</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -140,6 +140,7 @@
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
             <version>11.2.0.1</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
