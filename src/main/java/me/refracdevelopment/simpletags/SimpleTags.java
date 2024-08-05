@@ -1,5 +1,6 @@
 package me.refracdevelopment.simpletags;
 
+import com.cryptomorin.xseries.reflection.XReflection;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.tcoded.folialib.FoliaLib;
@@ -74,6 +75,13 @@ public final class SimpleTags extends JavaPlugin {
         instance = this;
 
         foliaLib = new FoliaLib(this);
+
+        if (!XReflection.supports(18) || getFoliaLib().isSpigot()) {
+            getLogger().info("This version and or software (Spigot) is no longer supported.");
+            getLogger().info("Please update to at least Paper 1.18.x or above.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         DownloadUtil.downloadAndEnable();
 
