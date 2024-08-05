@@ -9,17 +9,7 @@ tags:
     name: "&4Dark Red Heart"
     # Chat prefix
     prefix: '&4❤ '
-    # Menu item override
+    # Menu item overrides
+    # More overrides will be added here in the future
     item:
-      # If using ItemsAdder you put the namespaced item id here
       material: ''
-      # Enable this to use custom items from ItemsAdder
-      itemsAdder: false
-      # Custom Model Data
-      customData: false
-      customModelData: "YOURIDHERE"
-      # Custom Heads
-      skulls: false
-      headDatabase: false
-      # Either put a player name or a HeadDatabase or Skulls plugin skull id
-      skullOwner: ""
