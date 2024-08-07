@@ -1,8 +1,8 @@
 package me.refracdevelopment.simpletags.utilities;
 
 import me.refracdevelopment.simpletags.SimpleTags;
-import net.byteflux.libby.BukkitLibraryManager;
-import net.byteflux.libby.Library;
+import com.alessiodp.libby.BukkitLibraryManager;
+import com.alessiodp.libby.Library;
 
 public class DownloadUtil {
 
