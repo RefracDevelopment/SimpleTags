@@ -1,3 +1,5 @@
+[![Build](https://github.com/RefracDevelopment/SimpleTags/actions/workflows/build.yml/badge.svg)](https://github.com/RefracDevelopment/SimpleTags/actions/workflows/build.yml)
+
 ![](https://i.imgur.com/O57ilA8.png)
 
 [SpigotMC](https://www.spigotmc.org/resources/114078/)
