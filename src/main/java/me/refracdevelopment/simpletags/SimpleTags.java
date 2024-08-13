@@ -27,6 +27,7 @@ import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import me.refracdevelopment.simpletags.utilities.exceptions.MenuManagerNotSetupException;
 import me.refracdevelopment.simpletags.utilities.paginated.MenuManager;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -77,13 +78,13 @@ public final class SimpleTags extends JavaPlugin {
         foliaLib = new FoliaLib(this);
 
         if (!XReflection.supports(18) || getFoliaLib().isSpigot()) {
-            getLogger().info("This version and or software (Spigot) is no longer supported.");
+            getLogger().info("This version and or software (" + Bukkit.getName() + ") is not supported.");
             getLogger().info("Please update to at least Paper 1.18.x or above.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
-        DownloadUtil.downloadAndEnable();
+        DownloadUtil.downloadAndEnable(this);
 
         loadFiles();
 
@@ -116,8 +117,8 @@ public final class SimpleTags extends JavaPlugin {
             else if (Objects.requireNonNull(dataType) == DataType.SQLITE)
                 getSqLiteManager().shutdown();
 
-            getFoliaLib().getImpl().cancelAllTasks();
-        } catch (Exception ignored) {
+            getFoliaLib().getScheduler().cancelAllTasks();
+        } catch (Throwable ignored) {
         }
     }
 

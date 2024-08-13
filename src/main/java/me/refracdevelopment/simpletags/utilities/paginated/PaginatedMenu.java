@@ -117,7 +117,7 @@ public abstract class PaginatedMenu extends Menu {
      * @return true if successful, false if already on the last page
      */
     public boolean nextPage() throws MenuManagerException, MenuManagerNotSetupException {
-            if (!((page + 1) * maxItemsPerPage >= dataToItems().size())) {
+        if (!((page + 1) * maxItemsPerPage >= dataToItems().size())) {
             page = page + 1;
             reloadItems();
             return true;

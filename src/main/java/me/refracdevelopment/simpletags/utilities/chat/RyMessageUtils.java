@@ -112,8 +112,7 @@ public class RyMessageUtils {
      * Translate a string from legacy to Adventure API.
      *
      * @param input The string that needs translating.
-     * @return      String which is in an adventure format.
-     *
+     * @return String which is in an adventure format.
      * @Author: EternalCodeTeam (https://github.com/EternalCodeTeam/ChatFormatter/)
      */
     private static String legacyToAdventure(String input) {
@@ -153,6 +152,9 @@ public class RyMessageUtils {
      * @param message The message you wish to send the player.
      */
     public static void sendPlayer(@NotNull Player player, @NotNull String message) {
+        if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%") || message.isEmpty())
+            return;
+
         player.sendMessage(translate(player, getPrefix() + message));
     }
 
@@ -164,6 +166,9 @@ public class RyMessageUtils {
      */
     public static void sendPlayer(@NotNull Player player, @NotNull String... messages) {
         for (String message : messages) {
+            if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
+                return;
+
             player.sendMessage(translate(player, getPrefix() + message));
         }
     }
@@ -176,6 +181,9 @@ public class RyMessageUtils {
      */
     public static void sendPlayer(Player player, @NotNull List<String> messages) {
         for (String message : messages) {
+            if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
+                return;
+
             player.sendMessage(translate(player, getPrefix() + message));
         }
     }
@@ -187,6 +195,9 @@ public class RyMessageUtils {
      * @param message The message you wish to send to the sender.
      */
     public static void sendSender(@NotNull CommandSender sender, @NotNull String message) {
+        if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
+            return;
+
         message = Placeholders.setPlaceholders(sender, message);
 
         sender.sendMessage(translate(getPrefix() + message));
@@ -200,6 +211,9 @@ public class RyMessageUtils {
      */
     public static void sendSender(@NotNull CommandSender sender, @NotNull String... messages) {
         for (String message : messages) {
+            if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
+                return;
+
             message = Placeholders.setPlaceholders(sender, message);
 
             sender.sendMessage(translate(getPrefix() + message));
@@ -214,11 +228,15 @@ public class RyMessageUtils {
      */
     public static void sendSender(@NotNull CommandSender sender, @NotNull List<String> messages) {
         for (String message : messages) {
+            if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
+                return;
+
             message = Placeholders.setPlaceholders(sender, message);
 
             sender.sendMessage(translate(getPrefix() + message));
         }
     }
+
 
     /**
      * Send console a message.
@@ -268,6 +286,9 @@ public class RyMessageUtils {
      * @param message    The message you wish to be broadcast.
      */
     public static void broadcast(Player player, String permission, String message) {
+        if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
+            return;
+
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.hasPermission(permission)) {
                 online.sendMessage(translate(player, "%prefix%" + message));
@@ -283,6 +304,9 @@ public class RyMessageUtils {
      * @param message    The message you wish to be broadcast.
      */
     public static void broadcast(Player player, Permission permission, String message) {
+        if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
+            return;
+
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.hasPermission(permission)) {
                 online.sendMessage(translate(player, "%prefix%" + message));
@@ -296,6 +320,9 @@ public class RyMessageUtils {
      * @param message The message you wish to be sent to the players.
      */
     public static void broadcast(String message) {
+        if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
+            return;
+
         for (Player online : Bukkit.getOnlinePlayers()) {
             online.sendMessage(translate("%prefix%" + message));
         }
@@ -308,6 +335,9 @@ public class RyMessageUtils {
      * @param message The message you wish to be sent to players.
      */
     public static void broadcast(Player player, String message) {
+        if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
+            return;
+
         for (Player online : Bukkit.getOnlinePlayers()) {
             online.sendMessage(translate(player, "%prefix%" + message));
         }
