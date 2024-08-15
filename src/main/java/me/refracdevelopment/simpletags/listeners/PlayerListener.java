@@ -16,9 +16,6 @@ import java.util.UUID;
 
 public class PlayerListener implements Listener {
 
-    private final UUID getDevUUID = UUID.fromString("d9c670ed-d7d5-45fb-a144-8b8be86c4a2d");
-    private final UUID getDevUUID2 = UUID.fromString("ab898e40-9088-45eb-9d69-e0b78e872627");
-
     @EventHandler
     public void onLogin(PlayerLoginEvent event) {
         SimpleTags.getInstance().getProfileManager().handleProfileCreation(event.getPlayer().getUniqueId(), event.getPlayer().getName());
@@ -34,12 +31,6 @@ public class PlayerListener implements Listener {
         if (profile == null || profile.getData() == null) {
             player.kick(RyMessageUtils.translate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
             return;
-        }
-
-        if (player.getUniqueId().equals(getDevUUID)) {
-            sendDevMessage(player);
-        } else if (player.getUniqueId().equals(getDevUUID2)) {
-            sendDevMessage(player);
         }
     }
 
@@ -74,15 +65,5 @@ public class PlayerListener implements Listener {
             return;
 
         RyMessageUtils.sendPlayer(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
-    }
-
-    private void sendDevMessage(Player player) {
-        RyMessageUtils.sendPlayer(player, " ");
-        RyMessageUtils.sendPlayer(player, "&aWelcome " + SimpleTags.getInstance().getDescription().getName() + " Developer!");
-        RyMessageUtils.sendPlayer(player, "&aThis server is currently running " + SimpleTags.getInstance().getDescription().getName() + " &bv" + SimpleTags.getInstance().getDescription().getVersion() + "&a.");
-        RyMessageUtils.sendPlayer(player, "&aPlugin name&7: &f" + SimpleTags.getInstance().getDescription().getName());
-        RyMessageUtils.sendPlayer(player, " ");
-        RyMessageUtils.sendPlayer(player, "&aServer version&7: &f" + Bukkit.getVersion());
-        RyMessageUtils.sendPlayer(player, " ");
     }
 }
