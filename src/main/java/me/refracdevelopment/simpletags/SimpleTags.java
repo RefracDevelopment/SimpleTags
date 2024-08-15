@@ -140,6 +140,7 @@ public final class SimpleTags extends JavaPlugin {
     }
 
     private void loadManagers() {
+        // Setup database
         switch (getSettings().DATA_TYPE.toUpperCase()) {
             case "MARIADB":
             case "MYSQL":
@@ -155,6 +156,7 @@ public final class SimpleTags extends JavaPlugin {
         profileManager = new ProfileManager();
         tagManager = new TagManager();
 
+        // Setup menus
         MenuManager.setup(getServer(), this);
 
         // Loads all available tags
