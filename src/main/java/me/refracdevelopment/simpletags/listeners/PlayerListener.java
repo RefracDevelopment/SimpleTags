@@ -29,7 +29,7 @@ public class PlayerListener implements Listener {
         Tasks.runAsync(() -> profile.getData().load(player));
 
         if (profile == null || profile.getData() == null) {
-            player.kick(RyMessageUtils.translate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
+            player.kick(RyMessageUtils.adventureTranslate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
             return;
         }
     }

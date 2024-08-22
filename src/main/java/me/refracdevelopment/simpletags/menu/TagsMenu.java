@@ -39,7 +39,7 @@ public class TagsMenu extends PaginatedMenu {
     }
 
     @Override
-    public Component getMenuName() {
+    public String getMenuName() {
         return RyMessageUtils.translate(SimpleTags.getInstance().getMenus().TAGS_TITLE.replace("%total-tags%", String.valueOf(SimpleTags.getInstance().getTagManager().getLoadedTags().size())));
     }
 

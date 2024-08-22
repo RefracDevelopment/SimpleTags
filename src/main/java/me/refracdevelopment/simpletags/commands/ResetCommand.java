@@ -49,14 +49,14 @@ public class ResetCommand extends SubCommand {
                         SimpleTags.getInstance().getMySQLManager().delete();
 
                         Bukkit.getOnlinePlayers().forEach(player -> {
-                            player.kick(RyMessageUtils.translate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            player.kick(RyMessageUtils.adventureTranslate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
                         });
                         break;
                     case SQLITE:
                         SimpleTags.getInstance().getSqLiteManager().delete();
 
                         Bukkit.getOnlinePlayers().forEach(player -> {
-                            player.kick(RyMessageUtils.translate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            player.kick(RyMessageUtils.adventureTranslate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
                         });
                         break;
                     default:
@@ -74,13 +74,13 @@ public class ResetCommand extends SubCommand {
                             SimpleTags.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                             RyMessageUtils.sendPluginMessage(commandSender, "tags-reset-player");
-                            target.getPlayer().kick(RyMessageUtils.translate(target.getPlayer(), SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            target.getPlayer().kick(RyMessageUtils.adventureTranslate(target.getPlayer(), SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
                             break;
                         case SQLITE:
                             SimpleTags.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                             RyMessageUtils.sendPluginMessage(commandSender, "tags-reset-player");
-                            target.getPlayer().kick(RyMessageUtils.translate(target.getPlayer(), SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            target.getPlayer().kick(RyMessageUtils.adventureTranslate(target.getPlayer(), SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
                             break;
                         default:
                             RyMessageUtils.sendSender(commandSender, "This command is only available for MySQL, MariaDB and SQLite.");
