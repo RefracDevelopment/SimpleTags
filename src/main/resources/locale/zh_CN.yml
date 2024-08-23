@@ -1,0 +1,65 @@
+# zh_CN 语言文件由ItsDApples翻译
+
+# 此配置项用于插件识别并自动更新(请勿修改)
+config-version: '4'
+
+# 插件信息前缀
+prefix: <gradient:#8A2387:#E94057:#F27121:0>SimpleTags &8| &f
+
+# 消息 → 通用
+usage: /gems %cmd% %args%
+no-permission: '&c你没有权限!'
+no-console: '&c此命令仅玩家可使用.'
+unknown-command: 未知指令, 请使用 &d/%cmd%&f help 获取更多信息
+tag-already-exists: '&c该称号已存在.'
+invalid-tag: '&c该称号不存在.'
+tag-not-owned: '&c你没有这个称号!'
+tag-created: '&a创建新称号 %tag-name%&a.'
+tag-deleted: '&a删除称号 %tag-name%&a.'
+tag-edited: '&a称号 %tag-name% 已变更为 %tag-preifx%&a.'
+tag-set: '&a设置玩家 %player% &a 的称号为 %tag-name%&a.'
+tag-updated: '&a你的称号已更新为 %tag-prefix%&a.'
+tag-reset: '&a你的称号已被重置.'
+no-available-tags: '&c你不拥有任何称号.'
+
+# 消息 → 踢出
+kick-messages-error: '&c错误: 账户返回值为null.'
+
+# 消息 → 基础
+base-command-color: '&e'
+base-command-help: '&e使用 &b/%cmd% help &e获取指令的更多信息.'
+
+# 消息 → 帮助
+command-help-title: '&f可用的指令:'
+command-help-description: 显示帮助菜单.
+command-help-list-description: '&8 - &d/%cmd% %subcmd% %args% &7- %desc%'
+command-help-list-description-no-args: '&8 - &d/%cmd% %subcmd% &7- %desc%'
+
+# 消息 → 称号
+command-tags-description: 打开称号菜单.
+
+# 消息 → 新建
+command-create-description: 新增称号.
+
+# 消息 → 删除
+command-delete-description: 删除称号.
+
+# 消息 → 修改
+command-edit-description: 修改称号.
+
+# 消息 → 列表
+command-list-description: 列出所有可用称号.
+
+# 消息 → 设置
+command-set-description: 设置玩家的称号.
+
+# 消息 → 重载
+command-reload-description: 重载插件.
+command-reload-usage: '&c用法: &e/%cmd% reload'
+command-reload-success: '&a配置文件与语言文件已重载.'
+
+# 消息 → 版本
+command-version-description: 显示 SimpleTags 的版本.
+
+# Reset Command
+command-reset-description: 重置整个数据库的数据或重置某玩家的数据.
