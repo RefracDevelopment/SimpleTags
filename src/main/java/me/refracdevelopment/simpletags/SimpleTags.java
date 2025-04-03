@@ -78,7 +78,7 @@ public final class SimpleTags extends JavaPlugin {
         foliaLib = new FoliaLib(this);
 
         if (!XReflection.supports(18) || getFoliaLib().isSpigot()) {
-            getLogger().info("This version and or software (" + Bukkit.getName() + ") is not supported.");
+            getLogger().info("This version and or software (" + Bukkit.getName() + " v" + Bukkit.getMinecraftVersion() + ") is not supported.");
             getLogger().info("Please update to at least Paper 1.18.x or above.");
             getServer().getPluginManager().disablePlugin(this);
             return;
