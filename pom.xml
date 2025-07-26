@@ -161,9 +161,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.Tweetzy</groupId>
-            <artifactId>Skulls</artifactId>
-            <version>3.23.0</version>
+            <groupId>ca.tweetzy</groupId>
+            <artifactId>skulls</artifactId>
+            <version>v3.23.0</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
