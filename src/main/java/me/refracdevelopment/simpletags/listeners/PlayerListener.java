@@ -17,13 +17,11 @@ import java.util.UUID;
 public class PlayerListener implements Listener {
 
     @EventHandler
-    public void onLogin(PlayerLoginEvent event) {
-        SimpleTags.getInstance().getProfileManager().handleProfileCreation(event.getPlayer().getUniqueId(), event.getPlayer().getName());
-    }
-
-    @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+
+        SimpleTags.getInstance().getProfileManager().handleProfileCreation(event.getPlayer().getUniqueId(), event.getPlayer().getName());
+
         Profile profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
         Tasks.runAsync(() -> profile.getData().load(player));
