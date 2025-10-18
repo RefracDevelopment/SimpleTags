@@ -12,11 +12,9 @@ import me.refracdevelopment.simpletags.utilities.exceptions.MenuManagerException
 import me.refracdevelopment.simpletags.utilities.exceptions.MenuManagerNotSetupException;
 import me.refracdevelopment.simpletags.utilities.paginated.PaginatedMenu;
 import me.refracdevelopment.simpletags.utilities.paginated.PlayerMenuUtil;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +30,6 @@ public class TagsMenu extends PaginatedMenu {
         return SimpleTags.getInstance().getTagManager().getLoadedTags();
     }
 
-    @Nullable
     @Override
     public HashMap<Integer, ItemStack> getCustomMenuBorderItems() {
         return null;

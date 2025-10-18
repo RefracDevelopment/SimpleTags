@@ -3,24 +3,22 @@ package me.refracdevelopment.simpletags.utilities.chat;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class PAPIExpansion extends PlaceholderExpansion {
 
     @Override
-    public @NotNull String getAuthor() {
+    public String getAuthor() {
         return SimpleTags.getInstance().getDescription().getAuthors().get(0);
     }
 
     @Override
-    public @NotNull String getIdentifier() {
+    public String getIdentifier() {
         return "simpletags";
     }
 
     @Override
-    public @NotNull String getVersion() {
+    public String getVersion() {
         return SimpleTags.getInstance().getDescription().getVersion();
     }
 
@@ -30,7 +28,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, @NotNull String params) {
+    public String onPlaceholderRequest(Player player, String params) {
         ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
         switch (params) {

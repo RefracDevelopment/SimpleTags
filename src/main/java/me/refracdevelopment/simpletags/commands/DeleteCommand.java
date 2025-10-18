@@ -83,7 +83,7 @@ public class DeleteCommand extends SubCommand {
                 .build();
 
         ConfigFile tagsFile = SimpleTags.getInstance().getTagsFile();
-        tagsFile.remove("tags." + configName);
+        tagsFile.set("tags." + configName, null);
         tagsFile.save();
         tagsFile.reload();
         SimpleTags.getInstance().getTags().loadConfig();

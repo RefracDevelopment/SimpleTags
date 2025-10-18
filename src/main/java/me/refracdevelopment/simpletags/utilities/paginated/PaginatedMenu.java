@@ -7,7 +7,6 @@ import me.refracdevelopment.simpletags.utilities.Utilities;
 import me.refracdevelopment.simpletags.utilities.exceptions.MenuManagerException;
 import me.refracdevelopment.simpletags.utilities.exceptions.MenuManagerNotSetupException;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +39,6 @@ public abstract class PaginatedMenu extends Menu {
     /**
      * @return A hashmap of items you want to be placed in the paginated menu border. This will override any items already placed by default. Key = slot, Value = Item
      */
-    @Nullable
     public abstract HashMap<Integer, ItemStack> getCustomMenuBorderItems();
 
     public void addMenuBorder() {

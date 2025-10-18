@@ -3,6 +3,7 @@ package me.refracdevelopment.simpletags.menu;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.XEnchantment;
+import com.cryptomorin.xseries.XItemFlag;
 import de.tr7zw.nbtapi.NBTItem;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
@@ -101,8 +102,11 @@ public class TagsItem {
                 lore.forEach(s -> finalItem.addLoreLine(RyMessageUtils.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix()))));
             } else {
                 // Add Glow effect for equipped tag
-                finalItem.addEnchant(XEnchantment.POWER.getEnchant(), 1);
-                finalItem.setItemFlags(ItemFlag.HIDE_ENCHANTS);
+                finalItem.addEnchant(XEnchantment.POWER.get(), 1);
+
+                // Remove additional tooltip lore
+                finalItem.setItemFlags(XItemFlag.HIDE_ENCHANTS.get());
+                finalItem.setItemFlags(XItemFlag.HIDE_ADDITIONAL_TOOLTIP.get());
 
                 List<String> equippedLore = SimpleTags.getInstance().getMenus().TAGS_ITEMS.getStringList("tag-item.equipped-lore");
                 equippedLore.forEach(s -> finalItem.addLoreLine(RyMessageUtils.translate(player, s.replace("%tag-prefix%", tag.getTagPrefix()))));

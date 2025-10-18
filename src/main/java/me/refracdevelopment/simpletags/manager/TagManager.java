@@ -20,7 +20,7 @@ public class TagManager {
     public void loadTags() {
         getLoadedTags().clear();
 
-        SimpleTags.getInstance().getTags().TAGS.getRoutesAsStrings(false).forEach(tag ->
+        SimpleTags.getInstance().getTags().TAGS.getKeys(false).forEach(tag ->
                 addTag(new Tag(tag, SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".name"),
                         SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".prefix"),
                         SimpleTags.getInstance().getTagsFile().getString("tags." + tag + ".item.material")

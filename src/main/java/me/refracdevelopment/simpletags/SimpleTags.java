@@ -112,9 +112,9 @@ public final class SimpleTags extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         try {
-            if (Objects.requireNonNull(dataType) == DataType.MYSQL)
+            if (dataType == DataType.MYSQL)
                 getMySQLManager().shutdown();
-            else if (Objects.requireNonNull(dataType) == DataType.SQLITE)
+            else if (dataType == DataType.SQLITE)
                 getSqLiteManager().shutdown();
 
             getFoliaLib().getScheduler().cancelAllTasks();
@@ -128,7 +128,7 @@ public final class SimpleTags extends JavaPlugin {
         tagsFile = new ConfigFile("tags.yml");
         menusFile = new ConfigFile("menus.yml");
         commandsFile = new ConfigFile("commands/tags.yml");
-        localeFile = new ConfigFile("locale/" + getConfigFile().getString("locale") + ".yml");
+        localeFile = new ConfigFile("locale/" + configFile.getString("locale") + ".yml");
 
         // Cache
         settings = new Config();
@@ -171,8 +171,8 @@ public final class SimpleTags extends JavaPlugin {
 
     private void loadCommands() {
         try {
-            CommandManager.createCoreCommand(this, getCommands().TAGS_COMMAND_NAME,
-                    getLocaleFile().getString("command-tags-description"),
+            CommandManager.createCoreCommand(this, commands.TAGS_COMMAND_NAME,
+                    localeFile.getString("command-tags-description"),
                     "/" + getCommands().TAGS_COMMAND_NAME, (commandSender, list) -> {
                         commandsList = list;
 
@@ -193,7 +193,7 @@ public final class SimpleTags extends JavaPlugin {
                             RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
                         }
                     },
-                    getCommands().TAGS_COMMAND_ALIASES,
+                    commands.TAGS_COMMAND_ALIASES,
                     CreateCommand.class,
                     DeleteCommand.class,
                     EditCommand.class,
