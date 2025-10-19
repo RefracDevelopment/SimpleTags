@@ -124,11 +124,11 @@ public final class SimpleTags extends JavaPlugin {
 
     public void loadFiles() {
         // Files
-        configFile = new ConfigFile("config.yml");
-        tagsFile = new ConfigFile("tags.yml");
-        menusFile = new ConfigFile("menus.yml");
-        commandsFile = new ConfigFile("commands/tags.yml");
-        localeFile = new ConfigFile("locale/" + configFile.getString("locale") + ".yml");
+        configFile = new ConfigFile(this, "config.yml");
+        tagsFile = new ConfigFile(this, "tags.yml");
+        menusFile = new ConfigFile(this, "menus.yml");
+        commandsFile = new ConfigFile(this, "commands/tags.yml");
+        localeFile = new ConfigFile(this, "locale/" + configFile.getString("locale") + ".yml");
 
         // Cache
         settings = new Config();

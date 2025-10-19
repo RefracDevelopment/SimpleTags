@@ -1,95 +1,101 @@
 package me.refracdevelopment.simpletags.manager.configuration;
 
-import lombok.Getter;
-import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Getter
-public class ConfigFile {
+public class ConfigFile extends YamlConfiguration {
 
-    private File configFile;
-    private FileConfiguration config;
+    private File file;
+    private final JavaPlugin plugin;
+    private final String name;
 
-    public ConfigFile(String name) {
+    public ConfigFile(JavaPlugin plugin, String name) {
+        this.file = new File(plugin.getDataFolder(), name);
+        this.plugin = plugin;
+        this.name = name;
+
+        if (!this.file.exists()) {
+            plugin.saveResource(name, false);
+        }
+
         try {
-            configFile = new File(SimpleTags.getInstance().getDataFolder(), name);
-
-            if (!configFile.exists())
-                SimpleTags.getInstance().saveResource(name, false);
-
-            config = YamlConfiguration.loadConfiguration(configFile);
-        } catch (Exception e) {
-            RyMessageUtils.sendConsole(true, "&cFailed to load " + name + " file! The plugin will now shutdown.");
+            this.load(this.file);
+        } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(SimpleTags.getInstance());
+        }
+    }
+
+    public void load() {
+        this.file = new File(plugin.getDataFolder(), name);
+
+        if (!this.file.exists()) {
+            plugin.saveResource(name, false);
+        }
+        try {
+            this.load(this.file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
         }
     }
 
     public void save() {
         try {
-            config.save(configFile);
-        } catch (Exception e) {
+            this.save(this.file);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void reload() {
-        try {
-            config = YamlConfiguration.loadConfiguration(configFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        load();
     }
 
+    @Override
     public int getInt(String path) {
-        return config.getInt(path, 0);
+        return super.getInt(path, 0);
     }
 
+    @Override
     public double getDouble(String path) {
-        return config.getDouble(path, 0.0);
+        return super.getDouble(path, 0.0);
     }
 
+    @Override
     public boolean getBoolean(String path) {
-        return config.getBoolean(path, false);
+        return super.getBoolean(path, false);
     }
 
     public String getString(String path, boolean check) {
-        return config.getString(path, null);
+        return super.getString(path, null);
     }
 
+    @Override
     public String getString(String path) {
-        if (config.contains(path)) {
-            return config.getString(path, "String at path '" + path + "' not found.").replace("|", "\u2503");
+        if (super.contains(path)) {
+            return super.getString(path, "String at path '" + path + "' not found.").replace("|", "\u2503");
         }
 
         return null;
     }
 
+    @Override
     public List<String> getStringList(String path) {
-        return config.getStringList(path);
+        return super.getStringList(path).stream().map(String::new).collect(Collectors.toList());
     }
 
     public List<String> getStringList(String path, boolean check) {
-        if (!config.contains(path)) return null;
-        return getStringList(path);
+        if (!super.contains(path)) return null;
+        return super.getStringList(path).stream().map(String::new).collect(Collectors.toList());
     }
 
-    public ConfigurationSection getConfigurationSection(String path) {
-        return config.getConfigurationSection(path);
+    public boolean getOption(String option) {
+        return this.getBoolean("options." + option);
     }
 
-    public void set(String path, Object value) {
-        config.set(path, value);
-    }
-
-    public void remove(String path) {
-        config.set(path, null);
-    }
 }
