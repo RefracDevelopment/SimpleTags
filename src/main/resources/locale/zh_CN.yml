@@ -1,8 +1,5 @@
 # zh_CN 语言文件由ItsDApples翻译
 
-# 此配置项用于插件识别并自动更新(请勿修改)
-config-version: '4'
-
 # 插件信息前缀
 prefix: <gradient:#8A2387:#E94057:#F27121:0>SimpleTags &8| &f
 

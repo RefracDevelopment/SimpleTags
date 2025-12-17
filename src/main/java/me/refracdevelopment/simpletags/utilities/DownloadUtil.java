@@ -24,12 +24,12 @@ public class DownloadUtil {
             Library lib3 = Library.builder()
                     .groupId("org{}xerial") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                     .artifactId("sqlite-jdbc")
-                    .version("3.50.3.0")
+                    .version("3.51.1.0")
                     .build();
             Library lib4 = Library.builder()
                     .groupId("com{}zaxxer") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                     .artifactId("HikariCP")
-                    .version("5.1.0")
+                    .version("4.0.3")
                     .build();
 
             libraryManager.addMavenCentral();

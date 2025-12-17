@@ -1,4 +1,4 @@
-package me.refracdevelopment.simpletags.manager;
+package me.refracdevelopment.simpletags.managers;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,7 @@ public class ProfileManager {
             return;
 
         Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-            getProfiles().clear();
+            this.profiles.clear();
             handleProfileCreation(onlinePlayer.getUniqueId(), onlinePlayer.getName());
             Tasks.runAsync(() -> getProfile(onlinePlayer.getUniqueId()).getData().load(onlinePlayer));
         });

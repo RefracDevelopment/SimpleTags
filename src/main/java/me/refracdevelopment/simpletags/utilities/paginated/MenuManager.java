@@ -24,7 +24,6 @@ public class MenuManager {
     private static void registerMenuListener(Server server, Plugin plugin) {
         boolean isAlreadyRegistered = false;
         for (RegisteredListener rl : InventoryClickEvent.getHandlerList().getRegisteredListeners()) {
-            plugin.getLogger().info(rl.getListener().getClass().getSimpleName());
             if (rl.getListener() instanceof MenuListener) {
                 isAlreadyRegistered = true;
                 break;
@@ -41,8 +40,6 @@ public class MenuManager {
      * @param plugin The instance of the plugin using this API. Can provide in plugin class by passing this keyword
      */
     public static void setup(Server server, Plugin plugin) {
-        plugin.getLogger().info("MENU MANAGER HAS BEEN SETUP");
-
         registerMenuListener(server, plugin);
         isSetup = true;
     }

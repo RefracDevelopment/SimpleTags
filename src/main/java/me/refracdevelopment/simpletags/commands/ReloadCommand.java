@@ -75,6 +75,7 @@ public class ReloadCommand extends SubCommand {
         SimpleTags.getInstance().getConfigFile().reload();
         SimpleTags.getInstance().getTagsFile().reload();
         SimpleTags.getInstance().getMenusFile().reload();
+        SimpleTags.getInstance().getLocale().reload();
         SimpleTags.getInstance().getLocaleFile().reload();
         SimpleTags.getInstance().getCommandsFile().reload();
 

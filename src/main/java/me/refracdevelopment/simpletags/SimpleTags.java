@@ -1,23 +1,24 @@
 package me.refracdevelopment.simpletags;
 
-import com.cryptomorin.xseries.reflection.XReflection;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
+import lombok.Setter;
 import me.refracdevelopment.simpletags.commands.*;
 import me.refracdevelopment.simpletags.hooks.ItemsAdderListener;
 import me.refracdevelopment.simpletags.listeners.PlayerListener;
-import me.refracdevelopment.simpletags.manager.ProfileManager;
-import me.refracdevelopment.simpletags.manager.TagManager;
-import me.refracdevelopment.simpletags.manager.configuration.ConfigFile;
-import me.refracdevelopment.simpletags.manager.configuration.cache.Commands;
-import me.refracdevelopment.simpletags.manager.configuration.cache.Config;
-import me.refracdevelopment.simpletags.manager.configuration.cache.Menus;
-import me.refracdevelopment.simpletags.manager.configuration.cache.Tags;
-import me.refracdevelopment.simpletags.manager.data.DataType;
-import me.refracdevelopment.simpletags.manager.data.MySQLManager;
-import me.refracdevelopment.simpletags.manager.data.SQLiteManager;
+import me.refracdevelopment.simpletags.managers.ProfileManager;
+import me.refracdevelopment.simpletags.managers.TagManager;
+import me.refracdevelopment.simpletags.managers.configuration.ConfigFile;
+import me.refracdevelopment.simpletags.managers.configuration.Locale;
+import me.refracdevelopment.simpletags.managers.configuration.cache.Commands;
+import me.refracdevelopment.simpletags.managers.configuration.cache.Config;
+import me.refracdevelopment.simpletags.managers.configuration.cache.Menus;
+import me.refracdevelopment.simpletags.managers.configuration.cache.Tags;
+import me.refracdevelopment.simpletags.managers.data.DataType;
+import me.refracdevelopment.simpletags.managers.data.MySQLManager;
+import me.refracdevelopment.simpletags.managers.data.SQLiteManager;
 import me.refracdevelopment.simpletags.menu.TagsMenu;
 import me.refracdevelopment.simpletags.utilities.DownloadUtil;
 import me.refracdevelopment.simpletags.utilities.chat.PAPIExpansion;
@@ -26,8 +27,8 @@ import me.refracdevelopment.simpletags.utilities.command.CommandManager;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import me.refracdevelopment.simpletags.utilities.exceptions.MenuManagerNotSetupException;
 import me.refracdevelopment.simpletags.utilities.paginated.MenuManager;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,9 +39,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
+@Setter
 public final class SimpleTags extends JavaPlugin {
 
     @Getter
@@ -59,6 +60,7 @@ public final class SimpleTags extends JavaPlugin {
     private ConfigFile menusFile;
     private ConfigFile commandsFile;
     private ConfigFile localeFile;
+    private Locale locale;
 
     // Cache
     private Config settings;
@@ -67,8 +69,8 @@ public final class SimpleTags extends JavaPlugin {
     private Commands commands;
 
     // Utilities
-    private List<SubCommand> commandsList;
     private FoliaLib foliaLib;
+    private BukkitAudiences adventure;
 
     @Override
     public void onEnable() {
@@ -76,13 +78,7 @@ public final class SimpleTags extends JavaPlugin {
         instance = this;
 
         foliaLib = new FoliaLib(this);
-
-        if (!XReflection.supports(18) || getFoliaLib().isSpigot()) {
-            getLogger().info("This version and or software (" + Bukkit.getName() + " v" + Bukkit.getMinecraftVersion() + ") is not supported.");
-            getLogger().info("Please update to at least Paper 1.18.x or above.");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        adventure = BukkitAudiences.create(this);
 
         DownloadUtil.downloadAndEnable(this);
 
@@ -92,8 +88,8 @@ public final class SimpleTags extends JavaPlugin {
                 "<#A020F0> _____ _           _     _____               " + "Running <#7D0DC3>v" + getDescription().getVersion(),
                 "<#A020F0>|   __|_|_____ ___| |___|_   _| __ ___ ___   " + "Server <#7D0DC3>" + getServer().getName() + " <#A020F0>v" + getServer().getVersion(),
                 "<#A020F0>|__   | |     | . | | -_| | |  |. | . |_ -|  " + "Discord support: <#7D0DC3>" + getDescription().getWebsite(),
-                "<#7D0DC3>|_____|_|_|_|_|  _|_|___| |_| |___|_  |___|  " + "Thanks for using my plugin ❤ !",
-                "<#7D0DC3>              |_|                 |___|    ",
+                "<#A020F0>|_____|_|_|_|_|  _|_|___| |_| |___|_  |___|  " + "Thanks for using my plugin ❤ !",
+                "<#A020F0>              |_|                 |___|    ",
                 "        <#A020F0>Developed by <#7D0DC3>RefracDevelopment",
                 ""
         );
@@ -118,6 +114,11 @@ public final class SimpleTags extends JavaPlugin {
                 getSqLiteManager().shutdown();
 
             getFoliaLib().getScheduler().cancelAllTasks();
+
+            if (this.adventure != null) {
+                this.adventure.close();
+                this.adventure = null;
+            }
         } catch (Throwable ignored) {
         }
     }
@@ -128,9 +129,9 @@ public final class SimpleTags extends JavaPlugin {
         tagsFile = new ConfigFile(this, "tags.yml");
         menusFile = new ConfigFile(this, "menus.yml");
         commandsFile = new ConfigFile(this, "commands/tags.yml");
-        localeFile = new ConfigFile(this, "locale/" + configFile.getString("locale") + ".yml");
 
         // Cache
+        locale = new Locale();
         settings = new Config();
         tags = new Tags();
         menus = new Menus();
@@ -173,9 +174,8 @@ public final class SimpleTags extends JavaPlugin {
         try {
             CommandManager.createCoreCommand(this, commands.TAGS_COMMAND_NAME,
                     localeFile.getString("command-tags-description"),
-                    "/" + getCommands().TAGS_COMMAND_NAME, (commandSender, list) -> {
-                        commandsList = list;
-
+                    "/" + commands.TAGS_COMMAND_NAME,
+                    (commandSender, list) -> {
                         // Make sure the sender is a player.
                         if (!(commandSender instanceof Player player)) {
                             RyMessageUtils.sendPluginMessage(commandSender, "no-console");
@@ -240,7 +240,7 @@ public final class SimpleTags extends JavaPlugin {
         }
     }
 
-    public void updateCheck() {
+    private void updateCheck() {
         try {
             String urlString = "https://refracdev-updatecheck.refracdev.workers.dev/";
             URL url = new URL(urlString);

@@ -1,6 +1,3 @@
-# This is used for automatic file updating purposes
-config-version: '4'
-
 tags:
   # The tag name used in permissions or commands
   # simpletags.tag.darkredheart for example

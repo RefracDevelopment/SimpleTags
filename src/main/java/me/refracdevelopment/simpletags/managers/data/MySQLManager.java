@@ -1,28 +1,35 @@
-package me.refracdevelopment.simpletags.manager.data;
+package me.refracdevelopment.simpletags.managers.data;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
-import org.sqlite.SQLiteDataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class SQLiteManager {
+public class MySQLManager {
 
-    private SQLiteDataSource dataSource;
+    private final String host = SimpleTags.getInstance().getConfigFile().getString("mysql.host");
+    private final String username = SimpleTags.getInstance().getConfigFile().getString("mysql.username");
+    private final String password = SimpleTags.getInstance().getConfigFile().getString("mysql.password");
+    private final String database = SimpleTags.getInstance().getConfigFile().getString("mysql.database");
+    private final String port = SimpleTags.getInstance().getConfigFile().getString("mysql.port");
+    private HikariDataSource hikariDataSource;
 
-    public SQLiteManager(String path) {
-        RyMessageUtils.sendConsole(true, "&aEnabling SQLite support.");
-        Exception ex = connect(path);
+    public MySQLManager() {
+        RyMessageUtils.sendConsole(true, "&aEnabling MySQL support.");
+        Exception ex = connect();
 
         if (ex != null) {
             RyMessageUtils.sendConsole(true, "&cThere was an error connecting to your database. Here's the suspect: &e" + ex.getLocalizedMessage());
             ex.printStackTrace();
             Bukkit.shutdown();
         } else
-            RyMessageUtils.sendConsole(true, "&aManaged to successfully connect to: &e" + path + "&a!");
+            RyMessageUtils.sendConsole(true, "&aManaged to successfully connect to: &e" + database + "&a!");
 
         createT();
     }
@@ -31,13 +38,23 @@ public class SQLiteManager {
         Tasks.runAsync(this::createTables);
     }
 
-    public Exception connect(String path) {
+    public Exception connect() {
         try {
-            Class.forName("org.sqlite.JDBC");
-            dataSource = new SQLiteDataSource();
-            dataSource.setUrl("jdbc:sqlite:" + path);
+            HikariConfig config = new HikariConfig();
+
+            Class.forName("org.mariadb.jdbc.Driver");
+            config.setDriverClassName("org.mariadb.jdbc.Driver");
+            config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database);
+            config.setUsername(username);
+            config.setPassword(password);
+            config.addDataSourceProperty("cachePrepStmts", "true");
+            config.addDataSourceProperty("prepStmtCacheSize", "250");
+            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
+            hikariDataSource = new HikariDataSource(config);
         } catch (Exception exception) {
-            dataSource = null;
+            hikariDataSource = null;
+            exception.printStackTrace();
             return exception;
         }
         return null;
@@ -47,20 +64,17 @@ public class SQLiteManager {
         close();
     }
 
+
     public void createTables() {
         createTable("SimpleTags", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), tag VARCHAR(50), tagPrefix VARCHAR(50)");
     }
 
     public boolean isInitiated() {
-        return dataSource != null;
+        return hikariDataSource != null;
     }
 
     public void close() {
-        try {
-            getConnection().close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        this.hikariDataSource.close();
     }
 
 
@@ -69,7 +83,7 @@ public class SQLiteManager {
      * @throws SQLException
      */
     public Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+        return hikariDataSource.getConnection();
     }
 
     /**
@@ -82,7 +96,6 @@ public class SQLiteManager {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
                 statement.execute();
-                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
                 exception.printStackTrace();
@@ -107,10 +120,9 @@ public class SQLiteManager {
                     statement.setObject((i + 1), values[i]);
 
                 statement.execute();
-                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
-                RyMessageUtils.sendConsole(true, "SQLite#execute : " + query);
+                RyMessageUtils.sendConsole(true, "MySQL#execute : " + query);
                 exception.printStackTrace();
             } finally {
                 Thread.currentThread().interrupt();
@@ -134,10 +146,9 @@ public class SQLiteManager {
                     statement.setObject((i + 1), values[i]);
 
                 callback.call(statement.executeQuery());
-                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
-                RyMessageUtils.sendConsole(true, "SQLite#select : " + query);
+                RyMessageUtils.sendConsole(true, "MySQL#select : " + query);
                 exception.printStackTrace();
             } finally {
                 Thread.currentThread().interrupt();

@@ -1,6 +1,6 @@
 package me.refracdevelopment.simpletags.menu;
 
-import de.tr7zw.nbtapi.NBTItem;
+import de.tr7zw.nbtapi.NBT;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
 import me.refracdevelopment.simpletags.player.data.Tag;
@@ -83,13 +83,15 @@ public class TagsMenu extends PaginatedMenu {
 
         Tag tag = null;
 
-        NBTItem nbtItem = new NBTItem(event.getCurrentItem());
+        String tagName = NBT.get(event.getCurrentItem(), nbt -> (String) nbt.getString("tag-name"));
 
-        if (nbtItem.hasTag("tag-name"))
-            tag = SimpleTags.getInstance().getTagManager().getCachedTag(nbtItem.getString("tag-name"));
+        if (tagName != null)
+            tag = SimpleTags.getInstance().getTagManager().getCachedTag(tagName);
 
-        if (tag == null)
+        if (tag == null) {
+            player.closeInventory();
             return;
+        }
 
         if (!player.hasPermission("simpletags.tag." + tag.getConfigName())) {
             RyMessageUtils.sendPluginMessage(player, "tag-not-owned", Placeholders.setPlaceholders(player));

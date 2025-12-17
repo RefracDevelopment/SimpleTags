@@ -1,4 +1,4 @@
-package me.refracdevelopment.simpletags.manager.configuration;
+package me.refracdevelopment.simpletags.managers.configuration;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -1,7 +1,7 @@
 package me.refracdevelopment.simpletags.commands;
 
 import me.refracdevelopment.simpletags.SimpleTags;
-import me.refracdevelopment.simpletags.manager.configuration.ConfigFile;
+import me.refracdevelopment.simpletags.managers.configuration.ConfigFile;
 import me.refracdevelopment.simpletags.player.data.Tag;
 import me.refracdevelopment.simpletags.utilities.Permissions;
 import me.refracdevelopment.simpletags.utilities.chat.Placeholders;

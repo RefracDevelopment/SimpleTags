@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.refracdevelopment.simpletags.SimpleTags;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -15,6 +17,7 @@ import org.bukkit.permissions.Permission;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -26,6 +29,10 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class RyMessageUtils {
 
+    private static final Pattern LINK_PATTERN = Pattern.compile(
+            "(https?://\\S+)",
+            Pattern.CASE_INSENSITIVE
+    );
     private static final Pattern HEX_PATTERN = Pattern.compile("(?i)&#([0-9A-F]{6})");
     private static final Pattern AMPERSAND_PATTERN = Pattern.compile("(?i)&([0-9A-FK-ORX#])");
     private static final Map<String, String> codeTranslations = new ImmutableMap.Builder<String, String>()
@@ -67,10 +74,14 @@ public class RyMessageUtils {
     @Getter
     @Setter
     private static String supportMessage = "Please contact the plugin author for support.";
+    @Getter
+    @Setter
+    private static BukkitAudiences audiences;
 
     static {
         instance = SimpleTags.getInstance();
         prefix = instance.getLocaleFile().getString("prefix");
+        audiences = instance.getAdventure();
     }
 
     /**
@@ -139,11 +150,20 @@ public class RyMessageUtils {
      */
     public static Component adventureTranslate(String message) {
         message = legacyToAdventure(message);
+        Matcher matcher = LINK_PATTERN.matcher(message);
 
-        Component component = MiniMessage.miniMessage().deserialize(message);
-
-        if (!component.hasDecoration(TextDecoration.ITALIC)) {
-            component = component.decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+        Component component;
+        if (matcher.find()) {
+            component = MiniMessage.miniMessage().deserialize(message)
+                    .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                    .decorationIfAbsent(TextDecoration.BOLD, TextDecoration.State.FALSE)
+                    .decorationIfAbsent(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE)
+                    .clickEvent(ClickEvent.openUrl(matcher.group()));
+        } else {
+            component = MiniMessage.miniMessage().deserialize(message)
+                    .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                    .decorationIfAbsent(TextDecoration.BOLD, TextDecoration.State.FALSE)
+                    .decorationIfAbsent(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE);
         }
 
         return component;
@@ -154,7 +174,7 @@ public class RyMessageUtils {
      *
      * @param input The string that needs translating.
      * @return String which is in an adventure format.
-     * @Author: EternalCodeTeam (https://github.com/EternalCodeTeam/ChatFormatter/)
+     * @author EternalCodeTeam (https://github.com/EternalCodeTeam/ChatFormatter/)
      */
     private static String legacyToAdventure(String input) {
         String result = HEX_PATTERN.matcher(input).replaceAll(matchResult -> {
@@ -196,7 +216,7 @@ public class RyMessageUtils {
         if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%") || message.isEmpty())
             return;
 
-        player.sendMessage(adventureTranslate(player, getPrefix() + message));
+        audiences.player(player).sendMessage(adventureTranslate(player, getPrefix() + message));
     }
 
     /**
@@ -210,7 +230,8 @@ public class RyMessageUtils {
             if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
                 return;
 
-            player.sendMessage(adventureTranslate(player, getPrefix() + message));
+            if (audiences == null) player.sendMessage(translate(player, getPrefix() + message));
+            else audiences.player(player).sendMessage(adventureTranslate(player, getPrefix() + message));
         }
     }
 
@@ -225,7 +246,8 @@ public class RyMessageUtils {
             if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
                 return;
 
-            player.sendMessage(adventureTranslate(player, getPrefix() + message));
+            if (audiences == null) player.sendMessage(translate(player, getPrefix() + message));
+            else audiences.player(player).sendMessage(adventureTranslate(player, getPrefix() + message));
         }
     }
 
@@ -241,7 +263,8 @@ public class RyMessageUtils {
 
         message = Placeholders.setPlaceholders(sender, message);
 
-        sender.sendMessage(adventureTranslate(getPrefix() + message));
+        if (audiences == null) sender.sendMessage(translate(getPrefix() + message));
+        else audiences.sender(sender).sendMessage(adventureTranslate(getPrefix() + message));
     }
 
     /**
@@ -257,7 +280,8 @@ public class RyMessageUtils {
 
             message = Placeholders.setPlaceholders(sender, message);
 
-            sender.sendMessage(adventureTranslate(getPrefix() + message));
+            if (audiences == null) sender.sendMessage(translate(getPrefix() + message));
+            else audiences.sender(sender).sendMessage(adventureTranslate(getPrefix() + message));
         }
     }
 
@@ -274,7 +298,8 @@ public class RyMessageUtils {
 
             message = Placeholders.setPlaceholders(sender, message);
 
-            sender.sendMessage(adventureTranslate(getPrefix() + message));
+            if (audiences == null) sender.sendMessage(translate(getPrefix() + message));
+            else audiences.sender(sender).sendMessage(adventureTranslate(getPrefix() + message));
         }
     }
 
@@ -287,7 +312,8 @@ public class RyMessageUtils {
     public static void sendConsole(boolean prefix, String message) {
         if (prefix) message = "<#7D0DC3>[" + instance.getDescription().getName() + "] &f" + message;
 
-        Bukkit.getConsoleSender().sendMessage(adventureTranslate(message));
+        if (audiences == null) Bukkit.getConsoleSender().sendMessage(translate(message));
+        else audiences.console().sendMessage(adventureTranslate(message));
     }
 
     /**
@@ -300,7 +326,8 @@ public class RyMessageUtils {
         for (String message : messages) {
             if (prefix) message = "<#7D0DC3>[" + instance.getDescription().getName() + "] &f" + message;
 
-            Bukkit.getConsoleSender().sendMessage(adventureTranslate(message));
+            if (audiences == null) Bukkit.getConsoleSender().sendMessage(translate(message));
+            else audiences.console().sendMessage(adventureTranslate(message));
         }
     }
 
@@ -314,7 +341,8 @@ public class RyMessageUtils {
         for (String message : messages) {
             if (prefix) message = "<#7D0DC3>[" + instance.getDescription().getName() + "] &f" + message;
 
-            Bukkit.getConsoleSender().sendMessage(adventureTranslate(message));
+            if (audiences == null) Bukkit.getConsoleSender().sendMessage(translate(message));
+            else audiences.console().sendMessage(adventureTranslate(message));
         }
     }
 
@@ -331,7 +359,8 @@ public class RyMessageUtils {
 
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.hasPermission(permission)) {
-                online.sendMessage(adventureTranslate(player, "%prefix%" + message));
+                if (audiences == null) online.sendMessage(translate(player, getPrefix() + message));
+                else audiences.player(online).sendMessage(adventureTranslate(player, getPrefix() + message));
             }
         }
     }
@@ -349,7 +378,8 @@ public class RyMessageUtils {
 
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.hasPermission(permission)) {
-                online.sendMessage(adventureTranslate(player, "%prefix%" + message));
+                if (audiences == null) online.sendMessage(translate(player, getPrefix() + message));
+                else audiences.player(online).sendMessage(adventureTranslate(player, getPrefix() + message));
             }
         }
     }
@@ -364,7 +394,8 @@ public class RyMessageUtils {
             return;
 
         for (Player online : Bukkit.getOnlinePlayers()) {
-            online.sendMessage(adventureTranslate("%prefix%" + message));
+            if (audiences == null) online.sendMessage(translate(online, getPrefix() + message));
+            else audiences.player(online).sendMessage(adventureTranslate(online, getPrefix() + message));
         }
     }
 
@@ -379,7 +410,8 @@ public class RyMessageUtils {
             return;
 
         for (Player online : Bukkit.getOnlinePlayers()) {
-            online.sendMessage(adventureTranslate(player, "%prefix%" + message));
+            if (audiences == null) online.sendMessage(translate(player, getPrefix() + message));
+            else audiences.player(online).sendMessage(adventureTranslate(player, getPrefix() + message));
         }
     }
 

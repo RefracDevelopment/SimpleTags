@@ -29,11 +29,11 @@ public class ItemBuilder {
     }
 
     public ItemBuilder(Material m, int amount) {
-        is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).parseMaterial()), amount);
+        is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).get()), amount);
     }
 
     public ItemBuilder(Material m, int amount, byte durability) {
-        is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).parseMaterial()), amount, durability);
+        is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).get()), amount, durability);
     }
 
     public ItemBuilder clone() {
@@ -53,20 +53,6 @@ public class ItemBuilder {
     public ItemBuilder setName(String name) {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(name);
-        is.setItemMeta(im);
-        return this;
-    }
-
-    public ItemBuilder setUnColoredName(Component name) {
-        ItemMeta im = is.getItemMeta();
-        im.displayName(name);
-        is.setItemMeta(im);
-        return this;
-    }
-
-    public ItemBuilder setUnTranslatedName(Component name) {
-        ItemMeta im = is.getItemMeta();
-        im.displayName(name);
         is.setItemMeta(im);
         return this;
     }

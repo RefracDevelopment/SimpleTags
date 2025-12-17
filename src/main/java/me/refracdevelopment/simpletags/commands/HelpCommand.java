@@ -3,6 +3,7 @@ package me.refracdevelopment.simpletags.commands;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simpletags.utilities.chat.StringPlaceholders;
+import me.refracdevelopment.simpletags.utilities.command.CommandManager;
 import me.refracdevelopment.simpletags.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ public class HelpCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         RyMessageUtils.sendPluginMessage(commandSender, "command-help-title");
-        SimpleTags.getInstance().getCommandsList().forEach(command -> {
+        CommandManager.getSubCommands().forEach(command -> {
             StringPlaceholders placeholders;
 
             if (!command.getSyntax().isEmpty()) {

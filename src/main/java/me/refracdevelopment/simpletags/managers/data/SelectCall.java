@@ -1,4 +1,4 @@
-package me.refracdevelopment.simpletags.manager.data;
+package me.refracdevelopment.simpletags.managers.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

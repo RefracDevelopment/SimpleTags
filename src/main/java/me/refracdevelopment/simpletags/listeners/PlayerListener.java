@@ -27,7 +27,7 @@ public class PlayerListener implements Listener {
         Tasks.runAsync(() -> profile.getData().load(player));
 
         if (profile == null || profile.getData() == null) {
-            player.kick(RyMessageUtils.adventureTranslate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
+            player.kickPlayer(RyMessageUtils.translate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
             return;
         }
     }
@@ -52,7 +52,7 @@ public class PlayerListener implements Listener {
         ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
         if (SimpleTags.getInstance().getSettings().USE_CHAT)
-            event.setFormat(ChatColor.translateAlternateColorCodes('&', profile.getTagPrefix() + ChatColor.RESET + event.getFormat()));
+            event.setFormat(RyMessageUtils.translate(profile.getTagPrefix() + ChatColor.RESET + event.getFormat()));
     }
 
     @EventHandler

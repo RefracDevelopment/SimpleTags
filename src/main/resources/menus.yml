@@ -1,18 +1,15 @@
-# This is used for automatic file updating purposes
-config-version: '3'
-
 tags:
   title: "&8Tags (%total-tags%)"
   items:
     left:
-      material: DARK_OAK_BUTTON
+      material: WOOD_BUTTON
       data: 0
       name: "&aLeft"
     close:
       material: BARRIER
       name: "&cClose"
     right:
-      material: DARK_OAK_BUTTON
+      material: WOOD_BUTTON
       name: "&aRight"
     tag-item:
       material: NAME_TAG

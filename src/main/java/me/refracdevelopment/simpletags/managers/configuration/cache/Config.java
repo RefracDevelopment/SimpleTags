@@ -1,4 +1,4 @@
-package me.refracdevelopment.simpletags.manager.configuration.cache;
+package me.refracdevelopment.simpletags.managers.configuration.cache;
 
 import me.refracdevelopment.simpletags.SimpleTags;
 

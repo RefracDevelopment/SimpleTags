@@ -1,4 +1,4 @@
-package me.refracdevelopment.simpletags.manager;
+package me.refracdevelopment.simpletags.managers;
 
 import lombok.Getter;
 import me.refracdevelopment.simpletags.SimpleTags;
@@ -27,7 +27,7 @@ public class TagManager {
                 ))
         );
 
-        RyMessageUtils.sendConsole(true, "&aLoaded &e" + getLoadedTags().size() + " &atags.");
+        RyMessageUtils.sendConsole(true, "&aLoaded &e" + loadedTags.size() + " &atags.");
     }
 
     public void updateTags() {
@@ -43,16 +43,16 @@ public class TagManager {
     }
 
     public void addTag(Tag tag) {
-        if (!getLoadedTags().contains(tag))
-            getLoadedTags().add(tag);
+        if (!loadedTags.contains(tag))
+            loadedTags.add(tag);
     }
 
     public void removeTag(Tag tag) {
-        getLoadedTags().remove(tag);
+        loadedTags.remove(tag);
     }
 
     public Tag getCachedTag(String name) {
-        for (Tag tag : getLoadedTags())
+        for (Tag tag : loadedTags)
             if (tag.getConfigName().equalsIgnoreCase(name))
                 return tag;
 
@@ -60,11 +60,11 @@ public class TagManager {
     }
 
     public List<String> getTagNames() {
-        return getLoadedTags().stream().map(Tag::getConfigName).collect(Collectors.toList());
+        return loadedTags.stream().map(Tag::getConfigName).collect(Collectors.toList());
     }
 
     public List<ItemStack> getTagItems(Player player) {
-        getLoadedTags().forEach(tag -> loadedTagItems.add(tag.toItemStack(player)));
+        loadedTags.forEach(tag -> loadedTagItems.add(tag.toItemStack(player)));
 
         return loadedTagItems;
     }

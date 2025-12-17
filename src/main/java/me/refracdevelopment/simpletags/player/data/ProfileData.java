@@ -23,27 +23,27 @@ public class ProfileData {
     }
 
     public void load(Player player) {
-        switch (getPlugin().getDataType()) {
+        switch (plugin.getDataType()) {
             case MYSQL:
-                getPlugin().getMySQLManager().select("SELECT * FROM SimpleTags WHERE uuid=?", resultSet -> {
+                plugin.getMySQLManager().select("SELECT * FROM SimpleTags WHERE uuid=?", resultSet -> {
                     if (resultSet.next()) {
                         setTag(resultSet.getString("tag"));
                         setTagPrefix(resultSet.getString("tagPrefix"));
-                        getPlugin().getMySQLManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
+                        plugin.getMySQLManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
                     } else {
-                        getPlugin().getMySQLManager().execute("INSERT INTO SimpleTags (uuid, name, tag, tagPrefix) VALUES (?,?,?,?)",
+                        plugin.getMySQLManager().execute("INSERT INTO SimpleTags (uuid, name, tag, tagPrefix) VALUES (?,?,?,?)",
                                 player.getUniqueId().toString(), player.getName(), "", "");
                     }
                 }, player.getUniqueId().toString());
                 break;
             default:
-                getPlugin().getSqLiteManager().select("SELECT * FROM SimpleTags WHERE uuid=?", resultSet -> {
+                plugin.getSqLiteManager().select("SELECT * FROM SimpleTags WHERE uuid=?", resultSet -> {
                     if (resultSet.next()) {
                         setTag(resultSet.getString("tag"));
                         setTagPrefix(resultSet.getString("tagPrefix"));
-                        getPlugin().getSqLiteManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
+                        plugin.getSqLiteManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
                     } else {
-                        getPlugin().getSqLiteManager().execute("INSERT INTO SimpleTags (uuid, name, tag, tagPrefix) VALUES (?,?,?,?)",
+                        plugin.getSqLiteManager().execute("INSERT INTO SimpleTags (uuid, name, tag, tagPrefix) VALUES (?,?,?,?)",
                                 player.getUniqueId().toString(), player.getName(), "", "");
                     }
                 }, player.getUniqueId().toString());
@@ -51,20 +51,20 @@ public class ProfileData {
         }
 
         // Update player tag if any changes were made to it
-        if (getPlugin().getTagManager().getCachedTag(tag) == null) {
+        if (plugin.getTagManager().getCachedTag(tag) == null) {
             setTag("");
             setTagPrefix("");
         } else
-            setTagPrefix(getPlugin().getTagManager().getCachedTag(tag).getTagPrefix());
+            setTagPrefix(plugin.getTagManager().getCachedTag(tag).getTagPrefix());
     }
 
     public void save(Player player) {
-        switch (getPlugin().getDataType()) {
+        switch (plugin.getDataType()) {
             case MYSQL:
-                getPlugin().getMySQLManager().updatePlayerTag(player.getUniqueId().toString(), getTag(), getTagPrefix());
+                plugin.getMySQLManager().updatePlayerTag(player.getUniqueId().toString(), getTag(), getTagPrefix());
                 break;
             default:
-                getPlugin().getSqLiteManager().updatePlayerTag(player.getUniqueId().toString(), getTag(), getTagPrefix());
+                plugin.getSqLiteManager().updatePlayerTag(player.getUniqueId().toString(), getTag(), getTagPrefix());
                 break;
         }
     }
