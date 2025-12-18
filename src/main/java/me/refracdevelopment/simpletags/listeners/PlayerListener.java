@@ -46,7 +46,6 @@ public class PlayerListener implements Listener {
             return;
 
         Tasks.runAsync(() -> profile.getData().save(player));
-        SimpleTags.getInstance().getProfileManager().getProfiles().remove(player.getUniqueId());
     }
 
     @EventHandler
