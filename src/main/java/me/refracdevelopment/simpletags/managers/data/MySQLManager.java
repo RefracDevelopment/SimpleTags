@@ -31,11 +31,7 @@ public class MySQLManager {
         } else
             RyMessageUtils.sendConsole(true, "&aManaged to successfully connect to: &e" + database + "&a!");
 
-        createT();
-    }
-
-    public void createT() {
-        Tasks.runAsync(this::createTables);
+        createTables();
     }
 
     public Exception connect() {
