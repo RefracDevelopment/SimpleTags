@@ -24,7 +24,7 @@ public class SQLiteManager {
         } else
             RyMessageUtils.sendConsole(true, "&aManaged to successfully connect to: &e" + path + "&a!");
 
-        createTables();
+        Tasks.runAsync(this::createTables);
     }
 
     public Exception connect(String path) {
@@ -85,6 +85,8 @@ public class SQLiteManager {
             } finally {
                 Thread.currentThread().interrupt();
             }
+
+            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -147,13 +149,5 @@ public class SQLiteManager {
 
     public void updatePlayerName(String uuid, String name) {
         execute("UPDATE SimpleTags SET name=? WHERE uuid=?", name, uuid);
-    }
-
-    public void delete() {
-        execute("TRUNCATE TABLE SimpleTags");
-    }
-
-    public void deletePlayer(String uuid) {
-        execute("DELETE FROM SimpleTags WHERE uuid=?", uuid);
     }
 }
