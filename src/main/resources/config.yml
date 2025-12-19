@@ -33,3 +33,8 @@ mysql:
   database: SimpleTags
   username: ''
   password: ''
+
+# Check for updates on join
+# This uses the /tags version command permission
+# permission: simpletags.command.version
+check-for-updates: true

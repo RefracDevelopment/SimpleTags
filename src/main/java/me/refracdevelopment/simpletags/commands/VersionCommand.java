@@ -56,9 +56,17 @@ public class VersionCommand extends SubCommand {
         }
 
         String baseColor = SimpleTags.getInstance().getLocaleFile().getString("base-command-color");
+
         RyMessageUtils.sendSender(commandSender, baseColor + "Running <gradient:#8A2387:#E94057:#F27121:0>" + SimpleTags.getInstance().getDescription().getName() + baseColor + " v" + SimpleTags.getInstance().getDescription().getVersion());
         RyMessageUtils.sendSender(commandSender, baseColor + "Plugin created by: <gradient:#41E0F0:#FF8DCE:0>" + SimpleTags.getInstance().getDescription().getAuthors().get(0));
         RyMessageUtils.sendPluginMessage(commandSender, "base-command-help", StringPlaceholders.of("cmd", SimpleTags.getInstance().getCommands().TAGS_COMMAND_NAME));
+
+        RyMessageUtils.sendSender(commandSender, " ");
+
+        if (SimpleTags.getInstance().updateCheck(false)) {
+            RyMessageUtils.sendSender(commandSender, baseColor + "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleTags &r" + baseColor + "available!");
+            RyMessageUtils.sendSender(commandSender, baseColor + "Download the latest version here: &bhttps://github.com/RefracDevelopment/SimpleTags/releases/latest");
+        }
     }
 
     /**

@@ -1,7 +1,7 @@
 # en_US translation by Refrac
 
 # Plugin Message Prefix
-prefix: '<gradient:#8A2387:#E94057:#F27121:0>SimpleTags &8| &f'
+prefix: '<gradient:#8A2387:#E94057:#F27121:0>SimpleTags &8| &r'
 
 # Generic Command Messages
 usage: '/gems %cmd% %args%'

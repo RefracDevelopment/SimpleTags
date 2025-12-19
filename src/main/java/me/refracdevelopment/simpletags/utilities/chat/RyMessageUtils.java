@@ -216,7 +216,25 @@ public class RyMessageUtils {
         if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%") || message.isEmpty())
             return;
 
-        audiences.player(player).sendMessage(adventureTranslate(player, getPrefix() + message));
+        if (audiences == null) player.sendMessage(translate(player, getPrefix() + message));
+        else audiences.player(player).sendMessage(adventureTranslate(player, getPrefix() + message));
+    }
+
+    /**
+     * Send a player a message.
+     *
+     * @param player  The player who you wish to receive the message.
+     * @param message The message you wish to send the player.
+     */
+    public static void sendPlayer(Player player, String message, boolean prefix) {
+        if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%") || message.isEmpty())
+            return;
+
+        if (prefix)
+            message = getPrefix() + message;
+
+        if (audiences == null) player.sendMessage(translate(player, message));
+        else audiences.player(player).sendMessage(adventureTranslate(player, message));
     }
 
     /**

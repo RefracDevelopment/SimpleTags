@@ -1,7 +1,7 @@
 # zh_CN 语言文件由ItsDApples翻译
 
 # 插件信息前缀
-prefix: <gradient:#8A2387:#E94057:#F27121:0>SimpleTags &8| &f
+prefix: <gradient:#8A2387:#E94057:#F27121:0>SimpleTags &8| &r
 
 # 消息 → 通用
 usage: /gems %cmd% %args%

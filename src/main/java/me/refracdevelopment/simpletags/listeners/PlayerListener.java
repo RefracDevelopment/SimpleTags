@@ -3,6 +3,7 @@ package me.refracdevelopment.simpletags.listeners;
 import me.refracdevelopment.simpletags.SimpleTags;
 import me.refracdevelopment.simpletags.player.Profile;
 import me.refracdevelopment.simpletags.player.data.ProfileData;
+import me.refracdevelopment.simpletags.utilities.Permissions;
 import me.refracdevelopment.simpletags.utilities.Tasks;
 import me.refracdevelopment.simpletags.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
@@ -33,6 +34,13 @@ public class PlayerListener implements Listener {
             player.kickPlayer(RyMessageUtils.translate(player, SimpleTags.getInstance().getLocaleFile().getString("kick-messages-error")));
             return;
         }
+
+        if (SimpleTags.getInstance().getSettings().CHECK_FOR_UPDATES && player.hasPermission(Permissions.VERSION_COMMAND)) {
+            if (SimpleTags.getInstance().updateCheck(false)) {
+                RyMessageUtils.sendPlayer(player, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleTags &ravailable!", false);
+                RyMessageUtils.sendPlayer(player, "Download the latest version here: &bhttps://github.com/RefracDevelopment/SimpleTags/releases/latest", false);
+            }
+        }
     }
 
     @EventHandler
@@ -54,7 +62,7 @@ public class PlayerListener implements Listener {
         ProfileData profile = SimpleTags.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
         if (SimpleTags.getInstance().getSettings().USE_CHAT)
-            event.setFormat(RyMessageUtils.translate(profile.getTagPrefix() + ChatColor.RESET + event.getFormat()));
+            event.setFormat(RyMessageUtils.translate(profile.getTagPrefix() + "&r" + event.getFormat()));
     }
 
     @EventHandler
