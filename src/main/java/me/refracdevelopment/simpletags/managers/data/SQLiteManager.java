@@ -82,11 +82,7 @@ public class SQLiteManager {
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
                 exception.printStackTrace();
-            } finally {
-                Thread.currentThread().interrupt();
             }
-
-            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -108,11 +104,7 @@ public class SQLiteManager {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
                 RyMessageUtils.sendConsole(true, "SQLite#execute : " + query);
                 exception.printStackTrace();
-            } finally {
-                Thread.currentThread().interrupt();
             }
-
-            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -135,11 +127,7 @@ public class SQLiteManager {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
                 RyMessageUtils.sendConsole(true, "SQLite#select : " + query);
                 exception.printStackTrace();
-            } finally {
-                Thread.currentThread().interrupt();
             }
-
-            Thread.currentThread().interrupt();
         }).start();
     }
 

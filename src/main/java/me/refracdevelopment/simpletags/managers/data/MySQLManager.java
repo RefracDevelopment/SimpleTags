@@ -95,11 +95,7 @@ public class MySQLManager {
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
                 exception.printStackTrace();
-            } finally {
-                Thread.currentThread().interrupt();
             }
-
-            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -120,11 +116,7 @@ public class MySQLManager {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
                 RyMessageUtils.sendConsole(true, "MySQL#execute : " + query);
                 exception.printStackTrace();
-            } finally {
-                Thread.currentThread().interrupt();
             }
-
-            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -146,11 +138,7 @@ public class MySQLManager {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
                 RyMessageUtils.sendConsole(true, "MySQL#select : " + query);
                 exception.printStackTrace();
-            } finally {
-                Thread.currentThread().interrupt();
             }
-
-            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -160,13 +148,5 @@ public class MySQLManager {
 
     public void updatePlayerName(String uuid, String name) {
         execute("UPDATE SimpleTags SET name=? WHERE uuid=?", name, uuid);
-    }
-
-    public void delete() {
-        execute("TRUNCATE TABLE SimpleTags");
-    }
-
-    public void deletePlayer(String uuid) {
-        execute("DELETE FROM SimpleTags WHERE uuid=?", uuid);
     }
 }
