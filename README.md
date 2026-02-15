@@ -6,6 +6,10 @@
 
 SimpleTags is a plugin that allows you to use custom tags in chat.
 
+### Dependencies
+
+[ItemNBTAPI](https://www.spigotmc.org/resources/nbt-api.7939/)
+
 ### Issue Reporting/Support
 
 Please report all issues/support questions to the [Issues](https://github.com/RefracDevelopment/SimpleTags/issues) tab
