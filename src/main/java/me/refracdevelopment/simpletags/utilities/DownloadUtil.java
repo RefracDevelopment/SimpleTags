@@ -1,7 +1,7 @@
 package me.refracdevelopment.simpletags.utilities;
 
-import com.alessiodp.libby.BukkitLibraryManager;
-import com.alessiodp.libby.Library;
+import net.byteflux.libby.BukkitLibraryManager;
+import net.byteflux.libby.Library;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DownloadUtil {
@@ -24,7 +24,7 @@ public class DownloadUtil {
             Library lib3 = Library.builder()
                     .groupId("org{}xerial") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                     .artifactId("sqlite-jdbc")
-                    .version("3.51.1.0")
+                    .version("3.51.2.0")
                     .build();
             Library lib4 = Library.builder()
                     .groupId("com{}zaxxer") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
