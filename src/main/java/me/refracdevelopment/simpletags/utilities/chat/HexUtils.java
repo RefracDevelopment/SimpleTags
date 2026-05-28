@@ -1,6 +1,7 @@
 package me.refracdevelopment.simpletags.utilities.chat;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.reflection.XReflection;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
